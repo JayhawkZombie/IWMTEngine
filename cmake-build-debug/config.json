@@ -1,0 +1,27 @@
+{
+    "engineConfig": {
+        "core": {
+            "defaultFont": "",
+            "startEditorPaused": true
+        },
+        "window": {
+            "width": 1200,
+            "height": 900,
+            "enableVSync": true,
+            "enableMsaa": true,
+            "enableFullscreen": false,
+            "enableResize": true,
+            "frameRate": 60,
+            "windowTitle": "REngine"
+        },
+        "physics": {
+            "gravity": {
+                "x": 0.0,
+                "y": -9.8100004196167
+            }
+        },
+        "game": {
+            "levelName": "TestBed"
+        }
+    }
+}

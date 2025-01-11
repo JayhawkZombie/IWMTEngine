@@ -28,7 +28,8 @@ void Engine::GameLoop() {
     while (!quit) {
         CheckWorkerResults();
         const auto delta = deltaClock.restart();
-        currentLevelPtr = maybeCurrentLevel.get();
+        // currentLevelPtr = maybeCurrentLevel.get();
+        currentLevelPtr = maybeLevelPtr ? maybeLevelPtr->try_cast<Level>() : nullptr;
         if (!currentLevelPtr) {
             std::cerr << "Bad level ptr" << std::endl;
         }

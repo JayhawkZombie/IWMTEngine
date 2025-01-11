@@ -19,6 +19,7 @@ private:
     bool quit = false;
     EngineConfig config;
     std::shared_ptr<Level> maybeCurrentLevel;
+    std::shared_ptr<entt::meta_any> maybeLevelPtr;
     // std::shared_ptr<Level> currentLevel;
     std::vector<std::shared_ptr<mvHit> > mvHits;
     std::vector<std::shared_ptr<lineSeg> > lineSegs;

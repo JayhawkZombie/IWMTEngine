@@ -22,12 +22,28 @@ void Engine::CheckWorkerResults() {
     WorkerThread::ResultQueueItemT item;
     if (engineWorker.TryPopResult(item)) {
         fmt::println("Engine popping worker thread result: {}", item.second);
-        if (auto cast_paths = item.first->try_cast<std::vector<std::filesystem::path>>(); cast_paths) {
-            CheckIndexedFiles(*cast_paths);
-        } else if (auto level = item.first->try_cast<std::shared_ptr<Level>>(); level) {
-            fmt::println("Got level from worker");
-            maybeCurrentLevel = *level;
+        fmt::println("Type info {}", item.first->type().info().name());
+        fmt::println("Use count {}", item.first.use_count());
+
+        using namespace entt::literals;
+        const auto itemTypeInfo = item.first->type().info();
+        if (itemTypeInfo.hash() == "TestBed"_hs) {
+            fmt::println("TestBed Level !{}", itemTypeInfo.name());
+            const auto metaAnyTestBed = item.first;
+            maybeLevelPtr = metaAnyTestBed;
+        } else {
+            if (auto cast_paths = item.first->try_cast<std::vector<std::filesystem::path>>(); cast_paths) {
+                CheckIndexedFiles(*cast_paths);
+            }
         }
+
+
+        // if (auto cast_paths = item.first->try_cast<std::vector<std::filesystem::path>>(); cast_paths) {
+        //     CheckIndexedFiles(*cast_paths);
+        // } else if (auto level = item.first->try_cast<std::shared_ptr<Level>>(); level) {
+        //     fmt::println("Got level from worker");
+        //     level->swap(maybeCurrentLevel);
+        // }
     }
 }
 

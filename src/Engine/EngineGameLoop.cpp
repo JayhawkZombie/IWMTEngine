@@ -14,22 +14,23 @@ void Engine::GameLoop() {
     sf::Event event{};
     sf::Clock deltaClock;
     WorkerThread::Heartbeat lastHeartbeat;
-    std::chrono::steady_clock::duration lastHbDelta {0};
+    std::chrono::steady_clock::duration lastHbDelta{0};
 
     const auto AddJitterTask = [&]() {
         engineWorker.PostTask([]() {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            return std::make_shared<entt::meta_any>();
-        }, "Jitter Task");
+                                  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                                  return std::make_shared<
+                                      entt::meta_any>(nullptr);
+                              },
+                              "Jitter Task");
     };
-
-    Level *currentLevelPtr;
 
     while (!quit) {
         CheckWorkerResults();
-        const auto delta = deltaClock.restart();
-        // currentLevelPtr = maybeCurrentLevel.get();
-        currentLevelPtr = maybeLevelPtr ? maybeLevelPtr->try_cast<Level>() : nullptr;
+        const auto delta       = deltaClock.restart();
+        Level *currentLevelPtr = maybeLevelPtr
+                                     ? maybeLevelPtr->try_cast<Level>()
+                                     : nullptr;
         if (!currentLevelPtr) {
             std::cerr << "Bad level ptr" << std::endl;
         }

@@ -12,7 +12,7 @@ void EventHandler::ProcessEvents(sf::RenderWindow &window) {
     sf::Event event;
     while (window.pollEvent(event)) {
     ImGui::SFML::ProcessEvent(window, event);
-        fmt::println("Event: {}", event);
+        // fmt::println("Event: {}", event);
 
         if (event.type == sf::Event::KeyPressed) {
             KeyPressEventDispatcher.enqueue<sf::Event>(event);

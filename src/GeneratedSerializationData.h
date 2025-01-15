@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 10/01/2025 21:46:25
+* Generated at: 14/01/2025 19:20:52
 */
 
 
@@ -11,6 +11,7 @@
 #include "../src/Level/Level.h"
 #include "../src/Level/TestBed.h"
 #include "../src/Level/TestBed/SpriteSheet.h"
+#include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Engine/GameObject.h"
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
@@ -73,8 +74,15 @@ void serialize(Archive &ar, TestBed &val) {
 
 template<class Archive>
 void serialize(Archive &ar, SpriteSheet &val) {
-    ar(cereal::make_nvp("dimensions", val.dimensions));
+    ar(cereal::make_nvp("originalFileName", val.originalFileName));
+ar(cereal::make_nvp("dimensions", val.dimensions));
 ar(cereal::make_nvp("rawFrames", val.rawFrames));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, TarmieLevel &val) {
+    ar(cereal::make_nvp("m_spriteSheet", val.m_spriteSheet));
 }
 
 

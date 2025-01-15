@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 10/01/2025 21:46:25
+* Generated at: 14/01/2025 19:20:52
 */
 
 
@@ -10,6 +10,7 @@
 #include "../src/Level/Level.h"
 #include "../src/Level/TestBed.h"
 #include "../src/Level/TestBed/SpriteSheet.h"
+#include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Engine/GameObject.h"
 
 
@@ -174,6 +175,11 @@ auto rFactory = entt::meta<SpriteSheet>();
 rFactory.ctor<>();
             
             
+            GlobalConsole->Debug("Registering std::string originalFileName originalFileName");
+            GlobalConsole->Debug("	Code string: rFactory.data<&SpriteSheet::originalFileName>(\"originalFileName\"_hs);");
+            rFactory.data<&SpriteSheet::originalFileName>("originalFileName"_hs);
+        
+	
             GlobalConsole->Debug("Registering sf::IntRect dimensions dimensions");
             GlobalConsole->Debug("	Code string: rFactory.data<&SpriteSheet::dimensions>(\"dimensions\"_hs);");
             rFactory.data<&SpriteSheet::dimensions>("dimensions"_hs);
@@ -182,6 +188,20 @@ rFactory.ctor<>();
             GlobalConsole->Debug("Registering std::vector<sf::IntRect> rawFrames rawFrames");
             GlobalConsole->Debug("	Code string: rFactory.data<&SpriteSheet::rawFrames>(\"rawFrames\"_hs);");
             rFactory.data<&SpriteSheet::rawFrames>("rawFrames"_hs);
+        
+        }
+    
+
+        void Reflect_TarmieLevel() {
+            std::cerr << "	Registering class TarmieLevel" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<TarmieLevel>();
+rFactory.ctor<>();
+            rFactory.base<Level>();
+            
+            GlobalConsole->Debug("Registering SpriteSheet m_spriteSheet spriteSheet");
+            GlobalConsole->Debug("	Code string: rFactory.data<&TarmieLevel::m_spriteSheet>(\"spriteSheet\"_hs);");
+            rFactory.data<&TarmieLevel::m_spriteSheet>("spriteSheet"_hs);
         
         }
     
@@ -220,6 +240,7 @@ rFactory.ctor<>();
 	Reflect_Level();
 	Reflect_TestBed();
 	Reflect_SpriteSheet();
+	Reflect_TarmieLevel();
 	Reflect_GameObject();
         }
     

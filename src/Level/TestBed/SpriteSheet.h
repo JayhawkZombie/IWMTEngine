@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include <cereal/cereal.hpp>
 
 class SpriteSheet {
 public:
@@ -30,10 +31,12 @@ public:
     void RenderMenuBar();
     void RenderFrameEditorPopup();
     void RenderFrameEditorForFrame(int frame);
+    void RenderDimensionsEditor();
 };
 
 #include <Reflection/GenReflection.h>
 RENGINE_REFLECT_CLASS_BEGIN(SpriteSheet)
+RENGINE_REFLECT_CLASS_MEMBER(std::string, originalFileName, "originalFileName")
 RENGINE_REFLECT_CLASS_MEMBER(sf::IntRect, dimensions, "dimensions")
 RENGINE_REFLECT_CLASS_MEMBER(std::vector<sf::IntRect>, rawFrames, "rawFrames")
 RENGINE_REFLECT_CLASS_MEMBER(std::unordered_map<std::string, sf::IntRect>, namedFrames, "namedFrames")

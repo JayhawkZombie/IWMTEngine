@@ -7,6 +7,7 @@
 #include "SpriteSheet.h"
 #include <imgui.h>
 #include <Misc/IconsFontAwesome6.h>
+#include <Editor/ImGuiHelpers.h>
 
 SpriteSheet::SpriteSheet(const std::string &fileName) {
     if (!Load(fileName)) {
@@ -27,7 +28,7 @@ bool SpriteSheet::Load(const std::string &fileName) {
         return false;
     }
     originalFileName = fileName;
-    texture = tex;
+    texture          = tex;
     return true;
 }
 
@@ -40,14 +41,20 @@ void SpriteSheet::Render(sf::RenderTarget &target,
 }
 
 void SpriteSheet::RenderEditor() {
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_None | ImGuiWindowFlags_MenuBar;
+    ImGuiWindowFlags window_flags =
+            ImGuiWindowFlags_None | ImGuiWindowFlags_MenuBar;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-    ImGui::BeginChild("ChildR", ImVec2(0, 260), ImGuiChildFlags_Borders, window_flags);
+    ImGui::BeginChild("ChildR",
+                      ImVec2(0, 260),
+                      ImGuiChildFlags_Borders,
+                      window_flags);
     if (ImGui::BeginMenuBar()) {
         RenderMenuBar();
         ImGui::EndMenuBar();
     }
+    RenderDimensionsEditor();
     ImGui::EndChild();
+    ImGui::PopStyleVar();
 }
 
 void SpriteSheet::RenderMenuBar() {
@@ -75,7 +82,9 @@ void SpriteSheet::RenderFrameEditorPopup() {
                 ImGui::SameLine();
             }
             if (ImGui::Button(ICON_FA_CARET_RIGHT)) {
-                selected_frame_index = std::min(selected_frame_index + 1, static_cast<int>(rawFrames.size()) - 1);
+                selected_frame_index = std::min(selected_frame_index + 1,
+                                                static_cast<int>(rawFrames.
+                                                    size()) - 1);
             }
         }
         ImGui::Separator();
@@ -84,4 +93,17 @@ void SpriteSheet::RenderFrameEditorPopup() {
 }
 
 void SpriteSheet::RenderFrameEditorForFrame(int frame) {
+}
+
+void SpriteSheet::RenderDimensionsEditor() {
+    ImGui::SeparatorText("Dimensions and Size");
+    if (texture) {
+        ImGui::Text("Texture");
+        ImGui::SameLine();
+        ImGui::TextColored(ImGuiColors::BrightPink, "%i", texture->getSize().x);
+        ImGui::SameLine();
+        ImGui::Text("x");
+        ImGui::SameLine();
+        ImGui::TextColored(ImGuiColors::BrightPink, "%i", texture->getSize().y);
+    }
 }

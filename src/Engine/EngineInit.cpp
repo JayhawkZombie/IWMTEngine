@@ -39,25 +39,6 @@ void Engine::LoadConfig(const std::string &filename) {
 
 void Engine::InitLevel() {
     engineWorker.PostTask(LevelMakerTask{config.game.levelName}, "LevelMaker");
-    // const auto levelClass = config.game.levelName;
-    // if (!levelClass.empty()) {
-    //     const auto meta = Reflection::GetMeta(levelClass);
-    //     if (!meta) {
-    //         fmt::println("Failed to load level {}",
-    //                      fmt::styled(levelClass, fg_color_red));
-    //     } else {
-    //         fmt::println("Resolved level class metadata: {}",
-    //                      fmt::styled(meta.info().name(), fg_color_green));
-    //         maybeCurrentLevel = meta.construct();
-    //
-    //         if (!maybeCurrentLevel) {
-    //             fmt::println("Failed to construct level class {}",
-    //                          fmt::styled(meta.info().name(), fg_color_red));
-    //         }
-    //     }
-    // } else {
-    //     fmt::println("No level class provided in config");
-    // }
 }
 
 void Engine::SaveConfig(const std::string &filename) {

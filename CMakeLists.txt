@@ -14,6 +14,7 @@ find_package(cereal CONFIG REQUIRED)
 find_package(sol2 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/src/*.hpp)
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
@@ -44,7 +45,7 @@ add_custom_target(GenerateReflectionData ALL
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(IWMTEngine ${SRC_FILES} ${CODEGEN_OUTPUT_REFL} ${CODEGEN_OUTPUT_SERIAL})
+add_executable(IWMTEngine ${SRC_FILES})
 add_dependencies(IWMTEngine GenerateReflectionData)
 
 target_include_directories(IWMTEngine PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -53,4 +54,5 @@ target_link_libraries(IWMTEngine PRIVATE EnTT::EnTT)
 target_link_libraries(IWMTEngine PRIVATE fmt::fmt)
 target_link_libraries(IWMTEngine PRIVATE sol2)
 target_link_libraries(IWMTEngine PRIVATE ImGui-SFML::ImGui-SFML cereal::cereal)
+target_link_libraries(IWMTEngine PRIVATE spdlog::spdlog)
 target_link_libraries(IWMTEngine PRIVATE sfml-system sfml-window sfml-network sfml-graphics sfml-audio)

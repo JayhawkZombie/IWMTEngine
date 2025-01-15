@@ -18,9 +18,7 @@ private:
     EventHandler evtHandler;
     bool quit = false;
     EngineConfig config;
-    std::shared_ptr<Level> maybeCurrentLevel;
     std::shared_ptr<entt::meta_any> maybeLevelPtr;
-    // std::shared_ptr<Level> currentLevel;
     std::vector<std::shared_ptr<mvHit> > mvHits;
     std::vector<std::shared_ptr<lineSeg> > lineSegs;
     double lastFrameTime = 0.0;
@@ -52,7 +50,8 @@ public:
 
     void Tick(sf::Time delta);
 
-    static void CheckIndexedFiles(const std::vector<std::filesystem::path> &paths);
+    static void CheckIndexedFiles(
+        const std::vector<std::filesystem::path> &paths);
 
     void MakePhysicsObjects();
 
@@ -84,5 +83,4 @@ public:
     void OnJoystickMoved(const sf::Event &event);
 
     void OnSensorChanged(const sf::Event &event);
-
 };

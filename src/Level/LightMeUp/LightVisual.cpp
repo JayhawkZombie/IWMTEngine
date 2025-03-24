@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <fmt/ostream.h>
+#include <Logging/LogFormatting.h>
 
 LightVisual::LightVisual() {
     //ctor
@@ -11,7 +12,7 @@ LightVisual::~LightVisual() {
     //dtor
 }
 
-void LightVisual::init(Light &r_Lt0,
+void LightVisual::init(Light *r_Lt0,
                        unsigned int Rows,
                        unsigned int Cols,
                        float posX,
@@ -20,7 +21,7 @@ void LightVisual::init(Light &r_Lt0,
                        float dPosY,
                        sf::Vector2f LtSz) {
     fmt::println("LightVisual::init {} {}", Rows, Cols);
-    pLt0   = &r_Lt0;
+    pLt0   = r_Lt0;
     numLts = Rows * Cols;
     vtxVec.resize(4 * numLts);
 
@@ -77,6 +78,7 @@ void LightVisual::update() {
         vtxVec[4 * n + 3].color         =
                 vtxVec[4 * n + 2].color =
                 vtxVec[4 * n + 1].color = vtxVec[4 * n].color = LtClr;
+        fmt::println("Vertex color: {}", vtxVec[4 * n + 3].color);
         ++pLt;
     }
 }
@@ -88,15 +90,54 @@ void LightVisual::draw(sf::RenderTarget &RT) const {
 
 void LightVisual::RenderEditor() {
     if (ImGui::BeginChild("ChildL",
-                          ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260),
-                          ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeX
-                          )) {
+                          ImVec2(ImGui::GetContentRegionAvail().x,
+                                 ImGui::GetContentRegionAvail().y),
+                          ImGuiChildFlags_Borders,
+                          ImGuiWindowFlags_None
+                         )) {
         ImGui::Text("Vertex vector size: %lu", vtxVec.size());
         ImGui::Text("numLights     size: %u", numLts);
     }
+    RenderLightsEditor();
     ImGui::EndChild();
-    // if (ImGui::BeginChild("Light Visual", nullptr, ImGuiWindowFlags_ChildWindow)) {
-    //     ImGui::Text("Count: %u", numLts);
-    // }
-    // ImGui::End();
+}
+
+void LightVisual::RenderLightsEditor() {
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
+    if (ImGui::BeginChild("ChildLightsEditor",
+                          ImVec2(ImGui::GetContentRegionAvail().x,
+                                 ImGui::GetContentRegionAvail().y),
+                          ImGuiChildFlags_Borders,
+                          ImGuiWindowFlags_None
+                         )) {
+        ImGui::Text("Light colors: ");
+        ImGui::Separator();
+        const Light *pLt = pLt0;
+        ImGui::BeginTable("Light colors", 8, ImGuiTableFlags_Borders);
+        for (unsigned int n = 0; n < numLts; ++n) {
+            ImGui::TableNextColumn();
+            RenderEditorForSingleLight(pLt);
+            ++pLt;
+        }
+        ImGui::EndTable();
+    }
+    ImGui::EndChild();
+    ImGui::PopStyleVar();
+}
+
+void LightVisual::RenderEditorForSingleLight(const Light *lt) {
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
+    ImGui::PushID(lt);
+    if (ImGui::ColorEdit4("##Lt",
+                          (float *) &lt->r,
+                          ImGuiColorEditFlags_NoInputs |
+                          ImGuiColorEditFlags_NoLabel)) {
+        fmt::println("Changed light color to {} {} {}",
+                     lt->r,
+                     lt->g,
+                     lt->b);
+        update();
+    }
+    ImGui::PopID();
+    ImGui::PopStyleVar();
 }

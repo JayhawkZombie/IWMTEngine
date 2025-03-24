@@ -14,8 +14,8 @@ public:
     unsigned int numLts = 0;// useful in methods
 
     // group is entire grid. Rectangular layout
-    void init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz );
-    LightVisual( Light& r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz )
+    void init( Light* r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz );
+    LightVisual( Light* r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz )
     { init( r_Lt0, Rows, Cols, posX, posY, dPosX, dPosY, LtSz ); }
 
     LightVisual();
@@ -26,6 +26,8 @@ public:
     bool isOver( float x, float y )const;
 
     void RenderEditor();
+    void RenderLightsEditor();
+    void RenderEditorForSingleLight(const Light *lt);
 
     void update();
     void draw( sf::RenderTarget& RT ) const;

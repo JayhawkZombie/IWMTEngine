@@ -10,6 +10,7 @@
 class LightMeUpLevel : public Level
 {
 
+    void ResetAndResizeLights(size_t size, float posX, float posY, float dPosX, float dPosY, const sf::Vector2f &boxSize);
   public:
 
     int m_matrixHeight = 8;

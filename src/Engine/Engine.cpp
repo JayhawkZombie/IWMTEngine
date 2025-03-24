@@ -74,6 +74,7 @@ int Engine::Run() {
     engineWorker.Start();
     GameLoop();
     window->close();
+    engineWorker.Stop();
     return 0;
 }
 

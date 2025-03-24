@@ -144,9 +144,10 @@ public:
     }
 
     void Stop() {
-        fmt::println("WorkerThread stopping: {}", name);
+        fmt::println("WorkerThread stop requested: {}", name);
         stopRequested = true;
         running       = false;
+        fmt::println("WorkerThread posting no-op: {}", name);
         PostTask(NoOp, "no-op");
         if (th.joinable()) {
             fmt::println("WorkerThread joining: {}", name);

@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 14/01/2025 19:20:52
+* Generated at: 23/03/2025 17:07:59
 */
 
 
@@ -11,6 +11,8 @@
 #include "../src/Level/TestBed.h"
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
+#include "../src/Level/LightMeUp/LightMeUpLevel.h"
+#include "../src/Level/LightMeUp/LightVisual.h"
 #include "../src/Engine/GameObject.h"
 
 
@@ -206,6 +208,39 @@ rFactory.ctor<>();
         }
     
 
+        void Reflect_LightMeUpLevel() {
+            std::cerr << "	Registering class LightMeUpLevel" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<LightMeUpLevel>();
+rFactory.ctor<>();
+            rFactory.base<Level>();
+            
+            GlobalConsole->Debug("Registering LightMeUpLevel m_visual visual");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_visual>(\"visual\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_visual>("visual"_hs);
+        
+	
+            GlobalConsole->Debug("Registering LightMeUpLevel m_matrixHeight height");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_matrixHeight>(\"height\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_matrixHeight>("height"_hs);
+        
+        }
+    
+
+        void Reflect_LightVisual() {
+            std::cerr << "	Registering class LightVisual" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<LightVisual>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering LightVisual numLts numLights");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightVisual::numLts>(\"numLights\"_hs);");
+            rFactory.data<&LightVisual::numLts>("numLights"_hs);
+        
+        }
+    
+
         void Reflect_GameObject() {
             std::cerr << "	Registering class GameObject" << std::endl;
             using namespace entt::literals;
@@ -241,6 +276,8 @@ rFactory.ctor<>();
 	Reflect_TestBed();
 	Reflect_SpriteSheet();
 	Reflect_TarmieLevel();
+	Reflect_LightMeUpLevel();
+	Reflect_LightVisual();
 	Reflect_GameObject();
         }
     

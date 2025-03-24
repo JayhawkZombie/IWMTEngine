@@ -45,7 +45,7 @@ void TarmieLevel::RenderEditor() {
     ImGui::BeginChild("ChildR",
                       ImVec2(0, 260),
                       ImGuiChildFlags_Borders,
-                      ImGuiWindowFlags_None);
+                      ImGuiWindowFlags_ChildWindow);
     ImGui::Text("Tarmie");
     ImGui::SeparatorText("World Params");
     if (ImGui::DragInt("Block size",

@@ -36,6 +36,7 @@ class LightMeUpLevel : public Level
     void Render(sf::RenderTarget &target) override;
 
     void RenderEditor() override;
+    void RenderLightsEditor();
 };
 
 #include <Reflection/GenReflection.h>

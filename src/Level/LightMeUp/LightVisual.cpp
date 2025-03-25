@@ -98,46 +98,29 @@ void LightVisual::RenderEditor() {
         ImGui::Text("Vertex vector size: %lu", vtxVec.size());
         ImGui::Text("numLights     size: %u", numLts);
     }
-    RenderLightsEditor();
+    // RenderLightsEditor();
     ImGui::EndChild();
 }
 
-void LightVisual::RenderLightsEditor() {
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("ChildLightsEditor",
-                          ImVec2(ImGui::GetContentRegionAvail().x,
-                                 ImGui::GetContentRegionAvail().y),
-                          ImGuiChildFlags_Borders,
-                          ImGuiWindowFlags_None
-                         )) {
-        ImGui::Text("Light colors: ");
-        ImGui::Separator();
-        const Light *pLt = pLt0;
-        ImGui::BeginTable("Light colors", 8, ImGuiTableFlags_Borders);
-        for (unsigned int n = 0; n < numLts; ++n) {
-            ImGui::TableNextColumn();
-            RenderEditorForSingleLight(pLt);
-            ++pLt;
-        }
-        ImGui::EndTable();
-    }
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-}
-
-void LightVisual::RenderEditorForSingleLight(const Light *lt) {
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    ImGui::PushID(lt);
-    if (ImGui::ColorEdit4("##Lt",
-                          (float *) &lt->r,
-                          ImGuiColorEditFlags_NoInputs |
-                          ImGuiColorEditFlags_NoLabel)) {
-        fmt::println("Changed light color to {} {} {}",
-                     lt->r,
-                     lt->g,
-                     lt->b);
-        update();
-    }
-    ImGui::PopID();
-    ImGui::PopStyleVar();
-}
+// void LightVisual::RenderLightsEditor() {
+//     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
+//     if (ImGui::BeginChild("ChildLightsEditor",
+//                           ImVec2(ImGui::GetContentRegionAvail().x,
+//                                  ImGui::GetContentRegionAvail().y),
+//                           ImGuiChildFlags_Borders,
+//                           ImGuiWindowFlags_None
+//                          )) {
+//         ImGui::Text("Light colors: ");
+//         ImGui::Separator();
+//         const Light *pLt = pLt0;
+//         ImGui::BeginTable("Light colors", 8, ImGuiTableFlags_Borders);
+//         for (unsigned int n = 0; n < numLts; ++n) {
+//             ImGui::TableNextColumn();
+//             RenderEditorForSingleLight(pLt);
+//             ++pLt;
+//         }
+//         ImGui::EndTable();
+//     }
+//     ImGui::EndChild();
+//     ImGui::PopStyleVar();
+// }

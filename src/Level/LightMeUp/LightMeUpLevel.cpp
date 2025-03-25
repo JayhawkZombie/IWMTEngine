@@ -88,12 +88,13 @@ void LightMeUpLevel::RenderEditor() {
 
     if (ImGui::Begin(("LightMeUp"))) {
         ImGui::Text("Visual");
+        ImGui::SetNextItemWidth(100.f);
         if (ImGui::DragInt("Matrix Height", &m_matrixHeight, 0.5f, 1, 18)) {
             const auto totalLights = m_matrixHeight * m_matrixHeight;
             fmt::println("Total Lights: {}", totalLights);
             ResetAndResizeLights(totalLights, 200.f, 200.f, 8.f, 8.f, visualBoxSize);
         }
-
+        ImGui::SameLine();
 
         if (EditorVector2f(visualBoxSize, "Box Size", 4.f, 4.f, 150.f, 150.f)) {
             const auto totalLights = m_matrixHeight * m_matrixHeight;
@@ -101,7 +102,31 @@ void LightMeUpLevel::RenderEditor() {
             ResetAndResizeLights(totalLights, 200.f, 200.f, 8.f, 8.f, visualBoxSize);
         }
 
-        m_visual.RenderEditor();
+        RenderLightsEditor();
     }
     ImGui::End();
 }
+
+void LightMeUpLevel::RenderLightsEditor() {
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
+    if (ImGui::BeginChild("ChildLightsEditor",
+                          ImVec2(ImGui::GetContentRegionAvail().x,
+                                 ImGui::GetContentRegionAvail().y),
+                          ImGuiChildFlags_Borders,
+                          ImGuiWindowFlags_None
+                         )) {
+        ImGui::Text("Light colors: ");
+        ImGui::Separator();
+        ImGui::BeginTable("Light colors", 8, ImGuiTableFlags_Borders);
+        for (auto &light : m_lights) {
+            ImGui::TableNextColumn();
+            if (light.RenderEditor()) {
+                m_visual.update();
+            }
+        }
+        ImGui::EndTable();
+    }
+    ImGui::EndChild();
+    ImGui::PopStyleVar();
+}
+

@@ -178,7 +178,7 @@ int Engine::Init() {
                                      std::cerr << "Timer expired!" << std::endl;
                                  });
 
-    MakePhysicsObjects();
+    // MakePhysicsObjects();
     SetGravity(gravity);
     AssignBoundaries(config.window.width, config.window.height);
 

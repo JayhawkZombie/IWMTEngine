@@ -14,8 +14,12 @@ class LightMeUpLevel : public Level
   public:
 
     int m_matrixHeight = 8;
-    std::vector<Light> m_lights;
+
+    using light_vector = std::vector<Light>;
+
+    std::vector<light_vector> m_lightStates;
     LightVisual m_visual;
+
     /*
     virtual ~Level();
 
@@ -36,7 +40,10 @@ class LightMeUpLevel : public Level
     void Render(sf::RenderTarget &target) override;
 
     void RenderEditor() override;
-    void RenderLightsEditor();
+    bool RenderLightsEditor();
+    bool RenderLightStatesSelectorEditor();
+
+    size_t m_editorSelectedStateIndex = 0;
 };
 
 #include <Reflection/GenReflection.h>

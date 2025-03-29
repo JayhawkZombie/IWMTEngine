@@ -8,31 +8,33 @@
 #include <imgui.h>
 #include <fmt/base.h>
 
-LightMeUpLevel::LightMeUpLevel() {
+LightMeUpLevel::LightMeUpLevel() 
+    : m_starrySky(15)  // Initialize with 15 stars per cell
+{
     m_lightStates.emplace_back();
     m_lightStates.front().resize(64, Light(125, 125, 125));
+    const auto pos = GetLEDsPosition();
     m_visual.init(m_lightStates.front().data(),
                   8,
                   8,
-                  200.f,
-                  200.f,
+                  pos.x,
+                  pos.y,
                   8.f,
                   8.f,
                   sf::Vector2f(32, 32));
 }
 
-
 void LightMeUpLevel::Init() {
     Level::Init();
-    // LtPlayLV.init( LightArr[0], 8 ,  8  , 200, 200, 8, 8, sf::Vector2f(32,32) );
     fmt::println("LightMeUpLevel::Init");
     m_lightStates.emplace_back();
     auto &lights = m_lightStates.front();
-    lights.reserve(m_matrixHeight * m_matrixHeight);
-    for (auto light: lights) {
+    lights.resize(m_matrixHeight * m_matrixHeight);
+    for (auto& light: lights) {
         light.init(125, 125, 125);
     }
-    m_visual.init(lights.data(), 8, 8, 200, 200, 8, 8, sf::Vector2f(32, 32));
+    const auto pos = GetLEDsPosition();
+    m_visual.init(lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
     m_visual.update();
 }
 
@@ -40,10 +42,39 @@ void LightMeUpLevel::Destroy() {
 }
 
 void LightMeUpLevel::Tick(double deltaTime) {
+    m_starrySky.update(static_cast<float>(deltaTime));
+    
+    // Update star cell visibility and color based on LED states
+    const auto& lights = m_lightStates[m_editorSelectedStateIndex];
+    for (size_t y = 0; y < 8; ++y) {
+        for (size_t x = 0; x < 8; ++x) {
+            const auto& light = lights[y * 8 + x];
+            // Calculate visibility based on average brightness
+            float brightness = (light.r + light.g + light.b) / (3.0f * 255.0f);
+            m_starrySky.setCellVisibility(x, y, brightness);
+            // Set color directly from the LED
+            m_starrySky.setCellColor(x, y, sf::Color(light.r, light.g, light.b));
+        }
+    }
 }
 
 void LightMeUpLevel::Render(sf::RenderTarget &target) {
+    // Get the bounds of the light grid
+    sf::FloatRect lightBounds = m_visual.getRect();
+    // Add some padding around the lights for the starry background
+    lightBounds.left -= 50.f;
+    lightBounds.top -= 500.f;
+    lightBounds.width += 100.f;
+    lightBounds.height += 100.f;
+    
+    // Draw starry sky with background in the light grid area
+    m_starrySky.draw(target, lightBounds);
+    // Then draw the light visualization on top
     m_visual.draw(target);
+}
+
+sf::Vector2f LightMeUpLevel::GetLEDsPosition() const {
+    return sf::Vector2f(200.f, 600.f);
 }
 
 bool EditorVector2f(sf::Vector2f &vec,
@@ -108,8 +139,8 @@ void LightMeUpLevel::RenderEditor() {
             const auto totalLights = m_matrixHeight * m_matrixHeight;
             fmt::println("Total Lights: {}", totalLights);
             ResetAndResizeLights(totalLights,
-                                 200.f,
-                                 200.f,
+                                 50.f,
+                                 50.f,
                                  8.f,
                                  8.f,
                                  visualBoxSize);
@@ -121,9 +152,10 @@ void LightMeUpLevel::RenderEditor() {
             fmt::println("New vector value: {},{}",
                          visualBoxSize.x,
                          visualBoxSize.y);
+            const auto pos = GetLEDsPosition();
             ResetAndResizeLights(totalLights,
-                                 200.f,
-                                 200.f,
+                                 pos.x,
+                                 pos.y,
                                  8.f,
                                  8.f,
                                  visualBoxSize);
@@ -172,7 +204,10 @@ bool LightMeUpLevel::RenderLightsEditor() {
 
                 for (auto &light: lights) {
                     ImGui::TableNextColumn();
-                    light.RenderEditor();
+                    if (light.RenderEditor()) {
+                        light.updateRGBFromFloats();
+                        m_visual.update();
+                    }
                 }
             }
             ImGui::EndTable();

@@ -6,6 +6,7 @@
 
 #include "Level/Level.h"
 #include "LightVisual.h"
+#include "StarrySky.h"
 
 class LightMeUpLevel : public Level
 {
@@ -19,6 +20,7 @@ class LightMeUpLevel : public Level
 
     std::vector<light_vector> m_lightStates;
     LightVisual m_visual;
+    StarrySky m_starrySky;
 
     /*
     virtual ~Level();
@@ -38,6 +40,8 @@ class LightMeUpLevel : public Level
     void Destroy() override;
     void Tick(double delta) override;
     void Render(sf::RenderTarget &target) override;
+
+    sf::Vector2f GetLEDsPosition() const;
 
     void RenderEditor() override;
     bool RenderLightsEditor();

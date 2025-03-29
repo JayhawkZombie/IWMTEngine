@@ -46,7 +46,7 @@ void EngineConsole::RenderLogsAndMessages() {
 
 void EngineConsole::RenderTerminal() {
     const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
-    const float lineHeightToReserve = ImGui::GetTextLineHeightWithSpacing() * 3.f;
+    const float lineHeightToReserve = ImGui::GetTextLineHeightWithSpacing() * 1.f;
     const auto winSize = ImGui::GetWindowSize();
     ImGui::TextUnformatted("Terminal");
     if (ImGui::BeginChild("#terminal", {winSize.x * 0.3f, winSize.y - footer_height_to_reserve - lineHeightToReserve},
@@ -74,8 +74,8 @@ void EngineConsole::Render(sf::RenderWindow &window) {
     // static auto dockspaceId = ImGui::GetID("Editor");
     // ImGui::DockSpaceOverViewport(dockspaceId);
     const auto winSize = window.getSize();
-    ImGui::SetNextWindowPos(ImVec2(0.f, winSize.y - 300.f), ImGuiCond_Appearing);
-    ImGui::SetNextWindowSize(ImVec2(winSize.x, 300.f), ImGuiCond_Appearing);
+    ImGui::SetNextWindowPos(ImVec2(0.f, winSize.y - 300.f), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(winSize.x, 300.f), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Console", &m_isOpen, ImGuiWindowFlags_NoScrollbar)) {
         ImGui::BeginGroup();
         RenderLogsAndMessages();

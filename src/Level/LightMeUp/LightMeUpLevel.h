@@ -9,6 +9,8 @@
 #include "StarrySky.h"
 #include "PatternPlayer.h"
 #include <random>
+#include <vector>
+#include <memory>
 
 class LightMeUpLevel : public Level
 {
@@ -24,7 +26,7 @@ class LightMeUpLevel : public Level
     LightVisual m_visual;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
-    PatternPlayer m_patternPlayer;  // Pattern player for LED animations
+    std::unique_ptr<PatternPlayer> m_patternPlayer;  // Pattern player for LED animations
 
     /*
     virtual ~Level();

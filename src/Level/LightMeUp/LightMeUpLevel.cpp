@@ -29,6 +29,9 @@ LightMeUpLevel::LightMeUpLevel()
                   8.f,
                   8.f,
                   sf::Vector2f(32, 32));
+    
+    // Initialize pattern player with our LED vector
+    m_patternPlayer = std::make_unique<PatternPlayer>(m_lightStates.front(), 8, 8);
 }
 
 void LightMeUpLevel::Init() {
@@ -46,6 +49,9 @@ void LightMeUpLevel::Init() {
     const auto pos = GetLEDsPosition();
     m_visual.init(lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
     m_visual.update();
+    
+    // Reinitialize pattern player with our LED vector
+    m_patternPlayer = std::make_unique<PatternPlayer>(lights, 8, 8);
 }
 
 void LightMeUpLevel::Destroy() {
@@ -55,15 +61,10 @@ void LightMeUpLevel::Tick(double deltaTime) {
     m_starrySky.update(static_cast<float>(deltaTime));
     
     // Update pattern player
-    m_patternPlayer.update(deltaTime);
+    m_patternPlayer->update(deltaTime);
     
-    // Copy pattern player lights to current state
-    const auto& patternLights = m_patternPlayer.getLights();
+    // Get the current LED states directly from the pattern player's reference
     auto& lights = m_lightStates[m_editorSelectedStateIndex];
-    for (size_t i = 0; i < lights.size() && i < patternLights.size(); ++i) {
-        lights[i] = patternLights[i];
-    }
-    m_visual.update();
     
     // Update star cell visibility and color based on LED states
     for (size_t y = 0; y < 8; ++y) {
@@ -73,11 +74,13 @@ void LightMeUpLevel::Tick(double deltaTime) {
             // Calculate visibility based on average brightness
             float brightness = (light.r + light.g + light.b) / (3.0f * 255.0f);
             // Map the coordinates to the starry sky grid
-            // Note: We're using the same coordinates since both are 8x8 grids
             m_starrySky.setCellVisibility(x, y, brightness);
             m_starrySky.setCellColor(x, y, sf::Color(light.r, light.g, light.b));
         }
     }
+    
+    // Update the visual representation
+    m_visual.update();
 }
 
 void LightMeUpLevel::Render(sf::RenderTarget &target) {
@@ -223,7 +226,7 @@ bool LightMeUpLevel::RenderPatternEditor() {
         };
         
         if (ImGui::Combo("Pattern", &currentPattern, patterns, IM_ARRAYSIZE(patterns))) {
-            m_patternPlayer.setPattern(currentPattern);
+            m_patternPlayer->setPattern(currentPattern);
             edited = true;
         }
         
@@ -231,13 +234,26 @@ bool LightMeUpLevel::RenderPatternEditor() {
         static int stepPause = 1;
         static int param = 1;
         if (ImGui::SliderInt("Step Pause", &stepPause, 1, 10)) {
-            m_patternPlayer.setPattern(currentPattern, stepPause, param);
+            m_patternPlayer->setPattern(currentPattern, stepPause, param);
             edited = true;
         }
         if (ImGui::SliderInt("Parameter", &param, 1, 8)) {
-            m_patternPlayer.setPattern(currentPattern, stepPause, param);
+            m_patternPlayer->setPattern(currentPattern, stepPause, param);
             edited = true;
         }
+
+        // Pattern speed control
+        static float patternSpeed = 1.0f;
+        if (ImGui::SliderFloat("Pattern Speed", &patternSpeed, 0.1f, 5.0f, "%.1fx")) {
+            m_patternPlayer->setSpeed(patternSpeed);
+            edited = true;
+        }
+
+        // Display current step and pattern length
+        ImGui::Separator();
+        ImGui::Text("Pattern Progress: %u / %u", 
+                   m_patternPlayer->getCurrentStep(),
+                   m_patternPlayer->getPatternLength());
         
         // Pattern colors
         static Light onColor{255, 255, 255};
@@ -246,7 +262,7 @@ bool LightMeUpLevel::RenderPatternEditor() {
         ImGui::PushID("OnColor");
         if (onColor.RenderEditor()) {
             onColor.updateRGBFromFloats();
-            m_patternPlayer.setOnColor(onColor);
+            m_patternPlayer->setOnColor(onColor);
             edited = true;
         }
         ImGui::PopID();
@@ -256,7 +272,7 @@ bool LightMeUpLevel::RenderPatternEditor() {
         ImGui::PushID("OffColor");
         if (offColor.RenderEditor()) {
             offColor.updateRGBFromFloats();
-            m_patternPlayer.setOffColor(offColor);
+            m_patternPlayer->setOffColor(offColor);
             edited = true;
         }
         ImGui::PopID();

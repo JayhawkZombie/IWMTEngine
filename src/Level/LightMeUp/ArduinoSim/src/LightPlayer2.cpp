@@ -1,8 +1,8 @@
 #include "LightPlayer2.h"
 
-void LightPlayer2::init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, const patternData& rPattData, unsigned int NumPatterns )
+void LightPlayer2::init(std::vector<Light>& lights, unsigned int Rows, unsigned int Cols, const patternData& rPattData, unsigned int NumPatterns)
 {
-    pLt0 = &r_Lt0;
+    m_lights = &lights;
     rows = Rows;
     cols = Cols;
     numLts = rows*cols;
@@ -22,21 +22,21 @@ void LightPlayer2::setStateData( uint8_t* p_StateData, unsigned int DataSz )
     BA.init( p_StateData[0], DataSz );
 }
 
-void LightPlayer2::update( const Light& onLt, const Light& offLt )// assign as desired
+void LightPlayer2::update(const Light& onLt, const Light& offLt)// assign as desired
 {
-    for( unsigned int n = 0; n < numLts; ++n )
+    for(unsigned int n = 0; n < numLts; ++n)
     {
-        if( getState(n) ) *( pLt0 + n ) = onLt;
-        else *( pLt0 + n ) = offLt;
+        if(getState(n)) (*m_lights)[n] = onLt;
+        else (*m_lights)[n] = offLt;
     }
 
-    if( ++stepTimer >= pattData[ patternIter ].stepPause )
+    if(++stepTimer >= pattData[patternIter].stepPause)
     {
         stepTimer = 0;// to next step
-        if( ++stepIter >= getPattLength() )
+        if(++stepIter >= getPattLength())
         {
             stepIter = 0;// to next pattern
-            if( ++patternIter >= numPatterns )
+            if(++patternIter >= numPatterns)
                 patternIter = 0;// reset cycle
         }
     }

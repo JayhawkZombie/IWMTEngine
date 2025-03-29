@@ -78,7 +78,7 @@ void LightVisual::update() {
         vtxVec[4 * n + 3].color         =
                 vtxVec[4 * n + 2].color =
                 vtxVec[4 * n + 1].color = vtxVec[4 * n].color = LtClr;
-        fmt::println("Vertex color: {}", vtxVec[4 * n + 3].color);
+        // fmt::println("Vertex color: {}", vtxVec[4 * n + 3].color);
         ++pLt;
     }
 }

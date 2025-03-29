@@ -7,6 +7,7 @@
 #include "Level/Level.h"
 #include "LightVisual.h"
 #include "StarrySky.h"
+#include "PatternPlayer.h"
 #include <random>
 
 class LightMeUpLevel : public Level
@@ -23,6 +24,7 @@ class LightMeUpLevel : public Level
     LightVisual m_visual;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
+    PatternPlayer m_patternPlayer;  // Pattern player for LED animations
 
     /*
     virtual ~Level();
@@ -48,6 +50,7 @@ class LightMeUpLevel : public Level
     void RenderEditor() override;
     bool RenderLightsEditor();
     bool RenderLightStatesSelectorEditor();
+    bool RenderPatternEditor();  // New UI for pattern control
 
     size_t m_editorSelectedStateIndex = 0;
 };

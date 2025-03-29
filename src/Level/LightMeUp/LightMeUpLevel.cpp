@@ -54,15 +54,27 @@ void LightMeUpLevel::Destroy() {
 void LightMeUpLevel::Tick(double deltaTime) {
     m_starrySky.update(static_cast<float>(deltaTime));
     
+    // Update pattern player
+    m_patternPlayer.update(deltaTime);
+    
+    // Copy pattern player lights to current state
+    const auto& patternLights = m_patternPlayer.getLights();
+    auto& lights = m_lightStates[m_editorSelectedStateIndex];
+    for (size_t i = 0; i < lights.size() && i < patternLights.size(); ++i) {
+        lights[i] = patternLights[i];
+    }
+    m_visual.update();
+    
     // Update star cell visibility and color based on LED states
-    const auto& lights = m_lightStates[m_editorSelectedStateIndex];
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
+            // Get the LED state using the correct matrix index
             const auto& light = lights[y * 8 + x];
             // Calculate visibility based on average brightness
             float brightness = (light.r + light.g + light.b) / (3.0f * 255.0f);
+            // Map the coordinates to the starry sky grid
+            // Note: We're using the same coordinates since both are 8x8 grids
             m_starrySky.setCellVisibility(x, y, brightness);
-            // Set color directly from the LED
             m_starrySky.setCellColor(x, y, sf::Color(light.r, light.g, light.b));
         }
     }
@@ -170,10 +182,90 @@ void LightMeUpLevel::RenderEditor() {
                                  8.f,
                                  visualBoxSize);
         }
+        
+        // Add pattern editor UI
+        RenderPatternEditor();
+        
         RenderLightStatesSelectorEditor();
         RenderLightsEditor();
     }
     ImGui::End();
+}
+
+bool LightMeUpLevel::RenderPatternEditor() {
+    bool edited = false;
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
+    if (ImGui::BeginChild("PatternEditor",
+                          ImVec2(ImGui::GetContentRegionAvail().x, 200.f),
+                          ImGuiChildFlags_Borders,
+                          ImGuiWindowFlags_None)) {
+        ImGui::Text("Pattern Control");
+        ImGui::Separator();
+        
+        // Pattern selection
+        static int currentPattern = 0;
+        const char* patterns[] = {
+            "All Off",
+            "Scroll Right",
+            "Scroll Left",
+            "Fill From Right",
+            "Fill From Left",
+            "Criss Cross",
+            "Alternate Blink",
+            "Checker Blink",
+            "Scroll Column Right",
+            "Scroll Column Left",
+            "Scroll Row Bottom",
+            "Scroll Row Top",
+            "Scroll Box In",
+            "Scroll Box Out",
+            "Scroll Diagonal"
+        };
+        
+        if (ImGui::Combo("Pattern", &currentPattern, patterns, IM_ARRAYSIZE(patterns))) {
+            m_patternPlayer.setPattern(currentPattern);
+            edited = true;
+        }
+        
+        // Pattern parameters
+        static int stepPause = 1;
+        static int param = 1;
+        if (ImGui::SliderInt("Step Pause", &stepPause, 1, 10)) {
+            m_patternPlayer.setPattern(currentPattern, stepPause, param);
+            edited = true;
+        }
+        if (ImGui::SliderInt("Parameter", &param, 1, 8)) {
+            m_patternPlayer.setPattern(currentPattern, stepPause, param);
+            edited = true;
+        }
+        
+        // Pattern colors
+        static Light onColor{255, 255, 255};
+        static Light offColor{0, 0, 0};
+        
+        ImGui::PushID("OnColor");
+        if (onColor.RenderEditor()) {
+            onColor.updateRGBFromFloats();
+            m_patternPlayer.setOnColor(onColor);
+            edited = true;
+        }
+        ImGui::PopID();
+        ImGui::SameLine();
+        ImGui::Text("On Color");
+        
+        ImGui::PushID("OffColor");
+        if (offColor.RenderEditor()) {
+            offColor.updateRGBFromFloats();
+            m_patternPlayer.setOffColor(offColor);
+            edited = true;
+        }
+        ImGui::PopID();
+        ImGui::SameLine();
+        ImGui::Text("Off Color");
+    }
+    ImGui::EndChild();
+    ImGui::PopStyleVar();
+    return edited;
 }
 
 bool LightMeUpLevel::RenderLightsEditor() {

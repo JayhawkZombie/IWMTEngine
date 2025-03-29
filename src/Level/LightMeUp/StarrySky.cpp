@@ -10,9 +10,9 @@ StarrySky::StarrySky(size_t starsPerCell)
 
 void StarrySky::generateStars(size_t starsPerCell) {
     // Create random distribution for star properties
-    std::uniform_real_distribution<float> posDist(0.0f, 1.0f);  // Normalized positions
-    std::uniform_real_distribution<float> brightnessDist(0.3f, 1.0f);  // Minimum brightness of 0.3
-    std::uniform_real_distribution<float> sizeDist(1.0f, 2.0f);  // Star sizes between 1-2 pixels
+    std::uniform_real_distribution<float> posDist(0.1f, 0.9f);  // Keep stars away from edges
+    std::uniform_real_distribution<float> brightnessDist(0.4f, 1.0f);  // Increased minimum brightness
+    std::uniform_real_distribution<float> sizeDist(1.5f, 2.5f);  // Increased star sizes
 
     // Generate stars for each cell in the grid
     for (size_t i = 0; i < GRID_SIZE; ++i) {
@@ -23,9 +23,16 @@ void StarrySky::generateStars(size_t starsPerCell) {
             cell.visibility = 1.0f;
             cell.color = sf::Color::White;  // Default to white stars
 
+            // Add a few fixed-position stars to ensure coverage
             for (size_t k = 0; k < starsPerCell; ++k) {
                 Star star;
-                star.position = sf::Vector2f(posDist(m_rng), posDist(m_rng));
+                if (k < 4) {  // First 4 stars are fixed position
+                    float x = 0.25f + (k % 2) * 0.5f;
+                    float y = 0.25f + (k / 2) * 0.5f;
+                    star.position = sf::Vector2f(x, y);
+                } else {
+                    star.position = sf::Vector2f(posDist(m_rng), posDist(m_rng));
+                }
                 star.brightness = brightnessDist(m_rng);
                 star.size = sizeDist(m_rng);
                 cell.stars.push_back(star);
@@ -93,11 +100,18 @@ void StarrySky::draw(sf::RenderTarget& target, const sf::FloatRect& renderArea) 
 }
 
 void StarrySky::update(float deltaTime) {
-    // Add subtle twinkling effect
+    static float time = 0.0f;
+    time += deltaTime;
+    
+    // Use a sine wave for smooth twinkling
+    float baseTwinkle = std::sin(time * 2.0f) * 0.05f;  // Reduced amplitude for smoother effect
+    
     for (auto& row : m_grid) {
         for (auto& cell : row) {
             for (auto& star : cell.stars) {
-                float brightnessChange = randomFloat(-0.1f, 0.1f) * deltaTime;
+                // Add a small random offset to each star's twinkle
+                float starOffset = randomFloat(-0.02f, 0.02f);
+                float brightnessChange = (baseTwinkle + starOffset) * deltaTime;
                 star.brightness = std::clamp(star.brightness + brightnessChange, 0.3f, 1.0f);
             }
         }

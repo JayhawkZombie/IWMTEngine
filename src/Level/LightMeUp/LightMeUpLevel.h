@@ -7,6 +7,7 @@
 #include "Level/Level.h"
 #include "LightVisual.h"
 #include "StarrySky.h"
+#include <random>
 
 class LightMeUpLevel : public Level
 {
@@ -21,6 +22,7 @@ class LightMeUpLevel : public Level
     std::vector<light_vector> m_lightStates;
     LightVisual m_visual;
     StarrySky m_starrySky;
+    std::mt19937 m_rng;  // Random number generator for colors
 
     /*
     virtual ~Level();

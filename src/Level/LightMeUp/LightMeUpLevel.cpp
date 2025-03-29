@@ -7,12 +7,19 @@
 #include <Globals.h>
 #include <imgui.h>
 #include <fmt/base.h>
+#include <random>
 
 LightMeUpLevel::LightMeUpLevel() 
     : m_starrySky(15)  // Initialize with 15 stars per cell
+    , m_rng(std::random_device()())  // Initialize RNG with random seed
 {
+    std::uniform_int_distribution<uint8_t> colorDist(0, 255);
     m_lightStates.emplace_back();
-    m_lightStates.front().resize(64, Light(125, 125, 125));
+    m_lightStates.front().resize(64);
+    for (auto& light : m_lightStates.front()) {
+        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
+        light.updateFloatsFromRGB();  // Update the float values for ImGui
+    }
     const auto pos = GetLEDsPosition();
     m_visual.init(m_lightStates.front().data(),
                   8,
@@ -30,8 +37,11 @@ void LightMeUpLevel::Init() {
     m_lightStates.emplace_back();
     auto &lights = m_lightStates.front();
     lights.resize(m_matrixHeight * m_matrixHeight);
+    
+    std::uniform_int_distribution<uint8_t> colorDist(0, 255);
     for (auto& light: lights) {
-        light.init(125, 125, 125);
+        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
+        light.updateFloatsFromRGB();  // Update the float values for ImGui
     }
     const auto pos = GetLEDsPosition();
     m_visual.init(lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));

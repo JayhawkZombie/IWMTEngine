@@ -1,7 +1,7 @@
 #ifndef LIGHTPLAYER2_H
 #define LIGHTPLAYER2_H
 
-#include "Light.h"
+#include "../../Light.h"
 #include "utility/bitArray.h"
 #include <vector>
 

@@ -151,6 +151,9 @@ void LightMeUpLevel::ResetAndResizeLights(size_t size,
                   dPosY,
                   boxSize);
     m_visual.update();
+    
+    // Reinitialize pattern player with new dimensions
+    m_patternPlayer = std::make_unique<PatternPlayer>(lVec, m_matrixHeight, m_matrixHeight);
 }
 
 

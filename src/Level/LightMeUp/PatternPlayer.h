@@ -39,4 +39,6 @@ private:
     Light m_offColor{0, 0, 0};      // Color for 'off' state
     double m_accumulator{0.0};      // Time accumulator for updates
     float m_speed{1.0f};           // Pattern playback speed multiplier
+    size_t m_rows{8};             // Number of rows in the LED matrix
+    size_t m_cols{8};             // Number of columns in the LED matrix
 }; 

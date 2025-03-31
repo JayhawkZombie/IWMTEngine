@@ -210,26 +210,39 @@ bool LightMeUpLevel::RenderPatternEditor() {
         
         // Pattern selection
         static int currentPattern = 0;
-        const char* patterns[] = {
-            "All Off",
-            "Scroll Right",
-            "Scroll Left",
-            "Fill From Right",
-            "Fill From Left",
-            "Criss Cross",
-            "Alternate Blink",
-            "Checker Blink",
-            "Scroll Column Right",
-            "Scroll Column Left",
-            "Scroll Row Bottom",
-            "Scroll Row Top",
-            "Scroll Box In",
-            "Scroll Box Out",
-            "Scroll Diagonal"
+        struct PatternOption {
+            const char* name;
+            int index;
         };
         
-        if (ImGui::Combo("Pattern", &currentPattern, patterns, IM_ARRAYSIZE(patterns))) {
-            m_patternPlayer->setPattern(currentPattern);
+        static const PatternOption patterns[] = {
+            {"All Off", 0},
+            {"Scroll Right", 1},
+            {"Scroll Left", 2},
+            {"Fill From Right", 3},
+            {"Fill From Left", 4},
+            {"Criss Cross", 5},
+            {"Alternate Blink", 6},
+            {"Checker Blink", 7},
+            {"Scroll Column Right", 10},
+            {"Scroll Column Left", 11},
+            {"Scroll Row Bottom", 12},
+            {"Scroll Row Top", 13},
+            {"Scroll Box In", 14},
+            {"Scroll Box Out", 15},
+            {"Scroll Diagonal", 16}
+        };
+        
+        static int selectedPatternIndex = 0;
+        if (ImGui::Combo("Pattern", &selectedPatternIndex, 
+            [](void* data, int idx, const char** out_text) {
+                const PatternOption* items = (const PatternOption*)data;
+                if (out_text) *out_text = items[idx].name;
+                return true;
+            }, 
+            (void*)patterns, IM_ARRAYSIZE(patterns))) 
+        {
+            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index);
             edited = true;
         }
         
@@ -237,11 +250,11 @@ bool LightMeUpLevel::RenderPatternEditor() {
         static int stepPause = 1;
         static int param = 1;
         if (ImGui::SliderInt("Step Pause", &stepPause, 1, 10)) {
-            m_patternPlayer->setPattern(currentPattern, stepPause, param);
+            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index, stepPause, param);
             edited = true;
         }
         if (ImGui::SliderInt("Parameter", &param, 1, 8)) {
-            m_patternPlayer->setPattern(currentPattern, stepPause, param);
+            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index, stepPause, param);
             edited = true;
         }
 

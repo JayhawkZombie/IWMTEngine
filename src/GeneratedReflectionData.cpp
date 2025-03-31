@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 23/03/2025 17:07:59
+* Generated at: 30/03/2025 19:20:43
 */
 
 
@@ -12,6 +12,8 @@
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
+#include "../src/Level/LightMeUp/StarrySky.h"
+#include "../src/Level/LightMeUp/PatternPlayer.h"
 #include "../src/Level/LightMeUp/LightVisual.h"
 #include "../src/Engine/GameObject.h"
 
@@ -227,6 +229,122 @@ rFactory.ctor<>();
         }
     
 
+        void Reflect_Star() {
+            std::cerr << "	Registering class Star" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<Star>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering Star position position");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Star::position>(\"position\"_hs);");
+            rFactory.data<&Star::position>("position"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Star brightness brightness");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Star::brightness>(\"brightness\"_hs);");
+            rFactory.data<&Star::brightness>("brightness"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Star size size");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Star::size>(\"size\"_hs);");
+            rFactory.data<&Star::size>("size"_hs);
+        
+        }
+    
+
+        void Reflect_Cell() {
+            std::cerr << "	Registering class Cell" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<Cell>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering Cell stars stars");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Cell::stars>(\"stars\"_hs);");
+            rFactory.data<&Cell::stars>("stars"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Cell visibility visibility");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Cell::visibility>(\"visibility\"_hs);");
+            rFactory.data<&Cell::visibility>("visibility"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Cell color color");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Cell::color>(\"color\"_hs);");
+            rFactory.data<&Cell::color>("color"_hs);
+        
+        }
+    
+
+        void Reflect_StarrySky() {
+            std::cerr << "	Registering class StarrySky" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<StarrySky>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering StarrySky m_grid grid");
+            GlobalConsole->Debug("	Code string: rFactory.data<&StarrySky::m_grid>(\"grid\"_hs);");
+            rFactory.data<&StarrySky::m_grid>("grid"_hs);
+        
+	
+            GlobalConsole->Debug("Registering StarrySky m_rng rng");
+            GlobalConsole->Debug("	Code string: rFactory.data<&StarrySky::m_rng>(\"rng\"_hs);");
+            rFactory.data<&StarrySky::m_rng>("rng"_hs);
+        
+	
+            GlobalConsole->Debug("Registering StarrySky m_backgroundColor background_color");
+            GlobalConsole->Debug("	Code string: rFactory.data<&StarrySky::m_backgroundColor>(\"background_color\"_hs);");
+            rFactory.data<&StarrySky::m_backgroundColor>("background_color"_hs);
+        
+        }
+    
+
+        void Reflect_PatternPlayer() {
+            std::cerr << "	Registering class PatternPlayer" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<PatternPlayer>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering PatternPlayer m_patterns patterns");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_patterns>(\"patterns\"_hs);");
+            rFactory.data<&PatternPlayer::m_patterns>("patterns"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_onColor on_color");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_onColor>(\"on_color\"_hs);");
+            rFactory.data<&PatternPlayer::m_onColor>("on_color"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_offColor off_color");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_offColor>(\"off_color\"_hs);");
+            rFactory.data<&PatternPlayer::m_offColor>("off_color"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_accumulator accumulator");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_accumulator>(\"accumulator\"_hs);");
+            rFactory.data<&PatternPlayer::m_accumulator>("accumulator"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_speed speed");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_speed>(\"speed\"_hs);");
+            rFactory.data<&PatternPlayer::m_speed>("speed"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_rows rows");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_rows>(\"rows\"_hs);");
+            rFactory.data<&PatternPlayer::m_rows>("rows"_hs);
+        
+	
+            GlobalConsole->Debug("Registering PatternPlayer m_cols cols");
+            GlobalConsole->Debug("	Code string: rFactory.data<&PatternPlayer::m_cols>(\"cols\"_hs);");
+            rFactory.data<&PatternPlayer::m_cols>("cols"_hs);
+        
+        }
+    
+
         void Reflect_LightVisual() {
             std::cerr << "	Registering class LightVisual" << std::endl;
             using namespace entt::literals;
@@ -277,6 +395,10 @@ rFactory.ctor<>();
 	Reflect_SpriteSheet();
 	Reflect_TarmieLevel();
 	Reflect_LightMeUpLevel();
+	Reflect_Star();
+	Reflect_Cell();
+	Reflect_StarrySky();
+	Reflect_PatternPlayer();
 	Reflect_LightVisual();
 	Reflect_GameObject();
         }

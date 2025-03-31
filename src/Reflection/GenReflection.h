@@ -10,4 +10,10 @@
 #define RENGINE_REFLECT_BASE_CLASS(...)
 #define RENGINE_REFLECT_CLASS_END(...)
 
+#include <cereal/access.hpp>
+
+// NOT empty macro, adds friend class needed for non-public serialization
+#define RENGINE_PRIVATE_SERIALIZATION \
+    friend class cereal::access;
+
 extern void Reflect_RegisterAll();

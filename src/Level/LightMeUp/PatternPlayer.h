@@ -31,7 +31,7 @@ public:
     unsigned int getCurrentStep() const { return m_player->stepIter; }
     unsigned int getPatternLength() const { return m_player->getPattLength(); }
     
-private:
+// private:
     std::vector<Light>& m_lights;  // Reference to external light states
     std::vector<patternData> m_patterns;  // Pattern sequence
     std::unique_ptr<LightPlayer2> m_player;  // Pattern player
@@ -42,3 +42,16 @@ private:
     size_t m_rows{8};             // Number of rows in the LED matrix
     size_t m_cols{8};             // Number of columns in the LED matrix
 }; 
+
+#include <Reflection/GenReflection.h>
+RENGINE_REFLECT_CLASS_BEGIN(PatternPlayer)
+// RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_lights, "lights")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_patterns, "patterns")
+// RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_player, "player")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_onColor, "on_color")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_offColor, "off_color")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_accumulator, "accumulator")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_speed, "speed")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_rows, "rows")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_cols, "cols")
+RENGINE_REFLECT_CLASS_END(PatternPlayer)

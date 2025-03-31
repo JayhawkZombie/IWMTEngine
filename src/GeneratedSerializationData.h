@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 23/03/2025 17:07:59
+* Generated at: 30/03/2025 19:20:43
 */
 
 
@@ -13,6 +13,8 @@
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
+#include "../src/Level/LightMeUp/StarrySky.h"
+#include "../src/Level/LightMeUp/PatternPlayer.h"
 #include "../src/Level/LightMeUp/LightVisual.h"
 #include "../src/Engine/GameObject.h"
 #include <cereal/cereal.hpp>
@@ -92,6 +94,42 @@ template<class Archive>
 void serialize(Archive &ar, LightMeUpLevel &val) {
     ar(cereal::make_nvp("m_visual", val.m_visual));
 ar(cereal::make_nvp("m_matrixHeight", val.m_matrixHeight));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, Star &val) {
+    ar(cereal::make_nvp("position", val.position));
+ar(cereal::make_nvp("brightness", val.brightness));
+ar(cereal::make_nvp("size", val.size));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, Cell &val) {
+    ar(cereal::make_nvp("stars", val.stars));
+ar(cereal::make_nvp("visibility", val.visibility));
+ar(cereal::make_nvp("color", val.color));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, StarrySky &val) {
+    ar(cereal::make_nvp("m_grid", val.m_grid));
+ar(cereal::make_nvp("m_rng", val.m_rng));
+ar(cereal::make_nvp("m_backgroundColor", val.m_backgroundColor));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, PatternPlayer &val) {
+    ar(cereal::make_nvp("m_patterns", val.m_patterns));
+ar(cereal::make_nvp("m_onColor", val.m_onColor));
+ar(cereal::make_nvp("m_offColor", val.m_offColor));
+ar(cereal::make_nvp("m_accumulator", val.m_accumulator));
+ar(cereal::make_nvp("m_speed", val.m_speed));
+ar(cereal::make_nvp("m_rows", val.m_rows));
+ar(cereal::make_nvp("m_cols", val.m_cols));
 }
 
 

@@ -6,22 +6,26 @@
 #include <vector>
 #include <array>
 
+#include <Reflection/GenReflection.h>
+
+struct Star {
+    sf::Vector2f position;  // Position is normalized within its cell (0-1)
+    float brightness;       // 0.0 to 1.0
+    float size;            // radius in pixels
+};
+
+struct Cell {
+    std::vector<Star> stars;
+    float visibility{1.0f};  // Control factor for star visibility in this cell
+    sf::Color color{sf::Color::White};  // Color of stars in this cell
+};
+
 class StarrySky {
 public:
+    RENGINE_PRIVATE_SERIALIZATION;
+
     static constexpr size_t GRID_SIZE = 8;
     static constexpr size_t STARS_PER_CELL = 10;  // Default stars per grid cell
-
-    struct Star {
-        sf::Vector2f position;  // Position is normalized within its cell (0-1)
-        float brightness;       // 0.0 to 1.0
-        float size;            // radius in pixels
-    };
-
-    struct Cell {
-        std::vector<Star> stars;
-        float visibility{1.0f};  // Control factor for star visibility in this cell
-        sf::Color color{sf::Color::White};  // Color of stars in this cell
-    };
 
     StarrySky(size_t starsPerCell = STARS_PER_CELL);
     
@@ -43,7 +47,7 @@ public:
     void setBackgroundColor(const sf::Color& color) { m_backgroundColor = color; }
     const sf::Color& getBackgroundColor() const { return m_backgroundColor; }
 
-private:
+// private:
     using GridArray = std::array<std::array<Cell, GRID_SIZE>, GRID_SIZE>;
     GridArray m_grid;
     std::mt19937 m_rng;  // Mersenne Twister random number generator
@@ -55,5 +59,26 @@ private:
     sf::Vector2f mapToRenderArea(const Star& star, const sf::FloatRect& cellBounds) const;
     sf::FloatRect getCellBounds(size_t x, size_t y, const sf::FloatRect& totalArea) const;
 };
+
+
+
+
+RENGINE_REFLECT_CLASS_BEGIN(Star)
+RENGINE_REFLECT_CLASS_MEMBER(Star, position, "position")
+RENGINE_REFLECT_CLASS_MEMBER(Star, brightness, "brightness")
+RENGINE_REFLECT_CLASS_MEMBER(Star, size, "size")
+RENGINE_REFLECT_CLASS_END(Star)
+
+RENGINE_REFLECT_CLASS_BEGIN(Cell)
+RENGINE_REFLECT_CLASS_MEMBER(Cell, stars, "stars")
+RENGINE_REFLECT_CLASS_MEMBER(Cell, visibility, "visibility")
+RENGINE_REFLECT_CLASS_MEMBER(Cell, color, "color")
+RENGINE_REFLECT_CLASS_END(Cell)
+
+RENGINE_REFLECT_CLASS_BEGIN(StarrySky)
+RENGINE_REFLECT_CLASS_MEMBER(StarrySky, m_grid, "grid")
+RENGINE_REFLECT_CLASS_MEMBER(StarrySky, m_rng, "rng")
+RENGINE_REFLECT_CLASS_MEMBER(StarrySky, m_backgroundColor, "background_color")
+RENGINE_REFLECT_CLASS_END(StarrySky)
 
 #endif // STARRYSKY_H 

@@ -18,15 +18,23 @@ PatternPlayer::PatternPlayer(std::vector<Light>& lights, size_t rows, size_t col
 
 void PatternPlayer::update(double deltaTime) {
     // Accumulate time until we reach the update interval (scaled by speed)
-    m_accumulator += deltaTime * m_speed;
-    if (m_accumulator < 0.016) {  // Base update rate of ~60fps
+    m_accumulator += deltaTime;
+    
+    // Calculate how many updates to perform based on speed
+    double targetTime = 0.016 / m_speed;  // Adjust target time based on speed
+    if (m_accumulator < targetTime) {
         return;
     }
-    // m_accumulator = 0;
-    m_accumulator -= deltaTime * m_speed;
-
-    // Update pattern state
-    m_player->update(m_onColor, m_offColor);
+    
+    // Calculate number of updates to perform
+    int updates = static_cast<int>(m_accumulator / targetTime);
+    m_accumulator -= updates * targetTime;
+    
+    // Perform multiple updates if speed is high
+    for (int i = 0; i < updates; i++) {
+        // Update pattern state
+        m_player->update(m_onColor, m_offColor);
+    }
     
     // Update ImGui colors for all lights
     for (auto& light : m_lights) {

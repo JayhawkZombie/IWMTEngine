@@ -16,9 +16,19 @@ public:
     const std::vector<Light>& getLights() const { return m_lights; }
     
     // Pattern control
-    void setPattern(unsigned int funcIndex, unsigned int stepPause = 1, unsigned int param = 0);
-    void addPattern(unsigned int funcIndex, unsigned int stepPause = 1, unsigned int param = 0);
+    void setPattern(LightPatterns::PatternType type, unsigned int stepPause = 1, unsigned int param = 0);
+    void addPattern(LightPatterns::PatternType type, unsigned int stepPause = 1, unsigned int param = 0);
     void clearPatterns();
+    
+    // Pattern sequence control
+    void nextPattern();
+    void previousPattern();
+    size_t getCurrentPatternIndex() const { return m_currentPatternIndex; }
+    size_t getPatternCount() const { return m_patterns.size(); }
+    void removePattern(size_t index);
+    void movePatternUp(size_t index);
+    void movePatternDown(size_t index);
+    const patternData& getPattern(size_t index) const { return m_patterns[index]; }
     
     // Color control
     void setOnColor(const Light& color) { m_onColor = color; }
@@ -41,6 +51,7 @@ public:
     float m_speed{1.0f};           // Pattern playback speed multiplier
     size_t m_rows{8};             // Number of rows in the LED matrix
     size_t m_cols{8};             // Number of columns in the LED matrix
+    size_t m_currentPatternIndex{0};  // Current pattern in the sequence
 }; 
 
 #include <Reflection/GenReflection.h>
@@ -54,4 +65,5 @@ RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_accumulator, "accumulator")
 RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_speed, "speed")
 RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_rows, "rows")
 RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_cols, "cols")
+RENGINE_REFLECT_CLASS_MEMBER(PatternPlayer, m_currentPatternIndex, "current_pattern_index")
 RENGINE_REFLECT_CLASS_END(PatternPlayer)

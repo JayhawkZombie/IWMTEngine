@@ -14,15 +14,10 @@
 
 class LightMeUpLevel : public Level
 {
-
     void ResetAndResizeLights(size_t size, float posX, float posY, float dPosX, float dPosY, const sf::Vector2f &boxSize);
-  public:
-
+public:
     int m_matrixHeight = 8;
-
-    using light_vector = std::vector<Light>;
-
-    std::vector<light_vector> m_lightStates;
+    std::vector<Light> m_lights;  // Single vector of lights
     LightVisual m_visual;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
@@ -51,10 +46,7 @@ class LightMeUpLevel : public Level
 
     void RenderEditor() override;
     bool RenderLightsEditor();
-    bool RenderLightStatesSelectorEditor();
-    bool RenderPatternEditor();  // New UI for pattern control
-
-    size_t m_editorSelectedStateIndex = 0;
+    bool RenderPatternEditor();  // UI for pattern control
 };
 
 #include <Reflection/GenReflection.h>

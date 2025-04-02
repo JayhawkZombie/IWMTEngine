@@ -3,77 +3,75 @@
 
 #include "../../Light.h"
 #include "utility/bitArray.h"
+#include "../../PatternDefinitions.h"
 #include <vector>
 
 struct patternData
 {
 public:
-    unsigned int funcIndex = 0;
+    LightPatterns::PatternType type = LightPatterns::PatternType::AllOff;
     unsigned int stepPause = 1;
     unsigned int param = 0;
-    void init( unsigned int fIdx, unsigned int StepPause = 1, unsigned int Param = 0 )
-    { funcIndex = fIdx; stepPause = StepPause; param = Param; }
+    void init(LightPatterns::PatternType patternType, unsigned int StepPause = 1, unsigned int Param = 0)
+    { type = patternType; stepPause = StepPause; param = Param; }
 };
 
 class LightPlayer2
 {
-    public:
-        // new iteration scheme
-    unsigned int numPatterns = 1;// size of storage arrays
-    unsigned int patternIter = 0;// 0 to numPatterns. This is index into arrays
-
-    // new
+public:
+    // Pattern iteration
+    unsigned int numPatterns = 1;  // size of storage arrays
+    unsigned int patternIter = 0;  // 0 to numPatterns. This is index into arrays
+    
+    // Pattern data
     const patternData* pattData = nullptr;
-    // newer
-    uint8_t* pStateData = nullptr;// pattern #100: Length = stateDataSz/numLts
+    
+    // Custom bit pattern data
+    uint8_t* pStateData = nullptr;  // pattern #100: Length = stateDataSz/numLts
     unsigned int stateDataSz = 0;
-    // newest
-    bitArray BA;// for bitwise storage of above stateData
-    void setStateData( uint8_t* p_StateData, unsigned int DataSz );
+    bitArray BA;  // for bitwise storage of above stateData
+    
+    // Pattern state
+    unsigned int stepTimer = 0;  // timer for stepIter incrementation
+    unsigned int stepIter = 0;  // 0 to patternLength
 
-    unsigned int stepTimer = 0;// timer for stepIter incrementation
-    unsigned int stepIter = 0;// 0 to patternLength
-
-    // new. Find pattern length
-    unsigned int getPattLength()const;
-
+    // Core functions
     void init(std::vector<Light>& lights, unsigned int Rows, unsigned int Cols, const patternData& rPattData, unsigned int NumPatterns);
+    void update(const Light& onLt, const Light& offLt);
+    bool getState(unsigned int n) const;
+    unsigned int getPattLength() const;
+    void setStateData(uint8_t* p_StateData, unsigned int DataSz);
 
-    void update(const Light& onLt, const Light& offLt);// assign as desired
-    bool getState(unsigned int n)const;
+    // Constructor/Destructor
+    LightPlayer2() = default;
+    ~LightPlayer2() = default;
 
-    // pattern functions indexed to in switch within getState
-    bool scrollToRight(unsigned int n, unsigned int numInGroup)const;// returns state assignment
-    bool scrollToLeft(unsigned int n, unsigned int numInGroup)const;// returns state assignment
-
-    bool fillFromRight(unsigned int n)const;
-    bool fillFromLeft(unsigned int n)const;
-
-    bool crissCross(unsigned int n, unsigned int numInGroup)const;
-    bool alternateBlink(unsigned int n)const;
-    bool checkerBlink(unsigned int n)const;// checker board fill
-
-    // patterns for 2d
-    bool scrollColToRight(unsigned int n, unsigned int numInGroup)const;
-    bool scrollColToLeft(unsigned int n, unsigned int numInGroup)const;
-    bool scrollRowToBottom(unsigned int n, unsigned int numInGroup)const;
-    bool scrollRowToTop(unsigned int n, unsigned int numInGroup)const;
-    bool scrollBoxIn(unsigned int n)const;
-    bool scrollBoxOut(unsigned int n)const;
-
-    bool scrollDiagonal(unsigned int n)const;
-
-    LightPlayer2(){}
-    ~LightPlayer2(){}
-
-    protected:
+protected:
     std::vector<Light>* m_lights = nullptr;  // Reference to the lights vector
     unsigned int rows = 1, cols = 1;
+    unsigned int numLts = 1;  // numLts = rows*cols
 
-    // dependent. For convenience in functions
-    unsigned int numLts = 1;// numLts = rows*cols
+private:
+    // Pattern implementation functions
+    bool handleLinearPattern(LightPatterns::PatternType type, unsigned int n, unsigned int param) const;
+    bool handle2DPattern(LightPatterns::PatternType type, unsigned int n, unsigned int param) const;
+    bool handleSpecialPattern(LightPatterns::PatternType type, unsigned int n, unsigned int param) const;
 
-    private:
+    // Individual pattern implementations
+    bool scrollToRight(unsigned int n, unsigned int numInGroup) const;
+    bool scrollToLeft(unsigned int n, unsigned int numInGroup) const;
+    bool fillFromRight(unsigned int n) const;
+    bool fillFromLeft(unsigned int n) const;
+    bool crissCross(unsigned int n, unsigned int numInGroup) const;
+    bool alternateBlink(unsigned int n) const;
+    bool checkerBlink(unsigned int n) const;
+    bool scrollColToRight(unsigned int n, unsigned int numInGroup) const;
+    bool scrollColToLeft(unsigned int n, unsigned int numInGroup) const;
+    bool scrollRowToBottom(unsigned int n, unsigned int numInGroup) const;
+    bool scrollRowToTop(unsigned int n, unsigned int numInGroup) const;
+    bool scrollBoxIn(unsigned int n) const;
+    bool scrollBoxOut(unsigned int n) const;
+    bool scrollDiagonal(unsigned int n) const;
 };
 
 #endif // LIGHTPLAYER2_H

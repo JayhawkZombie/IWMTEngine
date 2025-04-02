@@ -14,14 +14,13 @@ LightMeUpLevel::LightMeUpLevel()
     , m_rng(std::random_device()())  // Initialize RNG with random seed
 {
     std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    m_lightStates.emplace_back();
-    m_lightStates.front().resize(64);
-    for (auto& light : m_lightStates.front()) {
+    m_lights.resize(64);
+    for (auto& light : m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
         light.updateFloatsFromRGB();  // Update the float values for ImGui
     }
     const auto pos = GetLEDsPosition();
-    m_visual.init(m_lightStates.front().data(),
+    m_visual.init(m_lights.data(),
                   8,
                   8,
                   pos.x,
@@ -31,27 +30,25 @@ LightMeUpLevel::LightMeUpLevel()
                   sf::Vector2f(32, 32));
     
     // Initialize pattern player with our LED vector
-    m_patternPlayer = std::make_unique<PatternPlayer>(m_lightStates.front(), 8, 8);
+    m_patternPlayer = std::make_unique<PatternPlayer>(m_lights, 8, 8);
 }
 
 void LightMeUpLevel::Init() {
     Level::Init();
     fmt::println("LightMeUpLevel::Init");
-    m_lightStates.emplace_back();
-    auto &lights = m_lightStates.front();
-    lights.resize(m_matrixHeight * m_matrixHeight);
+    m_lights.resize(m_matrixHeight * m_matrixHeight);
     
     std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    for (auto& light: lights) {
+    for (auto& light: m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
         light.updateFloatsFromRGB();  // Update the float values for ImGui
     }
     const auto pos = GetLEDsPosition();
-    m_visual.init(lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
+    m_visual.init(m_lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
     m_visual.update();
     
     // Reinitialize pattern player with our LED vector
-    m_patternPlayer = std::make_unique<PatternPlayer>(lights, 8, 8);
+    m_patternPlayer = std::make_unique<PatternPlayer>(m_lights, 8, 8);
 }
 
 void LightMeUpLevel::Destroy() {
@@ -63,14 +60,11 @@ void LightMeUpLevel::Tick(double deltaTime) {
     // Update pattern player
     m_patternPlayer->update(deltaTime);
     
-    // Get the current LED states directly from the pattern player's reference
-    auto& lights = m_lightStates[m_editorSelectedStateIndex];
-    
     // Update star cell visibility and color based on LED states
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
             // Get the LED state using the correct matrix index
-            const auto& light = lights[y * 8 + x];
+            const auto& light = m_lights[y * 8 + x];
             // Calculate visibility based on average brightness
             float brightness = (light.r + light.g + light.b) / (3.0f * 255.0f);
             // Map the coordinates to the starry sky grid
@@ -137,12 +131,8 @@ void LightMeUpLevel::ResetAndResizeLights(size_t size,
                                           float dPosX,
                                           float dPosY,
                                           const sf::Vector2f &boxSize) {
-    for (auto &lightVec: m_lightStates) {
-        lightVec.resize(size, Light(125, 125, 125));
-    }
-
-    auto &lVec = m_lightStates[m_editorSelectedStateIndex];
-    m_visual.init(lVec.data(),
+    m_lights.resize(size, Light(125, 125, 125));
+    m_visual.init(m_lights.data(),
                   m_matrixHeight,
                   m_matrixHeight,
                   posX,
@@ -153,9 +143,8 @@ void LightMeUpLevel::ResetAndResizeLights(size_t size,
     m_visual.update();
     
     // Reinitialize pattern player with new dimensions
-    m_patternPlayer = std::make_unique<PatternPlayer>(lVec, m_matrixHeight, m_matrixHeight);
+    m_patternPlayer = std::make_unique<PatternPlayer>(m_lights, m_matrixHeight, m_matrixHeight);
 }
-
 
 void LightMeUpLevel::RenderEditor() {
     static sf::Vector2f visualBoxSize = sf::Vector2f(32, 32);
@@ -192,7 +181,6 @@ void LightMeUpLevel::RenderEditor() {
         // Add pattern editor UI
         RenderPatternEditor();
         
-        RenderLightStatesSelectorEditor();
         RenderLightsEditor();
     }
     ImGui::End();
@@ -202,71 +190,119 @@ bool LightMeUpLevel::RenderPatternEditor() {
     bool edited = false;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
     if (ImGui::BeginChild("PatternEditor",
-                          ImVec2(ImGui::GetContentRegionAvail().x, 200.f),
+                          ImVec2(ImGui::GetContentRegionAvail().x, 300.f),
                           ImGuiChildFlags_Borders,
                           ImGuiWindowFlags_None)) {
         ImGui::Text("Pattern Control");
         ImGui::Separator();
         
         // Pattern selection
-        static int currentPattern = 0;
-        struct PatternOption {
-            const char* name;
-            int index;
-        };
-        
-        static const PatternOption patterns[] = {
-            {"All Off", 0},
-            {"Scroll Right", 1},
-            {"Scroll Left", 2},
-            {"Fill From Right", 3},
-            {"Fill From Left", 4},
-            {"Criss Cross", 5},
-            {"Alternate Blink", 6},
-            {"Checker Blink", 7},
-            {"Scroll Column Right", 10},
-            {"Scroll Column Left", 11},
-            {"Scroll Row Bottom", 12},
-            {"Scroll Row Top", 13},
-            {"Scroll Box In", 14},
-            {"Scroll Box Out", 15},
-            {"Scroll Diagonal", 16}
-        };
-        
         static int selectedPatternIndex = 0;
-        if (ImGui::Combo("Pattern", &selectedPatternIndex, 
-            [](void* data, int idx, const char** out_text) {
-                const PatternOption* items = (const PatternOption*)data;
-                if (out_text) *out_text = items[idx].name;
-                return true;
-            }, 
-            (void*)patterns, IM_ARRAYSIZE(patterns))) 
-        {
-            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index);
-            edited = true;
+        
+        // Create category combo box
+        static int selectedCategory = 0;
+        const char* categories[] = {
+            "Basic",
+            "Linear",
+            "Grid",
+            "Special"
+        };
+        
+        if (ImGui::Combo("Category", &selectedCategory, categories, IM_ARRAYSIZE(categories))) {
+            // When category changes, select first pattern in that category
+            auto categoryPatterns = LightPatterns::GetPatternsByCategory(
+                static_cast<LightPatterns::PatternCategory>(selectedCategory));
+            if (!categoryPatterns.empty()) {
+                selectedPatternIndex = 0;
+                edited = true;
+            }
         }
         
-        // Pattern parameters
-        static int stepPause = 1;
-        static int param = 1;
-        if (ImGui::SliderInt("Step Pause", &stepPause, 1, 10)) {
-            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index, stepPause, param);
-            edited = true;
+        // Get patterns for current category
+        auto categoryPatterns = LightPatterns::GetPatternsByCategory(
+            static_cast<LightPatterns::PatternCategory>(selectedCategory));
+        
+        // Pattern selection combo
+        if (!categoryPatterns.empty()) {
+            std::vector<const char*> patternNames;
+            for (const auto& pattern : categoryPatterns) {
+                patternNames.push_back(pattern.name.c_str());
+            }
+            
+            if (ImGui::Combo("Pattern", &selectedPatternIndex, patternNames.data(), patternNames.size())) {
+                edited = true;
+            }
+            
+            // Pattern parameters
+            static int stepPause = 1;
+            static int parameter = 0;
+            
+            ImGui::SliderInt("Step Pause", &stepPause, 1, 20);
+            ImGui::SliderInt("Parameter", &parameter, 0, 20);
+            
+            // Add pattern button
+            if (ImGui::Button("Add Pattern")) {
+                m_patternPlayer->addPattern(categoryPatterns[selectedPatternIndex].type, stepPause, parameter);
+                edited = true;
+            }
         }
-        if (ImGui::SliderInt("Parameter", &param, 1, 8)) {
-            m_patternPlayer->setPattern(patterns[selectedPatternIndex].index, stepPause, param);
-            edited = true;
+        
+        ImGui::Separator();
+        ImGui::Text("Pattern Sequence");
+        
+        // Pattern sequence list
+        for (size_t i = 0; i < m_patternPlayer->getPatternCount(); i++) {
+            ImGui::PushID(static_cast<int>(i));
+            
+            const auto& pattern = m_patternPlayer->getPattern(i);
+            const auto& config = LightPatterns::GetPatternConfig(pattern.type);
+            
+            ImGui::BeginGroup();
+            if (i == m_patternPlayer->getCurrentPatternIndex()) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+            }
+            
+            ImGui::Text("%zu: %s", i + 1, config.name.c_str());
+            
+            if (i == m_patternPlayer->getCurrentPatternIndex()) {
+                ImGui::PopStyleColor();
+            }
+            
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Up") && i > 0) {
+                m_patternPlayer->movePatternUp(i);
+                edited = true;
+            }
+            
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Down") && i < m_patternPlayer->getPatternCount() - 1) {
+                m_patternPlayer->movePatternDown(i);
+                edited = true;
+            }
+            
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Remove")) {
+                m_patternPlayer->removePattern(i);
+                edited = true;
+            }
+            
+            ImGui::EndGroup();
+            ImGui::PopID();
         }
-
-        // Pattern speed control
+        
+        ImGui::Separator();
+        
+        // Pattern playback controls
         static float patternSpeed = 1.0f;
         if (ImGui::SliderFloat("Pattern Speed", &patternSpeed, 0.1f, 5.0f, "%.1fx")) {
             m_patternPlayer->setSpeed(patternSpeed);
             edited = true;
         }
-
+        
         // Display current step and pattern length
-        ImGui::Separator();
         ImGui::Text("Pattern Progress: %u / %u", 
                    m_patternPlayer->getCurrentStep(),
                    m_patternPlayer->getPatternLength());
@@ -303,80 +339,17 @@ bool LightMeUpLevel::RenderPatternEditor() {
 bool LightMeUpLevel::RenderLightsEditor() {
     bool edited = false;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("ChildLightsEditor",
-                          // ImVec2(0, 0),
-                          ImVec2(ImGui::GetContentRegionAvail().x,
-                                 ImGui::GetContentRegionAvail().y),
-                          ImGuiChildFlags_Borders |
-                          ImGuiChildFlags_AlwaysAutoResize |
-                          ImGuiChildFlags_AutoResizeY |
-                          ImGuiChildFlags_AutoResizeX,
-                          ImGuiWindowFlags_None
-                         )) {
-        ImGui::Text("Light colors: ");
-        ImGui::Separator();
-        edited = true;
-        if (m_editorSelectedStateIndex >= m_lightStates.size()) {
-            // How the fuck
-            GlobalConsole->
-                    Error("Selected light state index out of bounds %lu/%lu",
-                          m_editorSelectedStateIndex,
-                          m_lightStates.size());
-        } else {
-            ImGui::BeginTable("Light colors",
-                              8,
-                              ImGuiTableFlags_Borders);
-            if (m_editorSelectedStateIndex >= m_lightStates.size()) {
-                ImGui::Text("Invalid light state index");
-                ImGui::SameLine();
-                if (ImGui::Button("Reset")) {
-                    m_editorSelectedStateIndex = 0;
-                }
-            } else {
-                light_vector &lights = m_lightStates[
-                    m_editorSelectedStateIndex];
-
-                for (auto &light: lights) {
-                    ImGui::TableNextColumn();
-                    if (light.RenderEditor()) {
-                        light.updateRGBFromFloats();
-                        m_visual.update();
-                    }
-                }
-            }
-            ImGui::EndTable();
-        }
-    }
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-    return edited;
-}
-
-bool LightMeUpLevel::RenderLightStatesSelectorEditor() {
-    bool edited = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("LightStatesEditor",
+    if (ImGui::BeginChild("LightsEditor",
                           ImVec2(ImGui::GetContentRegionAvail().x,
                                  100.f),
                           ImGuiChildFlags_Borders,
                           ImGuiWindowFlags_None
                          )) {
-        ImGui::Text("Light states");
+        ImGui::Text("Individual Light Control");
         ImGui::Separator();
-        edited = true;
-        for (size_t i = 0; i < m_lightStates.size(); ++i) {
-            ImGui::PushID(i);
-            ImGui::PushStyleColor(ImGuiCol_Button,
-                                  static_cast<ImVec4>(ImColor::HSV(i / 7.0f,
-                                      0.6f,
-                                      0.6f)));
-            if (ImGui::Button("##button", ImVec2(50.f, 50.f))) {
-                m_editorSelectedStateIndex = i;
-            }
-            ImGui::PopStyleColor();
-            ImGui::PopID();
-            ImGui::SameLine();
-        }
+        
+        // Add individual light controls if needed
+        
     }
     ImGui::EndChild();
     ImGui::PopStyleVar();

@@ -15,6 +15,13 @@
 class LightMeUpLevel : public Level
 {
     void ResetAndResizeLights(size_t size, float posX, float posY, float dPosX, float dPosY, const sf::Vector2f &boxSize);
+
+    // Predefined bit patterns
+    static const std::vector<std::pair<const char*, std::vector<uint8_t>>> PREDEFINED_BIT_PATTERNS;
+    
+    // Global step pause for all patterns
+    int m_globalStepPause = 1;
+    
 public:
     int m_matrixHeight = 8;
     std::vector<Light> m_lights;  // Single vector of lights

@@ -2,15 +2,18 @@
 
 void LightPlayer2::init(std::vector<Light>& lights, unsigned int Rows, unsigned int Cols, const patternData& rPattData, unsigned int NumPatterns)
 {
+    // Reset all state variables
+    stepTimer = 0;
+    stepIter = 0;
+    patternIter = 0;
+    pStateData = nullptr;
+    stateDataSz = 0;
+    
+    // Set new values
     m_lights = &lights;
     rows = Rows;
     cols = Cols;
     numLts = rows*cols;
-
-    stepTimer = 0;
-    stepIter = 0;
-    patternIter = 0;
-
     pattData = &rPattData;
     numPatterns = NumPatterns;
 }
@@ -54,7 +57,7 @@ unsigned int LightPlayer2::getPattLength() const
         case LightPatterns::PatternCategory::Linear:
             if (config.type == LightPatterns::PatternType::AlternateBlink ||
                 config.type == LightPatterns::PatternType::CheckerBlink)
-                return pattData[patternIter].param;
+                return 2;
             return numLts;
             
         case LightPatterns::PatternCategory::Grid:

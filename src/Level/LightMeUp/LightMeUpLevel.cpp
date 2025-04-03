@@ -9,6 +9,40 @@
 #include <fmt/base.h>
 #include <random>
 
+// Define predefined bit patterns
+const std::vector<std::pair<const char*, std::vector<uint8_t>>> LightMeUpLevel::PREDEFINED_BIT_PATTERNS = {
+    {"Box Pattern", {
+        0b00111100,  // Row 1
+        0b00100100,  // Row 2
+        0b00100100,  // Row 3
+        0b00100100,  // Row 4
+        0b00100100,  // Row 5
+        0b00100100,  // Row 6
+        0b00100100,  // Row 7
+        0b00111100   // Row 8
+    }},
+    {"Centered Box", {
+        0b00000000,  // Row 1
+        0b00000000,  // Row 2
+        0b00111100,  // Row 3
+        0b00111100,  // Row 4
+        0b00111100,  // Row 5
+        0b00111100,  // Row 6
+        0b00000000,  // Row 7
+        0b00000000   // Row 8
+    }},
+    {"Wide Rectangle", {
+        0b00000000,  // Row 1
+        0b00000000,  // Row 2
+        0b11111111,  // Row 3
+        0b10000001,  // Row 4
+        0b10000001,  // Row 5
+        0b11111111,  // Row 6
+        0b00000000,  // Row 7
+        0b00000000   // Row 8
+    }}
+};
+
 LightMeUpLevel::LightMeUpLevel() 
     : m_starrySky(15)  // Initialize with 15 stars per cell
     , m_rng(std::random_device()())  // Initialize RNG with random seed
@@ -234,16 +268,56 @@ bool LightMeUpLevel::RenderPatternEditor() {
             }
             
             // Pattern parameters
-            static int stepPause = 1;
             static int parameter = 0;
             
-            ImGui::SliderInt("Step Pause", &stepPause, 1, 20);
+            if (ImGui::SliderInt("Step Pause", &m_globalStepPause, 1, 20)) {
+                m_patternPlayer->setGlobalStepPause(m_globalStepPause);
+                edited = true;
+            }
             ImGui::SliderInt("Parameter", &parameter, 0, 20);
             
             // Add pattern button
             if (ImGui::Button("Add Pattern")) {
-                m_patternPlayer->addPattern(categoryPatterns[selectedPatternIndex].type, stepPause, parameter);
-                edited = true;
+                // Check if this is a custom bit pattern
+                if (categoryPatterns[selectedPatternIndex].type == LightPatterns::PatternType::CustomBitPattern) {
+                    // Show bit pattern selector
+                    ImGui::OpenPopup("Select Bit Pattern");
+                } else {
+                    // Use the default parameter from the pattern config
+                    const auto& config = categoryPatterns[selectedPatternIndex];
+                    m_patternPlayer->addPattern(config.type, m_globalStepPause, config.defaultParam);
+                    edited = true;
+                }
+            }
+            
+            // Bit pattern selector popup
+            if (ImGui::BeginPopup("Select Bit Pattern")) {
+                ImGui::Text("Select a predefined bit pattern:");
+                ImGui::Separator();
+                
+                for (const auto& [name, pattern] : PREDEFINED_BIT_PATTERNS) {
+                    if (ImGui::Button(name)) {
+                        m_patternPlayer->addCustomBitPattern(pattern, m_globalStepPause);
+                        edited = true;
+                        ImGui::CloseCurrentPopup();
+                    }
+                    
+                    // Preview the pattern
+                    ImGui::SameLine();
+                    ImGui::BeginGroup();
+                    for (size_t row = 0; row < 8; row++) {
+                        for (size_t col = 0; col < 8; col++) {
+                            if (col > 0) ImGui::SameLine();
+                            bool isSet = (pattern[row] & (1 << (7 - col))) != 0;
+                            char buttonId[32];
+                            snprintf(buttonId, sizeof(buttonId), "##bit_%s_%zu_%zu", name, row, col);
+                            ImGui::ColorButton(buttonId, isSet ? ImVec4(1,1,1,1) : ImVec4(0,0,0,1), 0, ImVec2(10,10));
+                        }
+                    }
+                    ImGui::EndGroup();
+                }
+                
+                ImGui::EndPopup();
             }
         }
         

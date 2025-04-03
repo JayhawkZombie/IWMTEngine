@@ -4,6 +4,7 @@
 #include "ArduinoSim/src/LightPlayer2.h"
 #include <vector>
 #include <memory>
+#include <map>
 
 class PatternPlayer {
 public:
@@ -19,6 +20,10 @@ public:
     void setPattern(LightPatterns::PatternType type, unsigned int stepPause = 1, unsigned int param = 0);
     void addPattern(LightPatterns::PatternType type, unsigned int stepPause = 1, unsigned int param = 0);
     void clearPatterns();
+    
+    // Bit pattern control
+    void setCustomBitPattern(const std::vector<uint8_t>& stateData, unsigned int stepPause = 20);
+    void addCustomBitPattern(const std::vector<uint8_t>& stateData, unsigned int stepPause = 20);
     
     // Pattern sequence control
     void nextPattern();
@@ -41,6 +46,17 @@ public:
     unsigned int getCurrentStep() const { return m_player->stepIter; }
     unsigned int getPatternLength() const { return m_player->getPattLength(); }
     
+    // Global step pause control
+    void setGlobalStepPause(unsigned int stepPause) {
+        for (auto& pattern : m_patterns) {
+            pattern.stepPause = stepPause;
+        }
+        // Re-initialize player with updated step pause
+        if (!m_patterns.empty()) {
+            m_player->init(m_lights, m_rows, m_cols, m_patterns[m_currentPatternIndex], m_patterns.size());
+        }
+    }
+    
 // private:
     std::vector<Light>& m_lights;  // Reference to external light states
     std::vector<patternData> m_patterns;  // Pattern sequence
@@ -52,6 +68,7 @@ public:
     size_t m_rows{8};             // Number of rows in the LED matrix
     size_t m_cols{8};             // Number of columns in the LED matrix
     size_t m_currentPatternIndex{0};  // Current pattern in the sequence
+    std::map<size_t, std::vector<uint8_t>> m_patternStateData;  // State data for each bit pattern
 }; 
 
 #include <Reflection/GenReflection.h>

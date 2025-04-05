@@ -14,14 +14,13 @@ LightMeUpLevel::LightMeUpLevel()
     , m_rng(std::random_device()())  // Initialize RNG with random seed
 {
     std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    m_lightStates.emplace_back();
-    m_lightStates.front().resize(64);
-    for (auto& light : m_lightStates.front()) {
+    m_lights.resize(64);
+    for (auto& light : m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
         light.updateFloatsFromRGB();  // Update the float values for ImGui
     }
     const auto pos = GetLEDsPosition();
-    m_visual.init(m_lightStates.front().data(),
+    m_visual.init(m_lights.data(),
                   8,
                   8,
                   pos.x,
@@ -34,17 +33,16 @@ LightMeUpLevel::LightMeUpLevel()
 void LightMeUpLevel::Init() {
     Level::Init();
     fmt::println("LightMeUpLevel::Init");
-    m_lightStates.emplace_back();
-    auto &lights = m_lightStates.front();
-    lights.resize(m_matrixHeight * m_matrixHeight);
+
+    m_lights.resize(m_matrixHeight * m_matrixHeight);
     
     std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    for (auto& light: lights) {
+    for (auto& light: m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
         light.updateFloatsFromRGB();  // Update the float values for ImGui
     }
     const auto pos = GetLEDsPosition();
-    m_visual.init(lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
+    m_visual.init(m_lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
     m_visual.update();
 }
 
@@ -55,10 +53,9 @@ void LightMeUpLevel::Tick(double deltaTime) {
     m_starrySky.update(static_cast<float>(deltaTime));
     
     // Update star cell visibility and color based on LED states
-    const auto& lights = m_lightStates[m_editorSelectedStateIndex];
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
-            const auto& light = lights[y * 8 + x];
+            const auto& light = m_lights[y * 8 + x];
             // Calculate visibility based on average brightness
             float brightness = (light.r + light.g + light.b) / (3.0f * 255.0f);
             m_starrySky.setCellVisibility(x, y, brightness);
@@ -122,12 +119,10 @@ void LightMeUpLevel::ResetAndResizeLights(size_t size,
                                           float dPosX,
                                           float dPosY,
                                           const sf::Vector2f &boxSize) {
-    for (auto &lightVec: m_lightStates) {
-        lightVec.resize(size, Light(125, 125, 125));
-    }
+    m_lights.resize(size, Light(125, 125, 125));
 
-    auto &lVec = m_lightStates[m_editorSelectedStateIndex];
-    m_visual.init(lVec.data(),
+    // auto &lVec = m_lightStates[m_editorSelectedStateIndex];
+    m_visual.init(m_lights.data(),
                   m_matrixHeight,
                   m_matrixHeight,
                   posX,
@@ -170,7 +165,6 @@ void LightMeUpLevel::RenderEditor() {
                                  8.f,
                                  visualBoxSize);
         }
-        RenderLightStatesSelectorEditor();
         RenderLightsEditor();
     }
     ImGui::End();
@@ -192,67 +186,6 @@ bool LightMeUpLevel::RenderLightsEditor() {
         ImGui::Text("Light colors: ");
         ImGui::Separator();
         edited = true;
-        if (m_editorSelectedStateIndex >= m_lightStates.size()) {
-            // How the fuck
-            GlobalConsole->
-                    Error("Selected light state index out of bounds %lu/%lu",
-                          m_editorSelectedStateIndex,
-                          m_lightStates.size());
-        } else {
-            ImGui::BeginTable("Light colors",
-                              8,
-                              ImGuiTableFlags_Borders);
-            if (m_editorSelectedStateIndex >= m_lightStates.size()) {
-                ImGui::Text("Invalid light state index");
-                ImGui::SameLine();
-                if (ImGui::Button("Reset")) {
-                    m_editorSelectedStateIndex = 0;
-                }
-            } else {
-                light_vector &lights = m_lightStates[
-                    m_editorSelectedStateIndex];
-
-                for (auto &light: lights) {
-                    ImGui::TableNextColumn();
-                    if (light.RenderEditor()) {
-                        light.updateRGBFromFloats();
-                        m_visual.update();
-                    }
-                }
-            }
-            ImGui::EndTable();
-        }
-    }
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-    return edited;
-}
-
-bool LightMeUpLevel::RenderLightStatesSelectorEditor() {
-    bool edited = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("LightStatesEditor",
-                          ImVec2(ImGui::GetContentRegionAvail().x,
-                                 100.f),
-                          ImGuiChildFlags_Borders,
-                          ImGuiWindowFlags_None
-                         )) {
-        ImGui::Text("Light states");
-        ImGui::Separator();
-        edited = true;
-        for (size_t i = 0; i < m_lightStates.size(); ++i) {
-            ImGui::PushID(i);
-            ImGui::PushStyleColor(ImGuiCol_Button,
-                                  static_cast<ImVec4>(ImColor::HSV(i / 7.0f,
-                                      0.6f,
-                                      0.6f)));
-            if (ImGui::Button("##button", ImVec2(50.f, 50.f))) {
-                m_editorSelectedStateIndex = i;
-            }
-            ImGui::PopStyleColor();
-            ImGui::PopID();
-            ImGui::SameLine();
-        }
     }
     ImGui::EndChild();
     ImGui::PopStyleVar();

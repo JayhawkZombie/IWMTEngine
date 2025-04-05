@@ -26,8 +26,6 @@ public:
     bool isOver( float x, float y )const;
 
     void RenderEditor();
-    // void RenderLightsEditor();
-    // void RenderEditorForSingleLight(const Light *lt);
 
     void update();
     void draw( sf::RenderTarget& RT ) const;

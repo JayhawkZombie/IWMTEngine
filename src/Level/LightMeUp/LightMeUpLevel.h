@@ -19,23 +19,11 @@ class LightMeUpLevel : public Level
 
     using light_vector = std::vector<Light>;
 
-    std::vector<light_vector> m_lightStates;
+    light_vector m_lights;
     LightVisual m_visual;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
 
-    /*
-    virtual ~Level();
-
-    virtual void Init();
-    virtual void Destroy();
-    virtual void Render(sf::RenderTarget &target);
-    virtual void Tick(double delta);
-
-    void RenderLevelEditor();
-    virtual void RenderEditor();
-    bool IsInitialized();
-     */
     LightMeUpLevel();
     ~LightMeUpLevel() override = default;
     void Init() override;
@@ -47,9 +35,6 @@ class LightMeUpLevel : public Level
 
     void RenderEditor() override;
     bool RenderLightsEditor();
-    bool RenderLightStatesSelectorEditor();
-
-    size_t m_editorSelectedStateIndex = 0;
 };
 
 #include <Reflection/GenReflection.h>

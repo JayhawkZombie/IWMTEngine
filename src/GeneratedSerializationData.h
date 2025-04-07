@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 03/04/2025 16:45:02
+* Generated at: 05/04/2025 15:19:58
 */
 
 
@@ -13,11 +13,12 @@
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
-#include "../src/Level/LightMeUp/LightVisual.h"
 #include "../src/Engine/GameObject.h"
+#include "../src/Editor/Editor.h"
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
+#include <Serialization/SerializeTypes.h>
 namespace cereal {
 
 template<class Archive>
@@ -90,14 +91,11 @@ void serialize(Archive &ar, TarmieLevel &val) {
 
 template<class Archive>
 void serialize(Archive &ar, LightMeUpLevel &val) {
-    ar(cereal::make_nvp("m_visual", val.m_visual));
+    ar(cereal::make_nvp("m_matrixWidth", val.m_matrixWidth));
 ar(cereal::make_nvp("m_matrixHeight", val.m_matrixHeight));
-}
-
-
-template<class Archive>
-void serialize(Archive &ar, LightVisual &val) {
-    ar(cereal::make_nvp("numLts", val.numLts));
+ar(cereal::make_nvp("m_boxSize", val.m_boxSize));
+ar(cereal::make_nvp("m_boxSpacing", val.m_boxSpacing));
+ar(cereal::make_nvp("m_boxPosition", val.m_boxPosition));
 }
 
 
@@ -106,6 +104,12 @@ void serialize(Archive &ar, GameObject &val) {
     ar(cereal::make_nvp("position", val.position));
 ar(cereal::make_nvp("size", val.size));
 ar(cereal::make_nvp("awake", val.awake));
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, Editor &val) {
+    
 }
 
 }//namespace cereal

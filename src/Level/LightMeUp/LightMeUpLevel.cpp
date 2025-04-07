@@ -8,50 +8,73 @@
 #include <imgui.h>
 #include <fmt/base.h>
 #include <random>
+#include <Logging/LogFormatting.h>
 
 LightMeUpLevel::LightMeUpLevel() 
-    : m_starrySky(15)  // Initialize with 15 stars per cell
+    : m_starrySky(5)  // Initialize with 15 stars per cell
     , m_rng(std::random_device()())  // Initialize RNG with random seed
 {
-    std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    m_lights.resize(64);
-    for (auto& light : m_lights) {
-        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
-        light.updateFloatsFromRGB();  // Update the float values for ImGui
-    }
-    const auto pos = GetLEDsPosition();
-    m_visual.init(m_lights.data(),
-                  8,
-                  8,
-                  pos.x,
-                  pos.y,
-                  8.f,
-                  8.f,
-                  sf::Vector2f(32, 32));
+    InitPatterns();
+    ResetAndResizeLights();
 }
 
 void LightMeUpLevel::Init() {
     Level::Init();
     fmt::println("LightMeUpLevel::Init");
 
-    m_lights.resize(m_matrixHeight * m_matrixHeight);
-    
-    std::uniform_int_distribution<uint8_t> colorDist(0, 255);
-    for (auto& light: m_lights) {
-        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
-        light.updateFloatsFromRGB();  // Update the float values for ImGui
+    InitPatterns();
+    ResetAndResizeLights();
+}
+
+void LightMeUpLevel::InitPatterns() {
+    std::ifstream file("testdata.txt");
+    if (!file) {
+        GlobalConsole->Error("No init file testdata.txt for patterns");
+        return;
     }
-    const auto pos = GetLEDsPosition();
-    m_visual.init(m_lights.data(), 8, 8, pos.x, pos.y, 8, 8, sf::Vector2f(32, 32));
+
+    unsigned int rows, cols;
+    file >> rows >> cols;
+
+    float posX, posY, dPosX, dPosY;
+    file >> posX >> posY >> dPosX >> dPosY;
+    sf::Vector2f lightSize;
+    file >> lightSize.x >> lightSize.y;
+
+    m_matrixWidth = static_cast<int>(cols);
+    m_matrixHeight = static_cast<int>(rows);
+    m_boxSize = lightSize;
+    m_boxPosition = sf::Vector2f(posX, posY);
+    m_boxSpacing = sf::Vector2f(dPosX, dPosY);
+
+    unsigned int numPatterns;
+    file >> numPatterns;
+    m_patternData.reserve(numPatterns);
+
+    patternData pd;
+    for (int i = 0; i < numPatterns; ++i) {
+        file >> pd.funcIndex >> pd.stepPause >> pd.param;
+        m_patternData.push_back(pd);
+    }
+    ResetAndResizeLights();
+
+    m_lightPlayer2.init(m_lights[0], m_matrixHeight, m_matrixWidth, m_patternData[0], numPatterns);
+    m_lightPlayer2.onLt = Light(0, 255, 255);
+    m_lightPlayer2.offLt = Light(255,0,255);
+
+    m_lightPlayer2.update();
     m_visual.update();
 }
+
 
 void LightMeUpLevel::Destroy() {
 }
 
 void LightMeUpLevel::Tick(double deltaTime) {
+    m_lightPlayer2.update();
+    m_visual.update();
     m_starrySky.update(static_cast<float>(deltaTime));
-    
+
     // Update star cell visibility and color based on LED states
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
@@ -69,10 +92,11 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
     // Get the bounds of the light grid
     sf::FloatRect lightBounds = m_visual.getRect();
     // Add some padding around the lights for the starry background
-    lightBounds.left -= 50.f;
-    lightBounds.top -= 500.f;
-    lightBounds.width += 100.f;
-    lightBounds.height += 100.f;
+
+    lightBounds.left += 400.f;
+    lightBounds.top = 400.f;
+    lightBounds.width = 300.f;
+    lightBounds.height = 300.f;
     
     // Draw starry sky with background in the light grid area
     m_starrySky.draw(target, lightBounds);
@@ -81,113 +105,34 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
 }
 
 sf::Vector2f LightMeUpLevel::GetLEDsPosition() const {
-    return sf::Vector2f(200.f, 600.f);
+    return m_boxPosition;
 }
 
-bool EditorVector2f(sf::Vector2f &vec,
-                    const char *label,
-                    float minx,
-                    float miny,
-                    float maxx,
-                    float maxy) {
-    bool edited = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-    ImGui::BeginChild("ChildR",
-                      ImVec2(0, 80),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY,
-                      ImGuiWindowFlags_None);
-    ImGui::Indent(5.f);
-    if (ImGui::DragFloat("x", &vec.x, 2.f, minx, maxx)) {
-        fmt::println("Edited vector x = {}", vec.x);
-        edited = true;
-    }
-
-    if (ImGui::DragFloat("y", &vec.y, 2.f, miny, maxy)) {
-        fmt::println("Edited vector y = {}", vec.y);
-        edited = true;
-    }
-
-    ImGui::Unindent();
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-    return edited;
+void LightMeUpLevel::SetLEDsPosition(const sf::Vector2f &pos) {
+    m_boxPosition = pos;
+    ResetAndResizeLights();
 }
 
-void LightMeUpLevel::ResetAndResizeLights(size_t size,
-                                          float posX,
-                                          float posY,
-                                          float dPosX,
-                                          float dPosY,
-                                          const sf::Vector2f &boxSize) {
-    m_lights.resize(size, Light(125, 125, 125));
-
-    // auto &lVec = m_lightStates[m_editorSelectedStateIndex];
-    m_visual.init(m_lights.data(),
+void LightMeUpLevel::ResetAndResizeLights() {
+    m_lights.resize(m_matrixWidth * m_matrixHeight, Light(125, 125, 125));
+    m_visual.init(m_lights[0],
                   m_matrixHeight,
-                  m_matrixHeight,
-                  posX,
-                  posY,
-                  dPosX,
-                  dPosY,
-                  boxSize);
+                  m_matrixWidth,
+                  m_boxPosition.x,
+                  m_boxPosition.y,
+                  m_boxSpacing.x,
+                  m_boxSpacing.y,
+                  m_boxSize);
+    AssignRandomColors();
     m_visual.update();
 }
 
-
-void LightMeUpLevel::RenderEditor() {
-    static sf::Vector2f visualBoxSize = sf::Vector2f(32, 32);
-
-    if (ImGui::Begin(("LightMeUp"))) {
-        ImGui::Text("Visual");
-        ImGui::SetNextItemWidth(100.f);
-        if (ImGui::DragInt("Matrix Height", &m_matrixHeight, 0.5f, 1, 18)) {
-            const auto totalLights = m_matrixHeight * m_matrixHeight;
-            fmt::println("Total Lights: {}", totalLights);
-            ResetAndResizeLights(totalLights,
-                                 50.f,
-                                 50.f,
-                                 8.f,
-                                 8.f,
-                                 visualBoxSize);
-        }
-        ImGui::SameLine();
-
-        if (EditorVector2f(visualBoxSize, "Box Size", 4.f, 4.f, 150.f, 150.f)) {
-            const auto totalLights = m_matrixHeight * m_matrixHeight;
-            fmt::println("New vector value: {},{}",
-                         visualBoxSize.x,
-                         visualBoxSize.y);
-            const auto pos = GetLEDsPosition();
-            ResetAndResizeLights(totalLights,
-                                 pos.x,
-                                 pos.y,
-                                 8.f,
-                                 8.f,
-                                 visualBoxSize);
-        }
-        RenderLightsEditor();
+void LightMeUpLevel::AssignRandomColors() {
+    std::uniform_int_distribution<uint8_t> colorDist(0, 255);
+    for (auto& light : m_lights) {
+        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
     }
-    ImGui::End();
 }
 
-bool LightMeUpLevel::RenderLightsEditor() {
-    bool edited = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("ChildLightsEditor",
-                          // ImVec2(0, 0),
-                          ImVec2(ImGui::GetContentRegionAvail().x,
-                                 ImGui::GetContentRegionAvail().y),
-                          ImGuiChildFlags_Borders |
-                          ImGuiChildFlags_AlwaysAutoResize |
-                          ImGuiChildFlags_AutoResizeY |
-                          ImGuiChildFlags_AutoResizeX,
-                          ImGuiWindowFlags_None
-                         )) {
-        ImGui::Text("Light colors: ");
-        ImGui::Separator();
-        edited = true;
-    }
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-    return edited;
-}
+
+

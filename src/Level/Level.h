@@ -27,8 +27,8 @@ public:
     virtual void Render(sf::RenderTarget &target);
     virtual void Tick(double delta);
 
-    void RenderLevelEditor();
-    virtual void RenderEditor();
+    bool RenderLevelEditor();
+    virtual bool RenderEditor();
     bool IsInitialized();
 
 protected:

@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 03/04/2025 16:45:02
+* Generated at: 05/04/2025 15:19:58
 */
 
 
@@ -12,8 +12,8 @@
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
-#include "../src/Level/LightMeUp/LightVisual.h"
 #include "../src/Engine/GameObject.h"
+#include "../src/Editor/Editor.h"
 
 
         void Reflect_PhysicsConfig() {
@@ -215,28 +215,29 @@ auto rFactory = entt::meta<LightMeUpLevel>();
 rFactory.ctor<>();
             rFactory.base<Level>();
             
-            GlobalConsole->Debug("Registering LightMeUpLevel m_visual visual");
-            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_visual>(\"visual\"_hs);");
-            rFactory.data<&LightMeUpLevel::m_visual>("visual"_hs);
+            GlobalConsole->Debug("Registering LightMeUpLevel m_matrixWidth width");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_matrixWidth>(\"width\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_matrixWidth>("width"_hs);
         
 	
             GlobalConsole->Debug("Registering LightMeUpLevel m_matrixHeight height");
             GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_matrixHeight>(\"height\"_hs);");
             rFactory.data<&LightMeUpLevel::m_matrixHeight>("height"_hs);
         
-        }
-    
-
-        void Reflect_LightVisual() {
-            std::cerr << "	Registering class LightVisual" << std::endl;
-            using namespace entt::literals;
-auto rFactory = entt::meta<LightVisual>();
-rFactory.ctor<>();
-            
-            
-            GlobalConsole->Debug("Registering LightVisual numLts numLights");
-            GlobalConsole->Debug("	Code string: rFactory.data<&LightVisual::numLts>(\"numLights\"_hs);");
-            rFactory.data<&LightVisual::numLts>("numLights"_hs);
+	
+            GlobalConsole->Debug("Registering LightMeUpLevel m_boxSize boxSize");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_boxSize>(\"boxSize\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_boxSize>("boxSize"_hs);
+        
+	
+            GlobalConsole->Debug("Registering LightMeUpLevel m_boxSpacing boxSpacing");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_boxSpacing>(\"boxSpacing\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_boxSpacing>("boxSpacing"_hs);
+        
+	
+            GlobalConsole->Debug("Registering LightMeUpLevel m_boxPosition boxPosition");
+            GlobalConsole->Debug("	Code string: rFactory.data<&LightMeUpLevel::m_boxPosition>(\"boxPosition\"_hs);");
+            rFactory.data<&LightMeUpLevel::m_boxPosition>("boxPosition"_hs);
         
         }
     
@@ -265,6 +266,16 @@ rFactory.ctor<>();
         }
     
 
+        void Reflect_Editor() {
+            std::cerr << "	Registering class Editor" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<Editor>();
+rFactory.ctor<>();
+            
+            
+        }
+    
+
         void Reflect_RegisterAll() {
             std::cerr << "Registering all reflection classes" << std::endl;
             Reflect_PhysicsConfig();
@@ -277,7 +288,7 @@ rFactory.ctor<>();
 	Reflect_SpriteSheet();
 	Reflect_TarmieLevel();
 	Reflect_LightMeUpLevel();
-	Reflect_LightVisual();
 	Reflect_GameObject();
+	Reflect_Editor();
         }
     

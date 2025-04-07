@@ -15,12 +15,12 @@ public:
     void Init() override;
     void Tick(double delta) override;
     void Render(sf::RenderTarget &target) override;
-    void RenderEditor() override;
+    bool RenderEditor() override;
     SpriteSheet sprite_sheet;
 };
 
-inline void TestBed::RenderEditor() {
-    Level::RenderEditor();
+inline bool TestBed::RenderEditor() {
+    return Level::RenderEditor();
 }
 
 #include <Reflection/GenReflection.h>

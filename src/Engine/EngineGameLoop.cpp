@@ -3,6 +3,7 @@
 //
 
 #include <Engine/Engine.h>
+#include <Editor/Editor.h>
 #include <Globals.h>
 #include <Timing/TimerManager.h>
 #include <imgui.h>
@@ -45,8 +46,9 @@ void Engine::GameLoop() {
 
         ImGui::SFML::Update(*window, delta);
 
-        ImGui::Begin("Hello, world! " ICON_FA_PLAY);
-        ImGui::Button("Look at this pretty button");
+        ImGui::Begin("IMWMTEngine" ICON_FA_PLAY);
+        // Display the level dropdown
+        GlobalEditor->DisplayLevelDropdown();
         if (ImGui::Button("Jitter worker")) {
             AddJitterTask();
         }
@@ -57,6 +59,7 @@ void Engine::GameLoop() {
             lastHeartbeat = thisHeartbeat;
         }
         ImGui::End();
+
 
         Tick(delta);
         if (currentLevelPtr) {
@@ -88,6 +91,8 @@ void Engine::GameLoop() {
     }
     ImGui::SFML::Shutdown();
 }
+
+
 
 
 void Engine::Tick(sf::Time delta) {

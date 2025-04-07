@@ -12,8 +12,12 @@
 #include <Config/EngineConfig.h>
 #include <Level/Level.h>
 
+class Editor;
+
 class Engine {
+    friend class Editor;
 private:
+
     std::unique_ptr<sf::RenderWindow> window;
     EventHandler evtHandler;
     bool quit = false;
@@ -30,6 +34,7 @@ public:
     ~Engine() = default;
 
     int Init();
+    bool InitEditor();
 
     void LoadConfig(const std::string &filename);
     void InitLevel();
@@ -50,8 +55,10 @@ public:
 
     void Tick(sf::Time delta);
 
+    static std::vector<std::string> PossibleLevelFiles;
     static void CheckIndexedFiles(
         const std::vector<std::filesystem::path> &paths);
+
 
     void MakePhysicsObjects();
 

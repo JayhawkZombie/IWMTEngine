@@ -15,8 +15,10 @@
 #include <cereal/archives/json.hpp>
 #include <GeneratedSerializationData.h>
 #include <Level/Level.h>
+#include <MultiThreading/Tasks/FileIndexTask.h>
 #include <MultiThreading/Tasks/LevelMakerTask.h>
 #include <Reflection/Reflection.h>
+#include <Editor/Editor.h>
 
 vec2d gravity = vec2d(0, 9.81f);
 
@@ -163,6 +165,11 @@ void Engine::InitReflection() {
     Reflect_RegisterAll();
 }
 
+bool Engine::InitEditor() {
+    GlobalEditor = std::make_unique<Editor>(this);
+    return true;
+}
+
 
 int Engine::Init() {
     InitGlobals();
@@ -171,6 +178,8 @@ int Engine::Init() {
     InitWindow();
     InitEvents();
     InitLevel();
+    InitEditor();
+    engineWorker.PostTask(FileIndexTask{std::filesystem::path(".")}, "FileIndexTask");
 
     GlobalTimerManager->AddTimer(5.0,
                                  false,

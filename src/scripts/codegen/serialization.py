@@ -16,7 +16,8 @@ def get_extra_includes():
     return [
         "#include <cereal/cereal.hpp>",
         "#include <cereal/archives/binary.hpp>",
-        "#include <cereal/archives/json.hpp>"
+        "#include <cereal/archives/json.hpp>",
+        "#include <Serialization/SerializeTypes.h>"
     ]
 
 def generate_serialization_functions(class_refl_data: List[reflection_utils.ReflectedClass]):

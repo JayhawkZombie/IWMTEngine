@@ -12,11 +12,16 @@
 #include <MultiThreading/Tasks/FileIndexTask.h>
 #include <SFML/Window.hpp>
 
+std::vector<std::string> Engine::PossibleLevelFiles = {};
+
 void Engine::CheckIndexedFiles(
     const std::vector<std::filesystem::path> &paths) {
     fmt::println("Checking indexed files ({})...", paths.size());
     for (const auto &path: paths) {
         fmt::print("\t{}\n", path.string());
+        if (path.has_extension() && path.extension() == ".level") {
+            PossibleLevelFiles.push_back(path.string());
+        }
     }
 }
 
@@ -56,16 +61,6 @@ void Engine::CheckWorkerResults() {
                 CheckIndexedFiles(*cast_paths);
             }
         }
-
-        // if (itemTypeInfo.hash() == "TestBed"_hs) {
-        //     fmt::println("TestBed Level !{}", itemTypeInfo.name());
-        //     const auto metaAnyTestBed = item.first;
-        //     maybeLevelPtr = metaAnyTestBed;
-        // } else {
-        //     if (auto cast_paths = item.first->try_cast<std::vector<std::filesystem::path>>(); cast_paths) {
-        //         CheckIndexedFiles(*cast_paths);
-        //     }
-        // }
     }
 }
 

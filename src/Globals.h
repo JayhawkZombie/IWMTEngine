@@ -10,8 +10,10 @@
 
 class TimerManager;
 class IniConfig;
+class Editor;
 
 extern std::unique_ptr<TimerManager> GlobalTimerManager;
 extern std::unique_ptr<EngineConsole> GlobalConsole;
 extern std::unique_ptr<IniConfig> GlobalIniConfig;
+extern std::unique_ptr<Editor> GlobalEditor;
 // extern std::unique_ptr<sf::RenderWindow> GlobalRenderWindow;

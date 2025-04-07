@@ -21,7 +21,7 @@ public:
     void Init() override;
     void Render(sf::RenderTarget &target) override;
     void RenderGrid(sf::RenderTarget &target);
-    void RenderEditor() override;
+    bool RenderEditor() override;
     void Tick(double delta) override;
 
     void AdjustToNewBlockSize();

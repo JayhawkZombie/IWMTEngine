@@ -37,13 +37,6 @@ public:
   vec2d from_base(vec2d baseT)const;// get components in x,y
   vec2d to_base(vec2d baseT)const;// get components in base.x, base.y
   vec2d Rotate(float ang)const;
-
-  template<class Archive>
-  void serialize(Archive & ar)
-  {
-    ar(cereal::make_nvp("x", x));
-    ar(cereal::make_nvp("y", y));
-  }
 };
 
 vec2d operator*(float c, vec2d v);

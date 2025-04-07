@@ -40,7 +40,8 @@ void TarmieLevel::RenderGrid(sf::RenderTarget &target) {
                 sf::LinesStrip);
 }
 
-void TarmieLevel::RenderEditor() {
+bool TarmieLevel::RenderEditor() {
+    bool edited = false;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
     ImGui::BeginChild("ChildR",
                       ImVec2(0, 260),
@@ -55,12 +56,14 @@ void TarmieLevel::RenderEditor() {
                        150.f,
                        "%i",
                        ImGuiSliderFlags_AlwaysClamp)) {
+        edited = true;
         AdjustToNewBlockSize();
     }
     ImGui::SeparatorText("Sprite Sheet");
     m_spriteSheet.RenderEditor();
     ImGui::EndChild();
     ImGui::PopStyleVar();
+    return edited;
 }
 
 void TarmieLevel::Tick(double delta) {

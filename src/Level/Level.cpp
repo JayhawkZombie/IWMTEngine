@@ -32,19 +32,21 @@ void Level::Destroy() {
 void Level::Render(sf::RenderTarget &target) {
 }
 
-void Level::RenderLevelEditor() {
+bool Level::RenderLevelEditor() {
+    bool edited = false;
     if (ImGui::Begin("Level Editor")) {
-        this->RenderEditor();
+        edited = this->RenderEditor();
     }
     ImGui::End();
+    return edited;
 }
 
 
 void Level::Tick(double delta) {
 }
 
-void Level::RenderEditor() {
-
+bool Level::RenderEditor() {
+    return false;
 }
 
 bool Level::IsInitialized() {

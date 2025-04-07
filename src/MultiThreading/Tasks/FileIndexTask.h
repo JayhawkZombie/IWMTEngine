@@ -7,11 +7,12 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <entt/meta/meta.hpp>
 
 class FileIndexTask {
 public:
     std::filesystem::path root;
     explicit FileIndexTask(const std::filesystem::path &rootPath);
 
-    std::vector<std::filesystem::path> operator()() const;
+    std::shared_ptr<entt::meta_any> operator()() const;
 };

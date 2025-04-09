@@ -8,6 +8,7 @@
 #include "LightVisual.h"
 #include "StarrySky.h"
 #include "Light_types/LightPlayer2.h"
+#include "Light_types/WavePlayer.h"
 #include <random>
 #include <cereal/types/polymorphic.hpp>
 
@@ -22,6 +23,9 @@ class LightMeUpLevel : public Level
     int m_matrixWidth = 8;
     LightPlayer2 m_lightPlayer2;
     std::vector<patternData> m_patternData;
+
+    WavePlayer m_wavePlayer;
+    LightVisual m_wavePlayerVisual;
 
     using light_vector = std::vector<Light>;
 
@@ -42,11 +46,16 @@ class LightMeUpLevel : public Level
     void Tick(double delta) override;
     void Render(sf::RenderTarget &target) override;
 
+    void UpdateVisuals(double delta);
+    void RenderVisuals(sf::RenderTarget &target) const;
+
     sf::Vector2f GetLEDsPosition() const;
     void SetLEDsPosition(const sf::Vector2f &pos);
 
     bool RenderEditor() override;
     bool RenderLightsEditor();
+    bool RenderPatternPlayerEditorTab();
+    bool RenderWavePlayerEditorTab();
 };
 
 // Register DerivedClassOne

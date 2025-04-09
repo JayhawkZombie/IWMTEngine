@@ -36,42 +36,79 @@ bool LightMeUpLevel::RenderEditor() {
     return edited;
 }
 
+bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
+    // bool edited = false;
+    ImGui::TextColored(ImColor(255, 0, 0), "State (readonly)");
+    ImGui::Separator();
+    EditorColoredLabeledUnsignedInt("Num patterns",
+                                    ImColor(255, 255, 0),
+                                    m_lightPlayer2.numPatterns);
+    EditorColoredLabeledUnsignedInt("Pattern iter",
+                                    ImColor(255, 255, 0),
+                                    m_lightPlayer2.patternIter);
+    EditorColoredLabeledUnsignedInt("Step timer  ",
+                                    ImColor(255, 255, 0),
+                                    m_lightPlayer2.stepTimer);
+    EditorColoredLabeledUnsignedInt("Step iter   ",
+                                    ImColor(255, 255, 0),
+                                    m_lightPlayer2.stepIter);
+
+    ImGui::SeparatorText("Pattern Data");
+    EditorViewPatternData("Pattern data", m_lightPlayer2.pattData, m_lightPlayer2.numPatterns);
+    return false;
+}
+
+bool LightMeUpLevel::RenderWavePlayerEditorTab() {
+    bool edited = false;
+    edited = EditorLight(m_wavePlayer.loLt, "Lo light");
+    ImGui::SameLine();
+    edited = edited || EditorLight(m_wavePlayer.hiLt, "Hi light");
+    if (edited) {
+        m_wavePlayer.init(m_lights[0], m_matrixHeight, m_matrixWidth, m_wavePlayer.hiLt, m_wavePlayer.loLt);
+    }
+    if (ImGui::SliderFloat("Amp Lt", &m_wavePlayer.AmpLt, 0.f, 5.f, "%.3f")) {
+        edited = true;
+    }
+    if (ImGui::SliderFloat("Amp Rt", &m_wavePlayer.AmpRt, 0.f, 5.f, "%.3f")) {
+        edited = true;
+    }
+
+    if (ImGui::SliderFloat("WvLn Lt", &m_wavePlayer.wvLenLt, 0.f, 128.f, "%.3f")) {
+        edited = true;
+    }
+    if (ImGui::SliderFloat("WvLn Rt", &m_wavePlayer.wvLenRt, 0.f, 128.f, "%.3f")) {
+        edited = true;
+    }
+
+    if (ImGui::SliderFloat("WvSpd Lt", &m_wavePlayer.wvSpdLt, 0.f, 128.f, "%.3f")) {
+        edited = true;
+    }
+    if (ImGui::SliderFloat("WvSpd Rt", &m_wavePlayer.wvSpdRt, 0.f, 128.f, "%.3f")) {
+        edited = true;
+    }
+
+    return edited;
+}
+
+
+
 bool LightMeUpLevel::RenderLightsEditor() {
     bool edited = false;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    if (ImGui::BeginChild("Pattern Player",
-                          ImVec2(ImGui::GetContentRegionAvail().x,
-                                 ImGui::GetContentRegionAvail().y),
-                          ImGuiChildFlags_Borders |
-                          ImGuiChildFlags_AlwaysAutoResize |
-                          ImGuiChildFlags_AutoResizeY |
-                          ImGuiChildFlags_AutoResizeX,
-                          ImGuiWindowFlags_None
-                         )) {
-        ImGui::Text("Pattern Player");
-        edited = EditorLight(m_lightPlayer2.onLt, "On light");
-        ImGui::SameLine();
-        edited = edited || EditorLight(m_lightPlayer2.offLt, "Off light");
-
-        ImGui::TextColored(ImColor(255, 0, 0), "State (readonly)");
-        ImGui::Separator();
-        EditorColoredLabeledUnsignedInt("Num patterns",
-                                        ImColor(255, 255, 0),
-                                        m_lightPlayer2.numPatterns);
-        EditorColoredLabeledUnsignedInt("Pattern iter",
-                                        ImColor(255, 255, 0),
-                                        m_lightPlayer2.patternIter);
-        EditorColoredLabeledUnsignedInt("Step timer  ",
-                                        ImColor(255, 255, 0),
-                                        m_lightPlayer2.stepTimer);
-        EditorColoredLabeledUnsignedInt("Step iter   ",
-                                        ImColor(255, 255, 0),
-                                        m_lightPlayer2.stepIter);
-
-        ImGui::SeparatorText("Pattern Data");
-        EditorViewPatternData("Pattern data", m_lightPlayer2.pattData, m_lightPlayer2.numPatterns);
+    edited = EditorLight(m_lightPlayer2.onLt, "On light");
+    ImGui::SameLine();
+    edited = edited || EditorLight(m_lightPlayer2.offLt, "Off light");
+    if (ImGui::BeginTabBar("Light Players")) {
+        if (ImGui::BeginTabItem("Pattern Player")) {
+            edited = RenderPatternPlayerEditorTab();
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Wave Player")) {
+            edited = RenderWavePlayerEditorTab();
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
     }
-    ImGui::EndChild();
     ImGui::PopStyleVar();
     return edited;
 }

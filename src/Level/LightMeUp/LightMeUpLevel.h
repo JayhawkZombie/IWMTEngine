@@ -9,6 +9,7 @@
 #include "StarrySky.h"
 #include "Light_types/LightPlayer2.h"
 #include "Light_types/WavePlayer.h"
+#include "Light_types/PulsePlayer.h"
 #include <random>
 #include <cereal/types/polymorphic.hpp>
 
@@ -18,25 +19,31 @@ class LightMeUpLevel : public Level
     void AssignRandomColors();
 
   public:
+    using light_vector = std::vector<Light>;
 
     int m_matrixHeight = 8;
     int m_matrixWidth = 8;
     LightPlayer2 m_lightPlayer2;
+    LightVisual m_visual;
     std::vector<patternData> m_patternData;
 
     WavePlayer m_wavePlayer;
     LightVisual m_wavePlayerVisual;
 
-    using light_vector = std::vector<Light>;
+    PulsePlayer m_pulsePlayer;
+    LightVisual m_pulsePlayerVisual;
+    light_vector m_pulsePlayerLights;
+
 
     sf::Vector2f m_boxSize{16.f, 16.f};
     sf::Vector2f m_boxSpacing{4.f, 4.f};
     sf::Vector2f m_boxPosition{400.f, 300.f};
 
     light_vector m_lights;
-    LightVisual m_visual;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
+
+    float C_Rt[3] = {3, 2, 1};
 
     LightMeUpLevel();
     ~LightMeUpLevel() override = default;
@@ -56,6 +63,7 @@ class LightMeUpLevel : public Level
     bool RenderLightsEditor();
     bool RenderPatternPlayerEditorTab();
     bool RenderWavePlayerEditorTab();
+    bool RenderPulsePlayerEditorTab();
 };
 
 // Register DerivedClassOne

@@ -133,6 +133,27 @@ inline void EditorViewPatternData(const char *label,
     ImGui::PopStyleVar();
 }
 
+inline void EditorViewFloat(const char *label, float value, ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
+    ImGui::Text("%s", label);
+    ImGui::SameLine();
+    ImGui::TextColored(color, "%.3f", value);
+}
+
+inline bool EditorBoolean(const char *label, bool &value) {
+    static bool val;
+    val = value;
+    bool edited = false;
+
+    ImGui::Text("%s", label);
+    ImGui::SameLine();
+    if (ImGui::Checkbox(label, &val)) {
+        edited = true;
+        value = val;
+    }
+
+    return edited;
+}
+
 namespace ImGuiColors {
     static constexpr ImVec4 BrightBlue    = ImVec4(0.149, 0.988f, 0.953f, 1.f);
     static constexpr ImVec4 BrightPink    = ImVec4(1.f, 0.f, 0.929f, 1.f);

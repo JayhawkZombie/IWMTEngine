@@ -105,6 +105,8 @@ void LightMeUpLevel::UpdateVisuals(double delta) {
     m_starrySky.update(static_cast<float>(delta));
     m_wavePlayer.update(static_cast<float>(delta));
     m_wavePlayerVisual.update();
+    m_pulsePlayer.update(static_cast<float>(delta));
+    m_pulsePlayerVisual.update();
 }
 
 
@@ -126,7 +128,9 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
 
 void LightMeUpLevel::RenderVisuals(sf::RenderTarget &target) const {
     m_visual.draw(target);
+    m_pulsePlayerVisual.draw(target);
     m_wavePlayerVisual.draw(target);
+    // m_pulsePlayerVisual.draw(target);
 }
 
 
@@ -141,6 +145,8 @@ void LightMeUpLevel::SetLEDsPosition(const sf::Vector2f &pos) {
 
 void LightMeUpLevel::ResetAndResizeLights() {
     m_lights.resize(m_matrixWidth * m_matrixHeight, Light(125, 125, 125));
+    m_pulsePlayerLights.resize(m_matrixWidth * m_matrixHeight,
+                               Light(125, 125, 125));
     m_visual.init(m_lights[0],
                   m_matrixHeight,
                   m_matrixWidth,
@@ -163,11 +169,33 @@ void LightMeUpLevel::ResetAndResizeLights() {
                            );
     m_wavePlayer.setWaveData(1.f, 64.f, 64.f, 128.f, 64.f);
     m_wavePlayerVisual.update();
+
+    m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
+                             m_matrixHeight,
+                             m_matrixWidth,
+                             m_boxPosition.x + 600.f,
+                             m_boxPosition.y,
+                             m_boxSpacing.x,
+                             m_boxSpacing.y,
+                             m_boxSize);
+    m_pulsePlayerVisual.update();
+    m_pulsePlayer.init(m_pulsePlayerLights[0],
+                       m_matrixHeight,
+                       m_matrixWidth,
+                       Light(125, 125, 0),
+                       Light(0, 0, 0),
+                       2,
+                       5.f,
+                       true);
+    m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
 }
 
 void LightMeUpLevel::AssignRandomColors() {
     std::uniform_int_distribution<uint8_t> colorDist(0, 255);
     for (auto &light: m_lights) {
+        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
+    }
+    for (auto &light: m_pulsePlayerLights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
     }
 }

@@ -10,6 +10,7 @@
 #include "Light_types/LightPlayer2.h"
 #include "Light_types/WavePlayer.h"
 #include "Light_types/PulsePlayer.h"
+#include "Light_types/DataPlayer.h"
 #include <random>
 #include <cereal/types/polymorphic.hpp>
 
@@ -34,6 +35,10 @@ class LightMeUpLevel : public Level
     LightVisual m_pulsePlayerVisual;
     light_vector m_pulsePlayerLights;
 
+    DataPlayer m_dataPlayer;
+    LightVisual m_dataPlayerVisual;
+    std::vector<uint8_t> m_dataPlayerDataVector;
+    light_vector m_dataPlayerLights;
 
     sf::Vector2f m_boxSize{16.f, 16.f};
     sf::Vector2f m_boxSpacing{4.f, 4.f};
@@ -49,6 +54,7 @@ class LightMeUpLevel : public Level
     ~LightMeUpLevel() override = default;
     void Init() override;
     void InitPatterns();
+    void InitDataPlayer();
     void Destroy() override;
     void Tick(double delta) override;
     void Render(sf::RenderTarget &target) override;

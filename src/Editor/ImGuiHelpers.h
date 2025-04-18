@@ -139,6 +139,12 @@ inline void EditorViewFloat(const char *label, float value, ImColor color = ImCo
     ImGui::TextColored(color, "%.3f", value);
 }
 
+inline void EditorViewInt(const char *label, int value, ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
+    ImGui::Text("%s", label);
+    ImGui::SameLine();
+    ImGui::TextColored(color, "%i", value);
+}
+
 inline bool EditorBoolean(const char *label, bool &value) {
     static bool val;
     val = value;

@@ -73,12 +73,12 @@ void LightMeUpLevel::InitPatterns() {
 }
 
 void LightMeUpLevel::InitDataPlayer() {
-
     int rows, cols;
     int row0, col0;
     std::ifstream infile("blueGuy_a16color16x16_data.txt");
     if (!infile) {
-        GlobalConsole->Error("Failed to open file blueGuy_a16color16x16_data.txt");
+        GlobalConsole->
+                Error("Failed to open file blueGuy_a16color16x16_data.txt");
         return;
     }
 
@@ -86,10 +86,14 @@ void LightMeUpLevel::InitDataPlayer() {
     infile >> row0 >> col0;
     GlobalConsole->Info("%i x %i @(%i,%i)", rows, cols, row0, col0);
 
-    infile >> m_dataPlayer.stepPause >> m_dataPlayer.drawOff >> m_dataPlayer.fadeAlong;
-    GlobalConsole->Debug("stepPause: %i drawOff: %i fadeAlong %i", m_dataPlayer.stepPause, m_dataPlayer.drawOff, m_dataPlayer.fadeAlong);
+    infile >> m_dataPlayer.stepPause >> m_dataPlayer.drawOff >> m_dataPlayer.
+            fadeAlong;
+    GlobalConsole->Debug("stepPause: %i drawOff: %i fadeAlong %i",
+                         m_dataPlayer.stepPause,
+                         m_dataPlayer.drawOff,
+                         m_dataPlayer.fadeAlong);
     m_dataPlayerLights.resize(rows * cols);
-    for (auto & light : m_dataPlayerLights) {
+    for (auto &light: m_dataPlayerLights) {
         light.init(125, 125, 125);
     }
     unsigned int numColors = 2;
@@ -125,40 +129,94 @@ void LightMeUpLevel::InitDataPlayer() {
             GlobalConsole->Debug("numQuadBits: %i", numQuadBits);
             // std::cout << "\n numQuadBits = " << numQuadBits;
 
-            if( numQuadBits%2 == 0 ) m_dataPlayerDataVector.resize( numQuadBits/2 );
-            else m_dataPlayerDataVector.resize( numQuadBits/2 + 1 );
-            m_dataPlayer.init( m_dataPlayerLights[0], rows, cols, m_dataPlayerDataVector[0], m_dataPlayerDataVector.size(), 16 );
+            if (numQuadBits % 2 == 0)
+                m_dataPlayerDataVector.
+                        resize(numQuadBits / 2);
+            else m_dataPlayerDataVector.resize(numQuadBits / 2 + 1);
+            m_dataPlayer.init(m_dataPlayerLights[0],
+                              rows,
+                              cols,
+                              m_dataPlayerDataVector[0],
+                              m_dataPlayerDataVector.size(),
+                              16);
 
-            GlobalConsole->Debug("DataVec.size(): %lu", m_dataPlayerDataVector.size() );
+            GlobalConsole->Debug("DataVec.size(): %lu",
+                                 m_dataPlayerDataVector.size());
             // std::cout << "\n DataVec.size() = " << m_dataPlayerDataVector.size();
 
             unsigned int inVal = 0;
             m_dataPlayer.BA.Clear();
-            for( unsigned int k = 0; k < numQuadBits; ++k )
-            {
+            for (unsigned int k = 0; k < numQuadBits; ++k) {
                 infile >> inVal;
-                m_dataPlayer.BA.pushQuad( inVal );
+                m_dataPlayer.BA.pushQuad(inVal);
             }
-        } else {
-            GlobalConsole->Error("Need to implement dataInBits for %u", numColors);
+        } else if (numColors == 4) {
+            GlobalConsole->Debug("initDataPlay(): 4 colors from dlbBits");
+            unsigned int numDblBits;
+            infile >> numDblBits;
+
+            if (numDblBits % 4 == 0)
+                m_dataPlayerDataVector.
+                        resize(numDblBits / 4);
+            else m_dataPlayerDataVector.resize(numDblBits / 4 + 1);
+            std::cout << "\n m_dataPlayerDataVector.size() = " <<
+                    m_dataPlayerDataVector.size();
+
+            m_dataPlayer.init(m_dataPlayerLights[0],
+                              rows,
+                              cols,
+                              m_dataPlayerDataVector[0],
+                              m_dataPlayerDataVector.size(),
+                              4);
+
+            unsigned int inVal = 0;
+            m_dataPlayer.BA.Clear();
+            for (unsigned int k = 0; k < numDblBits; ++k) {
+                infile >> inVal;
+                m_dataPlayer.BA.push(inVal / 2 > 0); // hi bit
+                m_dataPlayer.BA.push(inVal % 2 > 0); // lo bit
+            }
+        } else if (numColors == 2) {
+            std::cout << "\n initDataPlay(): 2 colors from bits";
+            unsigned int numBits;
+            infile >> numBits;
+            if (numBits % 8 == 0) m_dataPlayerDataVector.resize(numBits / 8);
+            else m_dataPlayerDataVector.resize(numBits / 8 + 1);
+            m_dataPlayer.init(m_dataPlayerLights[0],
+                              rows,
+                              cols,
+                              m_dataPlayerDataVector[0],
+                              m_dataPlayerDataVector.size(),
+                              2);
+
+            bool inVal = false;
+            m_dataPlayer.BA.Clear();
+            for (unsigned int k = 0; k < numBits; ++k) {
+                infile >> inVal;
+                m_dataPlayer.BA.push(inVal);
+            }
         }
     } else {
-        GlobalConsole->Debug("Reading data in rgb");// data is in whole bytes which may represent 2, 4 or 16 colors
+        GlobalConsole->Debug("Reading data in rgb");
+        // data is in whole bytes which may represent 2, 4 or 16 colors
 
-            // std::cout << "\n initDataPlay(): " << numColors << " colors from Bytes";
+        // std::cout << "\n initDataPlay(): " << numColors << " colors from Bytes";
         GlobalConsole->Debug("Reading %u colors", numColors);
-            unsigned int numBytes;
-            infile >> numBytes;
-            m_dataPlayerDataVector.reserve( numBytes );
-            unsigned int inVal = 0;
-            for( unsigned int k = 0; k < numBytes; ++k )
-            {
-                infile >> inVal;
-                m_dataPlayerDataVector.push_back( inVal );
-            }
+        unsigned int numBytes;
+        infile >> numBytes;
+        m_dataPlayerDataVector.reserve(numBytes);
+        unsigned int inVal = 0;
+        for (unsigned int k = 0; k < numBytes; ++k) {
+            infile >> inVal;
+            m_dataPlayerDataVector.push_back(inVal);
+        }
 
-            m_dataPlayer.init( m_dataPlayerLights[0], rows, cols, m_dataPlayerDataVector[0], m_dataPlayerDataVector.size(), numColors );
-
+        m_dataPlayer.init(m_dataPlayerLights[0],
+                          rows,
+                          cols,
+                          m_dataPlayerDataVector[0],
+                          m_dataPlayerDataVector.size(),
+                          numColors);
     }
 
 
@@ -274,9 +332,9 @@ void LightMeUpLevel::InitDataPlayer() {
     */
     m_dataPlayer.setGridBounds(row0, col0, rows, cols);
     // std::cout << "\n initDataPlay(): BA.bitSize() = " << m_dataPlayer.BA.bitSize();
-    GlobalConsole->Debug("initDataPlay(): BA.bitSize() = %u", m_dataPlayer.BA.bitSize() );
+    GlobalConsole->Debug("initDataPlay(): BA.bitSize() = %u",
+                         m_dataPlayer.BA.bitSize());
 }
-
 
 
 void LightMeUpLevel::Destroy() {
@@ -360,10 +418,10 @@ void LightMeUpLevel::ResetAndResizeLights() {
     AssignRandomColors();
     m_visual.update();
     m_wavePlayer.init(m_lights[0],
-              m_matrixHeight,
-              m_matrixWidth,
-              Light(255, 255, 255),
-              Light(0, 0, 0));
+                      m_matrixHeight,
+                      m_matrixWidth,
+                      Light(255, 255, 255),
+                      Light(0, 0, 0));
     m_wavePlayerVisual.init(
                             m_lights[0],
                             m_matrixHeight,

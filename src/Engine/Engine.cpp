@@ -21,6 +21,8 @@ void Engine::CheckIndexedFiles(
         fmt::print("\t{}\n", path.string());
         if (path.has_extension() && path.extension() == ".level") {
             PossibleLevelFiles.push_back(path.string());
+        } else {
+            Assets.push_back(path);
         }
     }
 }

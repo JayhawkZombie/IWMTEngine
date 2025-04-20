@@ -29,7 +29,7 @@ public:
     void SetPersistentFile(const std::string &filename);
     void SetPersistToFile(bool persist);
     void Tick(double delta) override;
-    void Render(sf::RenderWindow &window) override;
+    void Render(sf::RenderTarget &target) override;
     void SetOpen(bool open);
     [[nodiscard]] bool IsOpen() const;
 

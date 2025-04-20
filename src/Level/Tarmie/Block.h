@@ -15,5 +15,5 @@ public:
 
     void Tick(double delta) override;
     void Init() override;
-    void Render(sf::RenderWindow &window) override;
+    void Render(sf::RenderTarget &target) override;
 };

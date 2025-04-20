@@ -58,6 +58,6 @@ void TimerManager::AddTimer(double duration, bool repeat, const std::function<vo
     m_deferredAdditions.push_back(timer);
 }
 
-void TimerManager::Render(sf::RenderWindow &window) {
-    GameObject::Render(window);
+void TimerManager::Render(sf::RenderTarget &target) {
+    GameObject::Render(target);
 }

@@ -10,5 +10,5 @@ void Block::Tick(double delta) {
 void Block::Init() {
 }
 
-void Block::Render(sf::RenderWindow &window) {
+void Block::Render(sf::RenderTarget &target) {
 }

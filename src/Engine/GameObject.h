@@ -38,7 +38,7 @@ public:
 
     virtual void Tick(double delta);
     virtual void Init();
-    virtual void Render(sf::RenderWindow &window);
+    virtual void Render(sf::RenderTarget &target);
 
     void SetPosition(const sf::Vector2f &newPos);
     const sf::Vector2f &GetPosition() const;

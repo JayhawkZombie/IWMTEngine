@@ -70,10 +70,10 @@ void EngineConsole::RenderTerminal() {
     ImGui::PopItemWidth();
 }
 
-void EngineConsole::Render(sf::RenderWindow &window) {
+void EngineConsole::Render(sf::RenderTarget &target) {
     // static auto dockspaceId = ImGui::GetID("Editor");
     // ImGui::DockSpaceOverViewport(dockspaceId);
-    const auto winSize = window.getSize();
+    const auto winSize = target.getSize();
     ImGui::SetNextWindowPos(ImVec2(0.f, winSize.y - 300.f), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(winSize.x, 300.f), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Console", &m_isOpen, ImGuiWindowFlags_NoScrollbar)) {

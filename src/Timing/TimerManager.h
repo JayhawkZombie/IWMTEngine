@@ -22,7 +22,7 @@ public:
         const std::function<void()> cb
     );
 
-    void Render(sf::RenderWindow &window) override;
+    void Render(sf::RenderTarget &target) override;
 
 private:
 

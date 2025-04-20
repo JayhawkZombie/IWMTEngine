@@ -16,7 +16,7 @@ void GameObject::Tick(double delta) {
 void GameObject::Init() {
 }
 
-void GameObject::Render(sf::RenderWindow &window) {
+void GameObject::Render(sf::RenderTarget &target) {
 }
 
 void GameObject::SetPosition(const sf::Vector2f &newPos) {

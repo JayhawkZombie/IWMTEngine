@@ -8,9 +8,9 @@
 #include "LightVisual.h"
 #include "StarrySky.h"
 #include "Light_types/LightPlayer2.h"
-#include "Light_types/WavePlayer.h"
 #include "Light_types/PulsePlayer.h"
-// #include "Light_types/DataPlayer.h"
+
+#include "WavePlayerWrapper.h"
 #include "DataPlayerWrapper.h"
 #include <random>
 #include <cereal/types/polymorphic.hpp>
@@ -29,14 +29,12 @@ class LightMeUpLevel : public Level
     LightVisual m_visual;
     std::vector<patternData> m_patternData;
 
-    WavePlayer m_wavePlayer;
-    LightVisual m_wavePlayerVisual;
-
     PulsePlayer m_pulsePlayer;
     LightVisual m_pulsePlayerVisual;
     light_vector m_pulsePlayerLights;
 
     DataPlayerWrapper m_dataPlayerWrapper;
+    WavePlayerWrapper m_wavePlayerWrapper;
 
     sf::Vector2f m_boxSize{16.f, 16.f};
     sf::Vector2f m_boxSpacing{4.f, 4.f};
@@ -68,6 +66,7 @@ class LightMeUpLevel : public Level
     bool RenderPatternPlayerEditorTab();
     bool RenderWavePlayerEditorTab();
     bool RenderPulsePlayerEditorTab();
+    bool RenderDataPlayerEditorTab();
 };
 
 // Register DerivedClassOne

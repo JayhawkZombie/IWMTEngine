@@ -15,8 +15,6 @@ LightMeUpLevel::LightMeUpLevel()
      ,
       m_rng(std::random_device()()) // Initialize RNG with random seed
 {
-    // InitPatterns();
-    // ResetAndResizeLights();
 }
 
 void LightMeUpLevel::Init() {
@@ -68,11 +66,6 @@ void LightMeUpLevel::InitPatterns() {
     m_lightPlayer2.offLt = Light(255, 0, 255);
 
     m_lightPlayer2.update();
-
-    m_dataPlayerWrapper.SetSize(sf::Vector2f(200.f, 200.f));
-    m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 400.f, m_boxPosition.y));
-    m_dataPlayerWrapper.Init();
-    m_dataPlayerWrapper.Tick(0.0);
 }
 
 void LightMeUpLevel::Destroy() {
@@ -100,8 +93,7 @@ void LightMeUpLevel::UpdateVisuals(double delta) {
     m_lightPlayer2.update();
     m_visual.update();
     m_starrySky.update(static_cast<float>(delta));
-    m_wavePlayer.update(static_cast<float>(delta));
-    m_wavePlayerVisual.update();
+    m_wavePlayerWrapper.Tick(delta);
     m_pulsePlayer.update(static_cast<float>(delta));
     m_pulsePlayerVisual.update();
     m_dataPlayerWrapper.Tick(delta);
@@ -127,8 +119,9 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
 void LightMeUpLevel::RenderVisuals(sf::RenderTarget &target) {
     m_visual.draw(target);
     m_pulsePlayerVisual.draw(target);
-    m_wavePlayerVisual.draw(target);
     m_dataPlayerWrapper.Render(target);
+    m_wavePlayerWrapper.Render(target);
+    // m_wavePlayerVisual.draw(target);
     // m_dataPlayerVisual.draw(target);
 }
 
@@ -156,28 +149,27 @@ void LightMeUpLevel::ResetAndResizeLights() {
                   m_boxSize);
     AssignRandomColors();
     m_visual.update();
-    m_wavePlayer.init(m_lights[0],
-                      m_matrixHeight,
-                      m_matrixWidth,
-                      Light(255, 255, 255),
-                      Light(0, 0, 0));
-    m_wavePlayerVisual.init(
-                            m_lights[0],
-                            m_matrixHeight,
-                            m_matrixWidth,
-                            m_boxPosition.x + 100.f,
-                            m_boxPosition.y,
-                            m_boxSpacing.x,
-                            m_boxSpacing.y,
-                            m_boxSize
-                           );
-    m_wavePlayer.setWaveData(1.f, 64.f, 64.f, 128.f, 64.f);
-    m_wavePlayer.update(0.f);
-    m_wavePlayerVisual.update();
+    WavePlayerWrapper::config config;
+    config.rows = m_matrixHeight * 2;
+    config.cols = m_matrixWidth * 2;
+    config.onLight = Light(0, 255, 255);
+    config.offLight = Light(255, 0, 255);
+    config.C_Rt[0] = C_Rt[0];
+    config.C_Rt[1] = C_Rt[1];
+    config.C_Rt[2] = C_Rt[2];
+    config.AmpLt = 64.f;
+    config.AmpRt = 64.f;
+    config.wvLenLt = 64.f;
+    config.wvLenRt = 64.f;
+    config.wvSpdLt = 128.f;
+    config.wvSpdRt = 128.f;
+    m_wavePlayerWrapper.SetConfig(config);
+    m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f, m_boxPosition.y));
+    m_wavePlayerWrapper.Init();
     m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
                              m_matrixHeight,
                              m_matrixWidth,
-                             m_boxPosition.x + 200.f,
+                             m_boxPosition.x + 300.f,
                              m_boxPosition.y,
                              m_boxSpacing.x,
                              m_boxSpacing.y,
@@ -191,10 +183,12 @@ void LightMeUpLevel::ResetAndResizeLights() {
                        2,
                        5.f,
                        true);
-    m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
+    // m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
     m_dataPlayerWrapper.SetSize(sf::Vector2f(200.f, 200.f));
-    m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 400.f, m_boxPosition.y));
+    m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 400.f,
+                                                 m_boxPosition.y));
     m_dataPlayerWrapper.Init();
+    m_dataPlayerWrapper.Tick(0.0);
 }
 
 void LightMeUpLevel::AssignRandomColors() {

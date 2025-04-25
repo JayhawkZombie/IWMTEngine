@@ -2,6 +2,7 @@
 #define LIGHT_H
 
 #include<stdint.h>
+#include <fmt/core.h>
 
 class Light
 {
@@ -24,5 +25,9 @@ class Light
         return !( *this == Lt );
     }
 };
+
+inline auto format_as(const Light &l) {
+    return fmt::format("Light({},{},{})", l.r, l.g, l.b);
+}
 
 #endif // LIGHT_H

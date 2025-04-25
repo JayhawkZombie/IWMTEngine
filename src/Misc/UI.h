@@ -11,4 +11,4 @@ namespace ImGuiColors {
     static constexpr ImVec4 WarningYellow = ImVec4(1.f, 1.f, 0.f, 1.f);
     static constexpr ImVec4 ErrorOrange = ImVec4(1.f, 0.569f, 0.f, 1.f);
     static constexpr ImVec4 FatalRed = ImVec4(0.91f, 0.165f, 0.f, 1.f);
-}
+};

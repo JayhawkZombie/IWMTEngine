@@ -48,6 +48,7 @@ public:
     bool IsAwake() const;
 
     void PostTick();
+    virtual bool RenderEditor() { return false; }
 };
 
 

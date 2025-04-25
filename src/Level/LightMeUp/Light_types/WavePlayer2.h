@@ -7,7 +7,6 @@
 #include<cmath>
 #include<iostream>
 #include "Light.h"
-
 class WavePlayer2
 {
     public:

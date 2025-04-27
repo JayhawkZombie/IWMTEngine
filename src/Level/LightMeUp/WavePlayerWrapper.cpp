@@ -49,7 +49,6 @@ void WavePlayerWrapper::Init() {
                              m_config.wvSpdLt,
                              m_config.wvLenRt,
                              m_config.wvSpdRt);
-    // m_wavePlayer.setWaveData(1.f, 64.f, 64.f, 128.f, 64.f);
     m_wavePlayer.update(0.f);
     m_visual.update();
     m_wavePlayer.setSeriesCoeffs(m_config.C_Rt, 2, nullptr, 0);
@@ -57,12 +56,22 @@ void WavePlayerWrapper::Init() {
 }
 
 bool WavePlayerWrapper::RenderEditor() {
-    bool edited       = false;
-    bool didSetSeries = false;
-    static char fileNameBuff[256] = {'\0'};
+    bool edited                    = false;
+    bool didSetSeries              = false;
+    static char fileNameBuff[256]  = {'\0'};
+    static char inputFileBuff[256] = {'\0'};
+    ImGui::SetNextItemWidth(200.f);
     ImGui::InputText("Output file", fileNameBuff, 256);
+    ImGui::SameLine();
     if (ImGui::Button("Save")) {
         SaveConfig(std::string(fileNameBuff));
+    }
+    ImGui::SetNextItemWidth(200.f);
+    ImGui::InputText("Input file", inputFileBuff, 256);
+    ImGui::SameLine();
+    if (ImGui::Button("Load")) {
+        LoadConfig(std::string(inputFileBuff));
+        Init();
     }
     if (ImGui::Button("Generate Code")) {
         GlobalConsole->Debug("Generating code for WavePlayer");
@@ -74,9 +83,6 @@ bool WavePlayerWrapper::RenderEditor() {
     if (ImGui::SliderFloat3("C_Rt", &m_config.C_Rt[0], 0.f, 20.f, "%.3f")) {
         didSetSeries = true;
     }
-    // if (ImGui::SliderFloat("Amp Lt", &m_config.AmpLt, 0.f, 5.f, "%.3f")) {
-    //     edited = true;
-    // }
     if (ImGui::SliderFloat("Amp Rt", &m_config.AmpRt, 0.f, 5.f, "%.3f")) {
         edited = true;
     }
@@ -152,10 +158,26 @@ void WavePlayerWrapper::GenerateCode() {
     fmt::println(file, "}}");
 }
 
+bool WavePlayerWrapper::LoadConfig(const std::string &filename) {
+    std::ifstream file(filename);
+    if (!file) {
+        GlobalConsole->Error("Could not open file for wave data %s",
+                             filename.c_str());
+        return false;
+    }
+
+    cereal::JSONInputArchive archive(file);
+    archive(cereal::make_nvp("waveData", m_config));
+    GlobalConsole->Info("Loaded WaveData from file %s", filename.c_str());
+    return true;
+}
+
+
 bool WavePlayerWrapper::SaveConfig(const std::string &filename) {
     std::ofstream file(filename);
     if (!file) {
-        GlobalConsole->Error("Could not open file for saving wave data %s", filename.c_str());
+        GlobalConsole->Error("Could not open file for saving wave data %s",
+                             filename.c_str());
         return false;
     }
 

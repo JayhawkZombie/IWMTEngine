@@ -33,6 +33,7 @@ public:
 
     virtual bool RenderEditor() override;
     virtual bool SaveConfig(const std::string &filename);
+    virtual bool LoadConfig(const std::string &filename);
 
     virtual void GenerateCode();
 

@@ -30,6 +30,7 @@ public:
     virtual bool RenderEditor() override;
     void GenerateCode() override;
     bool SaveConfig(const std::string &filename) override;
+    bool LoadConfig(const std::string &filename) override;
 
     sf::Vector2f m_boxSize    = sf::Vector2f(8.f, 8.f);
     sf::Vector2f m_boxSpacing = sf::Vector2f(4.f, 4.f);

@@ -27,6 +27,10 @@ bool BaseLightPlayerWrapper::SaveConfig(const std::string &filename) {
     return false;
 }
 
+bool BaseLightPlayerWrapper::LoadConfig(const std::string &filename) {
+    return false;
+}
+
 void BaseLightPlayerWrapper::GenerateCode() {
     // Generates code for the lights array
     GlobalConsole->Debug("%lu Lights", m_lights.size());

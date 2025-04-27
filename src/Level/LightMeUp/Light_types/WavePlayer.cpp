@@ -15,9 +15,9 @@ void WavePlayer::init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, Light
 
     // check
     unsigned int rd = HiLt.r, gn = HiLt.g, bu = HiLt.g;
-    std::cout << "\nwvPlay.init() HiLt.r = " << rd << " HiLt.g = " << gn << " HiLt.b = " << bu;
+    // std::cout << "\nwvPlay.init() HiLt.r = " << rd << " HiLt.g = " << gn << " HiLt.b = " << bu;
     rd = LoLt.r; gn = LoLt.g; bu = LoLt.b;
-    std::cout << "\n LoLt.r = " << rd << " LoLt.g = " << gn << " LoLt.b = " << bu;
+    // std::cout << "\n LoLt.r = " << rd << " LoLt.g = " << gn << " LoLt.b = " << bu;
 }
 
 void WavePlayer::setWaveData( float ampRt, float wvLen_lt, float wvSpd_lt, float wvLen_rt, float wvSpd_rt )
@@ -53,7 +53,7 @@ void WavePlayer::setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_
         for( unsigned int k = 0; k < nTermsRt; ++k )
         {
             C_Rt[k] /= sum;
-            std::cout << "\nC_Rt[" << k << "] = " << C_Rt[k];
+            // std::cout << "\nC_Rt[" << k << "] = " << C_Rt[k];
         }
     }
 
@@ -68,7 +68,7 @@ void WavePlayer::setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_
         for( unsigned int k = 0; k < nTermsLt; ++k )
         {
             C_Lt[k] /= sum;
-            std::cout << "\nC_Lt[" << k << "] = " << C_Lt[k];
+            // std::cout << "\nC_Lt[" << k << "] = " << C_Lt[k];
         }
     }
 }
@@ -109,8 +109,8 @@ void WavePlayer::update( float dt )
         float y = AmpRt*yRt + AmpLt*yLt;
   //      std::cout << "\nwvPlay.update() yLt = " << yLt << " yRt = " << yRt << " y = " << y;
 
-        if( y < -1.0f || y > 1.0f )
-            std::cout << "\nwvPlay.update() y = " << y;
+        // if( y < -1.0f || y > 1.0f )
+        //     std::cout << "\nwvPlay.update() y = " << y;
 
         fr = 0.5f*( ( y + 1.0f )*frHi - ( y - 1.0f )*frLo );
         fg = 0.5f*( ( y + 1.0f )*fgHi - ( y - 1.0f )*fgLo );

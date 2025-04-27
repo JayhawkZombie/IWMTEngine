@@ -14,7 +14,9 @@ bool LightMeUpLevel::RenderEditor() {
     if (ImGui::Begin(("LightMeUp"))) {
         ImGui::Text("Visual");
         ImGui::SetNextItemWidth(50.f);
-        EditorViewInt("Matrix Height", m_matrixHeight, ImColor(0.5f, 0.5f, 0.5f, 1.f));
+        EditorViewInt("Matrix Height",
+                      m_matrixHeight,
+                      ImColor(0.5f, 0.5f, 0.5f, 1.f));
         // if (ImGui::DragInt("Matrix Height", &m_matrixHeight, 0.5f, 1, 18)) {
         //     m_matrixWidth = m_matrixHeight;
         //     const auto totalLights = m_matrixHeight * m_matrixHeight;
@@ -59,7 +61,8 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
     ImGui::SeparatorText("Pattern Data");
     EditorViewPatternData("Pattern data",
                           m_lightPlayer2.pattData,
-                          m_lightPlayer2.numPatterns);
+                          m_lightPlayer2.numPatterns,
+                          m_lightPlayer2.pattData[ m_lightPlayer2.patternIter ].funcIndex);
     return false;
 }
 
@@ -122,36 +125,7 @@ bool LightMeUpLevel::RenderWavePlayerEditorTab() {
 
 bool LightMeUpLevel::RenderPulsePlayerEditorTab() {
     bool edited = false;
-    edited = m_pulsePlayerWrapper.RenderEditor();
-    // edited      = EditorLight(m_pulsePlayer.loLt, "Lo light");
-    // ImGui::SameLine();
-    // edited = edited || EditorLight(m_pulsePlayer.hiLt, "Hi light");
-    // edited = edited || EditorBoolean("Repeat", m_pulsePlayer.doRepeat);
-    // if (ImGui::SliderInt("W", &m_pulsePlayer.W, 0, 100)) {
-    //     edited = true;
-    // }
-    // // if (ImGui::SliderInt("hfW", &m_pulsePlayer.hfW, 0, 100)) {
-    // //     edited = true;
-    // // }
-    // if (ImGui::SliderFloat("Speed", &m_pulsePlayer.speed, 0.f, 100.f, "%.3f")) {
-    //     edited = true;
-    // }
-    //
-    // if (ImGui::SliderFloat("tRepeat", &m_pulsePlayer.Trepeat, 0.1f, 10.f)) {
-    //     edited = true;
-    // }
-    // EditorViewFloat("tElap", m_pulsePlayer.tElap, ImColor(0, 255, 255, 255));
-    // if (edited) {
-    //     m_pulsePlayer.init(m_pulsePlayerLights[0],
-    //                        m_matrixHeight,
-    //                        m_matrixWidth,
-    //                        m_pulsePlayer.hiLt,
-    //                        m_pulsePlayer.loLt,
-    //                        m_pulsePlayer.W,
-    //                        m_pulsePlayer.speed,
-    //                        m_pulsePlayer.Trepeat,
-    //                        m_pulsePlayer.doRepeat);
-    // }
+    edited      = m_pulsePlayerWrapper.RenderEditor();
     return edited;
 }
 

@@ -9,7 +9,6 @@
 
 class PulsePlayerWrapper : public BaseLightPlayerWrapper {
 public:
-
     struct config {
         int rows, cols;
         Light defaultColor;
@@ -22,7 +21,7 @@ public:
 
     ~PulsePlayerWrapper() override;
 
-    void SetConfig(const config& config);
+    void SetConfig(const config &config);
 
     virtual void Tick(double delta) override;
     virtual void Init() override;
@@ -31,7 +30,5 @@ public:
     void GenerateCode() override;
 
 private:
-
     PulsePlayer m_pulsePlayer;
-
 };

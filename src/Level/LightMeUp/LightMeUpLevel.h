@@ -30,10 +30,6 @@ class LightMeUpLevel : public Level
     LightVisual m_visual;
     std::vector<patternData> m_patternData;
 
-    // PulsePlayer m_pulsePlayer;
-    // LightVisual m_pulsePlayerVisual;
-    // light_vector m_pulsePlayerLights;
-
     DataPlayerWrapper m_dataPlayerWrapper;
     WavePlayerWrapper m_wavePlayerWrapper;
     PulsePlayerWrapper m_pulsePlayerWrapper;

@@ -3,6 +3,59 @@
 
 #include "Light.h"
 
+/*
+*        case 0 : return false;// a "pause" between patterns
+case 1 : return scrollToRight( n, param );
+case 2 : return scrollToLeft( n, param );
+case 3 : return fillFromRight( n );
+case 4 : return fillFromLeft( n );
+case 5 : return crissCross( n, param );
+case 6 : return alternateBlink( n );
+case 7 : return checkerBlink( n );
+// 2d patterns
+case 10 : return scrollColToRight( n );
+case 11 : return scrollColToLeft( n );
+case 12 : return scrollRowToBottom( n );
+case 13 : return scrollRowToTop( n );
+case 14 : return scrollBoxIn( n );
+case 15 : return scrollBoxOut( n );
+case 16 : return scrollDiagonal( n, param );
+*/
+
+constexpr const char * PatternNames[] = {
+    "pause",
+    "scroll-to-right",
+    "scroll-to-left",
+    "fill-from-right",
+    "fill-from-left",
+    "criss-cross",
+    "alternate-blink",
+    "checker-blink",
+    "<8>",
+    "<9>",
+    "scroll-col-right",
+    "scroll-col-left",
+    "scroll-row-bottom",
+    "scroll-row-top",
+    "scroll-box-in",
+    "scroll-box-out",
+    "scroll-diag",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+    "<oops>",
+};
+
 // a player for presenting procedural patterns in a specified order
 struct patternData// for each pattern in the sequence to be played
 {

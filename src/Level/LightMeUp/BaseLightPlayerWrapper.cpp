@@ -23,11 +23,19 @@ bool BaseLightPlayerWrapper::RenderEditor() {
     return GameObject::RenderEditor();
 }
 
+bool BaseLightPlayerWrapper::SaveConfig(const std::string &filename) {
+    return false;
+}
+
 void BaseLightPlayerWrapper::GenerateCode() {
     // Generates code for the lights array
     GlobalConsole->Debug("%lu Lights", m_lights.size());
     for (size_t i = 0; i < m_lights.size(); i++) {
-        GlobalConsole->Debug("arr[%lu] = CRGB(%i, %i, %i);", i, m_lights[i].r, m_lights[i].g, m_lights[i].b);
+        GlobalConsole->Debug("arr[%lu] = CRGB(%i, %i, %i);",
+                             i,
+                             m_lights[i].r,
+                             m_lights[i].g,
+                             m_lights[i].b);
     }
 }
 

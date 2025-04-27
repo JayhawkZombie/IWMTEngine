@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 18/04/2025 08:44:36
+* Generated at: 27/04/2025 08:07:51
 */
 
 
@@ -12,6 +12,8 @@
 #include "../src/Level/TestBed/SpriteSheet.h"
 #include "../src/Level/Tarmie/TarmieLevel.h"
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
+#include "../src/Level/LightMeUp/WavePlayerWrapper.h"
+#include "../src/Level/LightMeUp/Light_types/Light.h"
 #include "../src/Engine/GameObject.h"
 #include "../src/Editor/Editor.h"
 
@@ -242,6 +244,94 @@ rFactory.ctor<>();
         }
     
 
+        void Reflect_WavePlayerConfig() {
+            std::cerr << "	Registering class WavePlayerConfig" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<WavePlayerConfig>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering WavePlayerConfig rows rows");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::rows>(\"rows\"_hs);");
+            rFactory.data<&WavePlayerConfig::rows>("rows"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig cols cols");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::cols>(\"cols\"_hs);");
+            rFactory.data<&WavePlayerConfig::cols>("cols"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig onLight onLight");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::onLight>(\"onLight\"_hs);");
+            rFactory.data<&WavePlayerConfig::onLight>("onLight"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig offLight offLight");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::offLight>(\"offLight\"_hs);");
+            rFactory.data<&WavePlayerConfig::offLight>("offLight"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig C_Rt C_Rt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::C_Rt>(\"C_Rt\"_hs);");
+            rFactory.data<&WavePlayerConfig::C_Rt>("C_Rt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig AmpLt AmpLt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::AmpLt>(\"AmpLt\"_hs);");
+            rFactory.data<&WavePlayerConfig::AmpLt>("AmpLt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig AmpRt AmpRt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::AmpRt>(\"AmpRt\"_hs);");
+            rFactory.data<&WavePlayerConfig::AmpRt>("AmpRt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig wvLenLt wvLenLt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::wvLenLt>(\"wvLenLt\"_hs);");
+            rFactory.data<&WavePlayerConfig::wvLenLt>("wvLenLt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig wvLenRt wvLenRt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::wvLenRt>(\"wvLenRt\"_hs);");
+            rFactory.data<&WavePlayerConfig::wvLenRt>("wvLenRt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig wvSpdLt wvSpdLt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::wvSpdLt>(\"wvSpdLt\"_hs);");
+            rFactory.data<&WavePlayerConfig::wvSpdLt>("wvSpdLt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig wvSpdRt wvSpdRt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::wvSpdRt>(\"wvSpdRt\"_hs);");
+            rFactory.data<&WavePlayerConfig::wvSpdRt>("wvSpdRt"_hs);
+        
+        }
+    
+
+        void Reflect_Light() {
+            std::cerr << "	Registering class Light" << std::endl;
+            using namespace entt::literals;
+auto rFactory = entt::meta<Light>();
+rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering Light r r");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Light::r>(\"r\"_hs);");
+            rFactory.data<&Light::r>("r"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Light g g");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Light::g>(\"g\"_hs);");
+            rFactory.data<&Light::g>("g"_hs);
+        
+	
+            GlobalConsole->Debug("Registering Light b b");
+            GlobalConsole->Debug("	Code string: rFactory.data<&Light::b>(\"b\"_hs);");
+            rFactory.data<&Light::b>("b"_hs);
+        
+        }
+    
+
         void Reflect_GameObject() {
             std::cerr << "	Registering class GameObject" << std::endl;
             using namespace entt::literals;
@@ -288,6 +378,8 @@ rFactory.ctor<>();
 	Reflect_SpriteSheet();
 	Reflect_TarmieLevel();
 	Reflect_LightMeUpLevel();
+	Reflect_WavePlayerConfig();
+	Reflect_Light();
 	Reflect_GameObject();
 	Reflect_Editor();
         }

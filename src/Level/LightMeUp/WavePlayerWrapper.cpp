@@ -7,8 +7,12 @@
 #include <Editor/ImGuiHelpers.h>
 #include <fstream>
 #include <Globals.h>
+#include <cereal/cereal.hpp>
+#include <Serialization/SerializeTypes.h>
+#include <cereal/archives/json.hpp>
+#include <GeneratedSerializationData.h>
 
-void WavePlayerWrapper::SetConfig(const config &config) {
+void WavePlayerWrapper::SetConfig(const WavePlayerConfig &config) {
     m_config = config;
 }
 
@@ -40,7 +44,11 @@ void WavePlayerWrapper::Init() {
                   m_boxSpacing.y,
                   m_boxSize
                  );
-    m_wavePlayer.setWaveData(m_config.AmpRt, m_config.wvLenLt, m_config.wvSpdLt, m_config.wvLenRt, m_config.wvSpdRt);
+    m_wavePlayer.setWaveData(m_config.AmpRt,
+                             m_config.wvLenLt,
+                             m_config.wvSpdLt,
+                             m_config.wvLenRt,
+                             m_config.wvSpdRt);
     // m_wavePlayer.setWaveData(1.f, 64.f, 64.f, 128.f, 64.f);
     m_wavePlayer.update(0.f);
     m_visual.update();
@@ -49,13 +57,18 @@ void WavePlayerWrapper::Init() {
 }
 
 bool WavePlayerWrapper::RenderEditor() {
-    bool edited = false;
+    bool edited       = false;
     bool didSetSeries = false;
+    static char fileNameBuff[256] = {'\0'};
+    ImGui::InputText("Output file", fileNameBuff, 256);
+    if (ImGui::Button("Save")) {
+        SaveConfig(std::string(fileNameBuff));
+    }
     if (ImGui::Button("Generate Code")) {
         GlobalConsole->Debug("Generating code for WavePlayer");
         GenerateCode();
     }
-    edited      = EditorLight(m_config.offLight, "Lo light");
+    edited = EditorLight(m_config.offLight, "Lo light");
     ImGui::SameLine();
     edited = edited || EditorLight(m_config.onLight, "Hi light");
     if (ImGui::SliderFloat3("C_Rt", &m_config.C_Rt[0], 0.f, 20.f, "%.3f")) {
@@ -74,14 +87,14 @@ bool WavePlayerWrapper::RenderEditor() {
                            128.f,
                            "%.3f")) {
         edited = true;
-                           }
+    }
     if (ImGui::SliderFloat("WvLn Rt",
                            &m_config.wvLenRt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
-                           }
+    }
 
     if (ImGui::SliderFloat("WvSpd Lt",
                            &m_config.wvSpdLt,
@@ -89,14 +102,14 @@ bool WavePlayerWrapper::RenderEditor() {
                            128.f,
                            "%.3f")) {
         edited = true;
-                           }
+    }
     if (ImGui::SliderFloat("WvSpd Rt",
                            &m_config.wvSpdRt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
-                           }
+    }
 
     if (edited) {
         Init();
@@ -118,8 +131,15 @@ void WavePlayerWrapper::GenerateCode() {
     }
 
     fmt::println(file, "void initWaveData(WavePlayer &wp, Light *arr) {{");
-    fmt::println(file, "static float C_Rt[3] = {{{},{},{}}};", m_config.C_Rt[0], m_config.C_Rt[1], m_config.C_Rt[2]);
-    fmt::println(file, "int rows = {}, cols = {};", m_config.rows, m_config.cols);
+    fmt::println(file,
+                 "static float C_Rt[3] = {{{},{},{}}};",
+                 m_config.C_Rt[0],
+                 m_config.C_Rt[1],
+                 m_config.C_Rt[2]);
+    fmt::println(file,
+                 "int rows = {}, cols = {};",
+                 m_config.rows,
+                 m_config.cols);
     fmt::println(file, "Light onLight = {};", m_config.onLight);
     fmt::println(file, "Light offLight = {};", m_config.offLight);
     fmt::println(file, "wp.AmpRt = {};", m_config.AmpRt);
@@ -130,6 +150,19 @@ void WavePlayerWrapper::GenerateCode() {
     fmt::println(file, "wp.C_Rt = C_Rt;");
     fmt::println(file, "wp.init(arr[0], rows, cols, onLight, offLight);");
     fmt::println(file, "}}");
+}
+
+bool WavePlayerWrapper::SaveConfig(const std::string &filename) {
+    std::ofstream file(filename);
+    if (!file) {
+        GlobalConsole->Error("Could not open file for saving wave data %s", filename.c_str());
+        return false;
+    }
+
+    GlobalConsole->Debug("Saving wave data to %s", filename.c_str());
+    cereal::JSONOutputArchive archive(file);
+    archive(cereal::make_nvp("waveData", m_config));
+    return true;
 }
 
 

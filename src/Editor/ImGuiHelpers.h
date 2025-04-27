@@ -100,7 +100,8 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
 
 inline void EditorViewPatternData(const char *label,
                                   const patternData *pdata,
-                                  unsigned int numPatterns) {
+                                  unsigned int numPatterns,
+                                  unsigned int currentIndex = 0) {
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
     ImGui::PushID(label);
     ImGui::BeginChild("##Light",
@@ -109,23 +110,30 @@ inline void EditorViewPatternData(const char *label,
                       ImGuiChildFlags_AutoResizeX,
                       ImGuiWindowFlags_None);
     if (ImGui::BeginTable(label,
-                          3,
+                          4,
                           ImGuiTableFlags_Resizable |
                           ImGuiTableFlags_BordersOuter |
                           ImGuiTableFlags_ScrollY)) {
         ImGui::TableSetupColumn("Func index");
         ImGui::TableSetupColumn("Step pause");
         ImGui::TableSetupColumn("Param");
+        ImGui::TableSetupColumn("Name");
         ImGui::TableHeadersRow();
         for (unsigned int i = 0; i < numPatterns; i++) {
             ImGui::TableNextRow();
-            ImGui::TableSetColumnIndex(0);
             const auto &p = pdata[i];
-            ImGui::Text("%u", p.funcIndex);
+            if (p.funcIndex == currentIndex) {
+                ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImColor(255, 255, 0));
+            }
+            ImColor tColor = p.funcIndex == currentIndex ? ImColor(0, 0, 0) : ImColor(255, 255, 255);
+            ImGui::TableSetColumnIndex(0);
+            ImGui::TextColored(tColor, "%u", p.funcIndex);
             ImGui::TableSetColumnIndex(1);
-            ImGui::Text("%u", p.stepPause);
+            ImGui::TextColored(tColor, "%u", p.stepPause);
             ImGui::TableSetColumnIndex(2);
-            ImGui::Text("%u", p.param);
+            ImGui::TextColored(tColor, "%u", p.param);
+            ImGui::TableSetColumnIndex(3);
+            ImGui::TextColored(tColor, "%s", PatternNames[p.funcIndex]);
         }
         ImGui::EndTable();
     }

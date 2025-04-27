@@ -149,22 +149,23 @@ void LightMeUpLevel::ResetAndResizeLights() {
                   m_boxSize);
     AssignRandomColors();
     m_visual.update();
-    WavePlayerWrapper::config config;
-    config.rows = m_matrixHeight * 2;
-    config.cols = m_matrixWidth * 2;
-    config.onLight = Light(0, 255, 255);
+    WavePlayerConfig config;
+    config.rows     = m_matrixHeight * 2;
+    config.cols     = m_matrixWidth * 2;
+    config.onLight  = Light(0, 255, 255);
     config.offLight = Light(255, 0, 255);
-    config.C_Rt[0] = C_Rt[0];
-    config.C_Rt[1] = C_Rt[1];
-    config.C_Rt[2] = C_Rt[2];
-    config.AmpLt = 0.5f;
-    config.AmpRt = 0.5f;
-    config.wvLenLt = 64.f;
-    config.wvLenRt = 64.f;
-    config.wvSpdLt = 128.f;
-    config.wvSpdRt = 128.f;
+    config.C_Rt[0]  = C_Rt[0];
+    config.C_Rt[1]  = C_Rt[1];
+    config.C_Rt[2]  = C_Rt[2];
+    config.AmpLt    = 0.5f;
+    config.AmpRt    = 0.5f;
+    config.wvLenLt  = 64.f;
+    config.wvLenRt  = 64.f;
+    config.wvSpdLt  = 128.f;
+    config.wvSpdRt  = 128.f;
     m_wavePlayerWrapper.SetConfig(config);
-    m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f, m_boxPosition.y));
+    m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f,
+                                                 m_boxPosition.y));
     m_wavePlayerWrapper.Init();
     // m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
     //                          m_matrixHeight,
@@ -196,18 +197,21 @@ void LightMeUpLevel::ResetAndResizeLights() {
                        m_config.repeat);
      */
     PulsePlayerWrapper::config config2;
-    config2.rows = m_matrixHeight;
-    config2.cols = m_matrixWidth;
-    config2.hiLight = Light(125, 125, 0);
-    config2.lowLight = Light(0, 0, 0);
+    config2.rows         = m_matrixHeight;
+    config2.cols         = m_matrixWidth;
+    config2.hiLight      = Light(125, 125, 0);
+    config2.lowLight     = Light(0, 0, 0);
     config2.defaultColor = Light(255, 0, 0);
-    config2.W_pulse = 12.f;
-    config2.repeat = true;
-    config2.speed = 1.f;
-    config2.boxSize = m_boxSize;
-    config2.boxSpacing = m_boxSpacing;
-    config2.T_repeat = 1.f;
-    m_pulsePlayerWrapper.SetPosition({m_boxPosition.x + 300.f, m_boxPosition.y});
+    config2.W_pulse      = 12.f;
+    config2.repeat       = true;
+    config2.speed        = 1.f;
+    config2.boxSize      = m_boxSize;
+    config2.boxSpacing   = m_boxSpacing;
+    config2.T_repeat     = 1.f;
+    m_pulsePlayerWrapper.SetPosition({
+                                         m_boxPosition.x + 300.f,
+                                         m_boxPosition.y
+                                     });
     m_pulsePlayerWrapper.SetConfig(config2);
     m_pulsePlayerWrapper.Init();
 

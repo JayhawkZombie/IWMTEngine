@@ -30,4 +30,13 @@ inline auto format_as(const Light &l) {
     return fmt::format("Light({},{},{})", l.r, l.g, l.b);
 }
 
+#include <Reflection/GenReflection.h>
+
+// Register Light type
+RENGINE_REFLECT_CLASS_BEGIN(Light)
+RENGINE_REFLECT_CLASS_MEMBER(Light, r, "r")
+RENGINE_REFLECT_CLASS_MEMBER(Light, g, "g")
+RENGINE_REFLECT_CLASS_MEMBER(Light, b, "b")
+RENGINE_REFLECT_CLASS_END(Light)
+
 #endif // LIGHT_H

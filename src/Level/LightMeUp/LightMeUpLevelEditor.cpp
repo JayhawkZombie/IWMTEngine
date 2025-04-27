@@ -122,35 +122,36 @@ bool LightMeUpLevel::RenderWavePlayerEditorTab() {
 
 bool LightMeUpLevel::RenderPulsePlayerEditorTab() {
     bool edited = false;
-    edited      = EditorLight(m_pulsePlayer.loLt, "Lo light");
-    ImGui::SameLine();
-    edited = edited || EditorLight(m_pulsePlayer.hiLt, "Hi light");
-    edited = edited || EditorBoolean("Repeat", m_pulsePlayer.doRepeat);
-    if (ImGui::SliderInt("W", &m_pulsePlayer.W, 0, 100)) {
-        edited = true;
-    }
-    // if (ImGui::SliderInt("hfW", &m_pulsePlayer.hfW, 0, 100)) {
+    edited = m_pulsePlayerWrapper.RenderEditor();
+    // edited      = EditorLight(m_pulsePlayer.loLt, "Lo light");
+    // ImGui::SameLine();
+    // edited = edited || EditorLight(m_pulsePlayer.hiLt, "Hi light");
+    // edited = edited || EditorBoolean("Repeat", m_pulsePlayer.doRepeat);
+    // if (ImGui::SliderInt("W", &m_pulsePlayer.W, 0, 100)) {
     //     edited = true;
     // }
-    if (ImGui::SliderFloat("Speed", &m_pulsePlayer.speed, 0.f, 100.f, "%.3f")) {
-        edited = true;
-    }
-
-    if (ImGui::SliderFloat("tRepeat", &m_pulsePlayer.Trepeat, 0.1f, 10.f)) {
-        edited = true;
-    }
-    EditorViewFloat("tElap", m_pulsePlayer.tElap, ImColor(0, 255, 255, 255));
-    if (edited) {
-        m_pulsePlayer.init(m_pulsePlayerLights[0],
-                           m_matrixHeight,
-                           m_matrixWidth,
-                           m_pulsePlayer.hiLt,
-                           m_pulsePlayer.loLt,
-                           m_pulsePlayer.W,
-                           m_pulsePlayer.speed,
-                           m_pulsePlayer.Trepeat,
-                           m_pulsePlayer.doRepeat);
-    }
+    // // if (ImGui::SliderInt("hfW", &m_pulsePlayer.hfW, 0, 100)) {
+    // //     edited = true;
+    // // }
+    // if (ImGui::SliderFloat("Speed", &m_pulsePlayer.speed, 0.f, 100.f, "%.3f")) {
+    //     edited = true;
+    // }
+    //
+    // if (ImGui::SliderFloat("tRepeat", &m_pulsePlayer.Trepeat, 0.1f, 10.f)) {
+    //     edited = true;
+    // }
+    // EditorViewFloat("tElap", m_pulsePlayer.tElap, ImColor(0, 255, 255, 255));
+    // if (edited) {
+    //     m_pulsePlayer.init(m_pulsePlayerLights[0],
+    //                        m_matrixHeight,
+    //                        m_matrixWidth,
+    //                        m_pulsePlayer.hiLt,
+    //                        m_pulsePlayer.loLt,
+    //                        m_pulsePlayer.W,
+    //                        m_pulsePlayer.speed,
+    //                        m_pulsePlayer.Trepeat,
+    //                        m_pulsePlayer.doRepeat);
+    // }
     return edited;
 }
 

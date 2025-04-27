@@ -94,8 +94,9 @@ void LightMeUpLevel::UpdateVisuals(double delta) {
     m_visual.update();
     m_starrySky.update(static_cast<float>(delta));
     m_wavePlayerWrapper.Tick(delta);
-    m_pulsePlayer.update(static_cast<float>(delta));
-    m_pulsePlayerVisual.update();
+    // m_pulsePlayer.update(static_cast<float>(delta));
+    // m_pulsePlayerVisual.update();
+    m_pulsePlayerWrapper.Tick(delta);
     m_dataPlayerWrapper.Tick(delta);
 }
 
@@ -118,9 +119,10 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
 
 void LightMeUpLevel::RenderVisuals(sf::RenderTarget &target) {
     m_visual.draw(target);
-    m_pulsePlayerVisual.draw(target);
+    // m_pulsePlayerVisual.draw(target);
     m_dataPlayerWrapper.Render(target);
     m_wavePlayerWrapper.Render(target);
+    m_pulsePlayerWrapper.Render(target);
     // m_wavePlayerVisual.draw(target);
     // m_dataPlayerVisual.draw(target);
 }
@@ -137,8 +139,6 @@ void LightMeUpLevel::SetLEDsPosition(const sf::Vector2f &pos) {
 
 void LightMeUpLevel::ResetAndResizeLights() {
     m_lights.resize(m_matrixWidth * m_matrixHeight, Light(125, 125, 125));
-    m_pulsePlayerLights.resize(m_matrixWidth * m_matrixHeight,
-                               Light(125, 125, 125));
     m_visual.init(m_lights[0],
                   m_matrixHeight,
                   m_matrixWidth,
@@ -157,8 +157,8 @@ void LightMeUpLevel::ResetAndResizeLights() {
     config.C_Rt[0] = C_Rt[0];
     config.C_Rt[1] = C_Rt[1];
     config.C_Rt[2] = C_Rt[2];
-    config.AmpLt = 64.f;
-    config.AmpRt = 64.f;
+    config.AmpLt = 0.5f;
+    config.AmpRt = 0.5f;
     config.wvLenLt = 64.f;
     config.wvLenRt = 64.f;
     config.wvSpdLt = 128.f;
@@ -166,24 +166,51 @@ void LightMeUpLevel::ResetAndResizeLights() {
     m_wavePlayerWrapper.SetConfig(config);
     m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f, m_boxPosition.y));
     m_wavePlayerWrapper.Init();
-    m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
-                             m_matrixHeight,
-                             m_matrixWidth,
-                             m_boxPosition.x + 300.f,
-                             m_boxPosition.y,
-                             m_boxSpacing.x,
-                             m_boxSpacing.y,
-                             m_boxSize);
-    m_pulsePlayerVisual.update();
-    m_pulsePlayer.init(m_pulsePlayerLights[0],
-                       m_matrixHeight,
-                       m_matrixWidth,
-                       Light(125, 125, 0),
-                       Light(0, 0, 0),
-                       2,
-                       5.f,
-                       true);
+    // m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
+    //                          m_matrixHeight,
+    //                          m_matrixWidth,
+    //                          m_boxPosition.x + 300.f,
+    //                          m_boxPosition.y,
+    //                          m_boxSpacing.x,
+    //                          m_boxSpacing.y,
+    //                          m_boxSize);
+    // m_pulsePlayerVisual.update();
+    // m_pulsePlayer.init(m_pulsePlayerLights[0],
+    //                    m_matrixHeight,
+    //                    m_matrixWidth,
+    //                    Light(125, 125, 0),
+    //                    Light(0, 0, 0),
+    //                    2,
+    //                    5.f,
+    //                    true);
     // m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
+    /*
+    m_pulsePlayer.init(GetLights()[0],
+                       m_config.rows,
+                       m_config.cols,
+                       m_config.hiLight,
+                       m_config.lowLight,
+                       m_config.W_pulse,
+                       m_config.speed,
+                       m_config.T_repeat,
+                       m_config.repeat);
+     */
+    PulsePlayerWrapper::config config2;
+    config2.rows = m_matrixHeight;
+    config2.cols = m_matrixWidth;
+    config2.hiLight = Light(125, 125, 0);
+    config2.lowLight = Light(0, 0, 0);
+    config2.defaultColor = Light(255, 0, 0);
+    config2.W_pulse = 12.f;
+    config2.repeat = true;
+    config2.speed = 1.f;
+    config2.boxSize = m_boxSize;
+    config2.boxSpacing = m_boxSpacing;
+    config2.T_repeat = 1.f;
+    m_pulsePlayerWrapper.SetPosition({m_boxPosition.x + 300.f, m_boxPosition.y});
+    m_pulsePlayerWrapper.SetConfig(config2);
+    m_pulsePlayerWrapper.Init();
+
     m_dataPlayerWrapper.SetSize(sf::Vector2f(200.f, 200.f));
     m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 400.f,
                                                  m_boxPosition.y));
@@ -196,7 +223,7 @@ void LightMeUpLevel::AssignRandomColors() {
     for (auto &light: m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
     }
-    for (auto &light: m_pulsePlayerLights) {
-        light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
-    }
+    // for (auto &light: m_pulsePlayerLights) {
+    //     light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
+    // }
 }

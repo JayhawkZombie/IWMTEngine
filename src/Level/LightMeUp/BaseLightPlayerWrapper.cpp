@@ -11,6 +11,7 @@ void BaseLightPlayerWrapper::Tick(double delta) {
     if (!m_init) {
         return;
     }
+    m_visual.update();
 }
 
 bool BaseLightPlayerWrapper::ResizeNumLights(size_t numLights, Light color) {
@@ -36,5 +37,9 @@ void BaseLightPlayerWrapper::Init() {
 }
 
 void BaseLightPlayerWrapper::Render(sf::RenderTarget &target) {
+    if (!HasInit()) {
+        return;
+    }
     GameObject::Render(target);
+    m_visual.draw(target);
 }

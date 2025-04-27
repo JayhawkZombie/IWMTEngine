@@ -45,6 +45,7 @@ void WavePlayerWrapper::Init() {
     m_wavePlayer.update(0.f);
     m_visual.update();
     m_wavePlayer.setSeriesCoeffs(m_config.C_Rt, 2, nullptr, 0);
+    SetHasInit(true);
 }
 
 bool WavePlayerWrapper::RenderEditor() {
@@ -60,9 +61,9 @@ bool WavePlayerWrapper::RenderEditor() {
     if (ImGui::SliderFloat3("C_Rt", &m_config.C_Rt[0], 0.f, 20.f, "%.3f")) {
         didSetSeries = true;
     }
-    if (ImGui::SliderFloat("Amp Lt", &m_config.AmpLt, 0.f, 5.f, "%.3f")) {
-        edited = true;
-    }
+    // if (ImGui::SliderFloat("Amp Lt", &m_config.AmpLt, 0.f, 5.f, "%.3f")) {
+    //     edited = true;
+    // }
     if (ImGui::SliderFloat("Amp Rt", &m_config.AmpRt, 0.f, 5.f, "%.3f")) {
         edited = true;
     }
@@ -116,24 +117,22 @@ void WavePlayerWrapper::GenerateCode() {
         return;
     }
 
-    file << "void initWaveData(WavePlayer &wp, Light *arr) {\n";
-    file << "static float C_Rt[3] = {" << m_config.C_Rt[0] << ", " << m_config.C_Rt[1] << ", " << m_config.C_Rt[2] << "};\n";
-    file << "int rows = " << m_config.rows << ", cols = " << m_config.cols << ";\n";
-    file << "Light onLight(" << (int) m_config.onLight.r << "," << (int) m_config.onLight.g << "," << (int) m_config.onLight.b << ");\n";
-    file << "Light offLight(" << (int) m_config.offLight.r << "," << (int) m_config.offLight.g << "," << (int) m_config.offLight.b << ");\n";
-    file << "wp.AmpRt = " << m_config.AmpRt << ";\n";
-    file << "wp.wvLenLt = " << m_config.wvLenLt << ";\n";
-    file << "wp.wvLenRt = " << m_config.wvLenRt << ";\n";
-    file << "wp.wvSpdLt = " << m_config.wvSpdLt << ";\n";
-    file << "wp.wvSpdRt = " << m_config.wvSpdRt << ";\n";
-    file << "wp.C_Rt = C_Rt;";
-    file << "wp.init(arr[0], rows, cols, onLight, offLight);" << "\n";
-    file << "}\n";
-
+    fmt::println(file, "void initWaveData(WavePlayer &wp, Light *arr) {{");
+    fmt::println(file, "static float C_Rt[3] = {{{},{},{}}};", m_config.C_Rt[0], m_config.C_Rt[1], m_config.C_Rt[2]);
+    fmt::println(file, "int rows = {}, cols = {};", m_config.rows, m_config.cols);
+    fmt::println(file, "Light onLight = {};", m_config.onLight);
+    fmt::println(file, "Light offLight = {};", m_config.offLight);
+    fmt::println(file, "wp.AmpRt = {};", m_config.AmpRt);
+    fmt::println(file, "wp.wvLenLt = {};", m_config.wvLenLt);
+    fmt::println(file, "wp.wvLenRt = {};", m_config.wvLenRt);
+    fmt::println(file, "wp.wvSpdLt = {};", m_config.wvSpdLt);
+    fmt::println(file, "wp.wvSpdRt = {};", m_config.wvSpdRt);
+    fmt::println(file, "wp.C_Rt = C_Rt;");
+    fmt::println(file, "wp.init(arr[0], rows, cols, onLight, offLight);");
+    fmt::println(file, "}}");
 }
 
 
 void WavePlayerWrapper::Render(sf::RenderTarget &target) {
     BaseLightPlayerWrapper::Render(target);
-    m_visual.draw(target);
 }

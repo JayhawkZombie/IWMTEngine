@@ -182,11 +182,12 @@ void DataPlayerWrapper::Init() {
 }
 
 void DataPlayerWrapper::Render(sf::RenderTarget &target) {
-    if (!HasInit()) {
-        return;
-    }
-    GameObject::Render(target);
-    m_visual.draw(target);
+    BaseLightPlayerWrapper::Render(target);
+    // if (!HasInit()) {
+    //     return;
+    // }
+    // GameObject::Render(target);
+    // m_visual.draw(target);
 }
 
 void DataPlayerWrapper::GenerateCode() {

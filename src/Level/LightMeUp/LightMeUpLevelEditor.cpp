@@ -9,7 +9,6 @@
 
 bool LightMeUpLevel::RenderEditor() {
     bool edited = false;
-    // static int matrixDim = m_matrixHeight;
 
     if (ImGui::Begin(("LightMeUp"))) {
         ImGui::Text("Visual");
@@ -17,14 +16,6 @@ bool LightMeUpLevel::RenderEditor() {
         EditorViewInt("Matrix Height",
                       m_matrixHeight,
                       ImColor(0.5f, 0.5f, 0.5f, 1.f));
-        // if (ImGui::DragInt("Matrix Height", &m_matrixHeight, 0.5f, 1, 18)) {
-        //     m_matrixWidth = m_matrixHeight;
-        //     const auto totalLights = m_matrixHeight * m_matrixHeight;
-        //     // m_matrixWidth          = m_matrixHeight;
-        //     fmt::println("Total Lights: {}", totalLights);
-        //     // ResetAndResizeLights();
-        //     // Init();
-        // }
 
         if (EditorVector2f(m_boxSize, "Box Size", 4.f, 4.f, 150.f, 150.f)) {
             fmt::println("New vector value: {}", m_boxSize);
@@ -68,59 +59,6 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
 
 bool LightMeUpLevel::RenderWavePlayerEditorTab() {
     return m_wavePlayerWrapper.RenderEditor();
-    // bool edited = false;
-    // edited      = EditorLight(m_wavePlayer.loLt, "Lo light");
-    // ImGui::SameLine();
-    // edited = edited || EditorLight(m_wavePlayer.hiLt, "Hi light");
-    // if (ImGui::SliderFloat3("C_Rt", &C_Rt[0], 0.f, 20.f, "%.3f")) {
-    //     m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
-    // }
-    // if (ImGui::SliderFloat("Amp Lt", &m_wavePlayer.AmpLt, 0.f, 5.f, "%.3f")) {
-    //     edited = true;
-    // }
-    // if (ImGui::SliderFloat("Amp Rt", &m_wavePlayer.AmpRt, 0.f, 5.f, "%.3f")) {
-    //     edited = true;
-    // }
-    //
-    // if (ImGui::SliderFloat("WvLn Lt",
-    //                        &m_wavePlayer.wvLenLt,
-    //                        0.f,
-    //                        128.f,
-    //                        "%.3f")) {
-    //     edited = true;
-    // }
-    // if (ImGui::SliderFloat("WvLn Rt",
-    //                        &m_wavePlayer.wvLenRt,
-    //                        0.f,
-    //                        128.f,
-    //                        "%.3f")) {
-    //     edited = true;
-    // }
-    //
-    // if (ImGui::SliderFloat("WvSpd Lt",
-    //                        &m_wavePlayer.wvSpdLt,
-    //                        0.f,
-    //                        128.f,
-    //                        "%.3f")) {
-    //     edited = true;
-    // }
-    // if (ImGui::SliderFloat("WvSpd Rt",
-    //                        &m_wavePlayer.wvSpdRt,
-    //                        0.f,
-    //                        128.f,
-    //                        "%.3f")) {
-    //     edited = true;
-    // }
-    //
-    // if (edited) {
-    //     m_wavePlayer.init(m_lights[0],
-    //                       m_matrixHeight,
-    //                       m_matrixWidth,
-    //                       m_wavePlayer.hiLt,
-    //                       m_wavePlayer.loLt);
-    // }
-
-    // return edited;
 }
 
 bool LightMeUpLevel::RenderPulsePlayerEditorTab() {

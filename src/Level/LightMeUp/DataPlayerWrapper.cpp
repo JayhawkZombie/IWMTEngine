@@ -21,11 +21,10 @@ void DataPlayerWrapper::Init() {
     BaseLightPlayerWrapper::Init();
     int rows, cols;
     int row0, col0;
-    std::ifstream infile("blueGuy_a16color16x16_data.dp");
+    std::ifstream infile("Boom2_4colorBits16x16_data.txt");
     if (!infile) {
-        std::cerr << "Failed to open 16color data player file" << std::endl;
         GlobalConsole->
-                Error("Failed to open file blueGuy_a16color16x16_data.txt");
+                Error("Failed to open file Boom2_4colorBits16x16_data.txt");
         return;
     }
 
@@ -39,12 +38,10 @@ void DataPlayerWrapper::Init() {
                          m_dataPlayer.stepPause,
                          m_dataPlayer.drawOff,
                          m_dataPlayer.fadeAlong);
-    // m_dataPlayerLights.resize(rows * cols);
     ResizeNumLights(rows * cols, Light(125, 125, 125));
     for (auto &light: GetLights()) {
         light.init(125, 125, 125);
     }
-    // unsigned int numColors = 2;
     infile >> m_numColors;
     GlobalConsole->Debug("numColors: %i", m_numColors);
 
@@ -69,11 +66,9 @@ void DataPlayerWrapper::Init() {
         GlobalConsole->Debug("Reading data in bits");
         if (m_numColors == 16) {
             GlobalConsole->Debug("initDataPlay(): 16 colors from dlbBits");
-            // std::cout << "\n initDataPlay(): 16 colors from dblBits";
             unsigned int numQuadBits;
             infile >> numQuadBits;
             GlobalConsole->Debug("numQuadBits: %i", numQuadBits);
-            // std::cout << "\n numQuadBits = " << numQuadBits;
 
             if (numQuadBits % 2 == 0)
                 m_dataPlayerDataVector.
@@ -88,7 +83,6 @@ void DataPlayerWrapper::Init() {
 
             GlobalConsole->Debug("DataVec.size(): %lu",
                                  m_dataPlayerDataVector.size());
-            // std::cout << "\n DataVec.size() = " << m_dataPlayerDataVector.size();
 
             unsigned int inVal = 0;
             m_dataPlayer.BA.Clear();
@@ -146,7 +140,6 @@ void DataPlayerWrapper::Init() {
         GlobalConsole->Debug("Reading data in rgb");
         // data is in whole bytes which may represent 2, 4 or 16 colors
 
-        // std::cout << "\n initDataPlay(): " << numColors << " colors from Bytes";
         GlobalConsole->Debug("Reading %u colors", m_numColors);
         unsigned int numBytes;
         infile >> numBytes;
@@ -176,18 +169,12 @@ void DataPlayerWrapper::Init() {
                            );
     SetHasInit(true);
     m_dataPlayer.setGridBounds(row0, col0, rows, cols);
-    // std::cout << "\n initDataPlay(): BA.bitSize() = " << m_dataPlayer.BA.bitSize();
     GlobalConsole->Debug("initDataPlay(): BA.bitSize() = %u",
                          m_dataPlayer.BA.bitSize());
 }
 
 void DataPlayerWrapper::Render(sf::RenderTarget &target) {
     BaseLightPlayerWrapper::Render(target);
-    // if (!HasInit()) {
-    //     return;
-    // }
-    // GameObject::Render(target);
-    // m_visual.draw(target);
 }
 
 void DataPlayerWrapper::GenerateCode() {

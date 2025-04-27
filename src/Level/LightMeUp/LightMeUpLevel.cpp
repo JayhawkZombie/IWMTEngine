@@ -94,8 +94,6 @@ void LightMeUpLevel::UpdateVisuals(double delta) {
     m_visual.update();
     m_starrySky.update(static_cast<float>(delta));
     m_wavePlayerWrapper.Tick(delta);
-    // m_pulsePlayer.update(static_cast<float>(delta));
-    // m_pulsePlayerVisual.update();
     m_pulsePlayerWrapper.Tick(delta);
     m_dataPlayerWrapper.Tick(delta);
 }
@@ -119,12 +117,9 @@ void LightMeUpLevel::Render(sf::RenderTarget &target) {
 
 void LightMeUpLevel::RenderVisuals(sf::RenderTarget &target) {
     m_visual.draw(target);
-    // m_pulsePlayerVisual.draw(target);
     m_dataPlayerWrapper.Render(target);
     m_wavePlayerWrapper.Render(target);
     m_pulsePlayerWrapper.Render(target);
-    // m_wavePlayerVisual.draw(target);
-    // m_dataPlayerVisual.draw(target);
 }
 
 
@@ -167,35 +162,6 @@ void LightMeUpLevel::ResetAndResizeLights() {
     m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f,
                                                  m_boxPosition.y));
     m_wavePlayerWrapper.Init();
-    // m_pulsePlayerVisual.init(m_pulsePlayerLights[0],
-    //                          m_matrixHeight,
-    //                          m_matrixWidth,
-    //                          m_boxPosition.x + 300.f,
-    //                          m_boxPosition.y,
-    //                          m_boxSpacing.x,
-    //                          m_boxSpacing.y,
-    //                          m_boxSize);
-    // m_pulsePlayerVisual.update();
-    // m_pulsePlayer.init(m_pulsePlayerLights[0],
-    //                    m_matrixHeight,
-    //                    m_matrixWidth,
-    //                    Light(125, 125, 0),
-    //                    Light(0, 0, 0),
-    //                    2,
-    //                    5.f,
-    //                    true);
-    // m_wavePlayer.setSeriesCoeffs(C_Rt, 2, nullptr, 0);
-    /*
-    m_pulsePlayer.init(GetLights()[0],
-                       m_config.rows,
-                       m_config.cols,
-                       m_config.hiLight,
-                       m_config.lowLight,
-                       m_config.W_pulse,
-                       m_config.speed,
-                       m_config.T_repeat,
-                       m_config.repeat);
-     */
     PulsePlayerWrapper::config config2;
     config2.rows         = m_matrixHeight;
     config2.cols         = m_matrixWidth;
@@ -227,7 +193,4 @@ void LightMeUpLevel::AssignRandomColors() {
     for (auto &light: m_lights) {
         light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
     }
-    // for (auto &light: m_pulsePlayerLights) {
-    //     light.init(colorDist(m_rng), colorDist(m_rng), colorDist(m_rng));
-    // }
 }

@@ -51,7 +51,8 @@ void WavePlayerWrapper::Init() {
                              m_config.wvSpdRt);
     m_wavePlayer.update(0.f);
     m_visual.update();
-    m_wavePlayer.setSeriesCoeffs(m_config.C_Rt, 2, nullptr, 0);
+    GlobalConsole->Debug("C_RT %.3f %.3f %.3f", m_config.C_Rt[0], m_config.C_Rt[1], m_config.C_Rt[2]);
+    m_wavePlayer.setSeriesCoeffs_Unsafe(m_config.C_Rt, 3, nullptr, 0);
     SetHasInit(true);
 }
 
@@ -60,16 +61,18 @@ bool WavePlayerWrapper::RenderEditor() {
     bool didSetSeries              = false;
     static char fileNameBuff[256]  = {'\0'};
     static char inputFileBuff[256] = {'\0'};
-    ImGui::SetNextItemWidth(200.f);
-    ImGui::InputText("Output file", fileNameBuff, 256);
-    ImGui::SameLine();
-    if (ImGui::Button("Save")) {
+
+    if (EditorInputTextWithButton("Output file",
+                                  fileNameBuff,
+                                  256,
+                                  "Output file")) {
         SaveConfig(std::string(fileNameBuff));
     }
-    ImGui::SetNextItemWidth(200.f);
-    ImGui::InputText("Input file", inputFileBuff, 256);
-    ImGui::SameLine();
-    if (ImGui::Button("Load")) {
+
+    if (EditorInputTextWithButton("Input file",
+                                  inputFileBuff,
+                                  256,
+                                  "Input file")) {
         LoadConfig(std::string(inputFileBuff));
         Init();
     }

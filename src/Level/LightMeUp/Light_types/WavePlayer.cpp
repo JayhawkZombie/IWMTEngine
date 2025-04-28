@@ -36,6 +36,7 @@ void WavePlayer::setWaveData( float ampRt, float wvLen_lt, float wvSpd_lt, float
 
 void WavePlayer::setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt )
 {
+    std::cout << "WavePlayer::setSeriesCoeffs" << std::endl;
     C_Rt = C_rt;
     nTermsRt = n_TermsRt;
     C_Lt = C_lt;
@@ -71,6 +72,46 @@ void WavePlayer::setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_
             // std::cout << "\nC_Lt[" << k << "] = " << C_Lt[k];
         }
     }
+}
+
+void WavePlayer::setSeriesCoeffs_Unsafe( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt )
+{
+    std::cout << "WavePlayer::setSeriesCoeffs_Unsafe" << std::endl;
+    C_Rt = C_rt;
+    nTermsRt = n_TermsRt;
+    C_Lt = C_lt;
+    nTermsLt = n_TermsLt;
+
+    // coefficients must sum to 1.0f
+    // float sum = 0.0f;
+    // if( C_Rt )
+    // {
+    //     for( unsigned int k = 0; k < nTermsRt; ++k )
+    //     {
+    //         if( C_Rt[k] > 0.0f ) sum += C_Rt[k];
+    //         else sum -= C_Rt[k];
+    //     }
+    //     for( unsigned int k = 0; k < nTermsRt; ++k )
+    //     {
+    //         C_Rt[k] /= sum;
+    //         // std::cout << "\nC_Rt[" << k << "] = " << C_Rt[k];
+    //     }
+    // }
+    //
+    // if( C_Lt )
+    // {
+    //     sum = 0.0f;
+    //     for( unsigned int k = 0; k < nTermsLt; ++k )
+    //     {
+    //         if( C_Lt[k] > 0.0f ) sum += C_Lt[k];
+    //         else sum -= C_Lt[k];
+    //     }
+    //     for( unsigned int k = 0; k < nTermsLt; ++k )
+    //     {
+    //         C_Lt[k] /= sum;
+    //         // std::cout << "\nC_Lt[" << k << "] = " << C_Lt[k];
+    //     }
+    // }
 }
 
 void WavePlayer::update( float dt )

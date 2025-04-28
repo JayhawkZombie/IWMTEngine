@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 27/04/2025 08:07:51
+* Generated at: 27/04/2025 08:58:41
 */
 
 
@@ -21,8 +21,8 @@
         void Reflect_PhysicsConfig() {
             std::cerr << "	Registering class PhysicsConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<PhysicsConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<PhysicsConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering vec2d gravity gravity");
@@ -35,8 +35,8 @@ rFactory.ctor<>();
         void Reflect_WindowConfig() {
             std::cerr << "	Registering class WindowConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<WindowConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<WindowConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering int width width");
@@ -84,8 +84,8 @@ rFactory.ctor<>();
         void Reflect_CoreConfig() {
             std::cerr << "	Registering class CoreConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<CoreConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<CoreConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering std::string defaultFont defaultFont");
@@ -103,8 +103,8 @@ rFactory.ctor<>();
         void Reflect_GameInitConfig() {
             std::cerr << "	Registering class GameInitConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<GameInitConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<GameInitConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering std::string levelName levelName");
@@ -117,8 +117,8 @@ rFactory.ctor<>();
         void Reflect_EngineConfig() {
             std::cerr << "	Registering class EngineConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<EngineConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<EngineConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering EngineConfig core core");
@@ -146,8 +146,8 @@ rFactory.ctor<>();
         void Reflect_Level() {
             std::cerr << "	Registering class Level" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<Level>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<Level>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering std::string name name");
@@ -165,8 +165,8 @@ rFactory.ctor<>();
         void Reflect_TestBed() {
             std::cerr << "	Registering class TestBed" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<TestBed>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<TestBed>();
+            rFactory.ctor<>();
             rFactory.base<Level>();
             
         }
@@ -175,8 +175,8 @@ rFactory.ctor<>();
         void Reflect_SpriteSheet() {
             std::cerr << "	Registering class SpriteSheet" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<SpriteSheet>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<SpriteSheet>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering std::string originalFileName originalFileName");
@@ -199,8 +199,8 @@ rFactory.ctor<>();
         void Reflect_TarmieLevel() {
             std::cerr << "	Registering class TarmieLevel" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<TarmieLevel>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<TarmieLevel>();
+            rFactory.ctor<>();
             rFactory.base<Level>();
             
             GlobalConsole->Debug("Registering SpriteSheet m_spriteSheet spriteSheet");
@@ -213,8 +213,8 @@ rFactory.ctor<>();
         void Reflect_LightMeUpLevel() {
             std::cerr << "	Registering class LightMeUpLevel" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<LightMeUpLevel>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<LightMeUpLevel>();
+            rFactory.ctor<>();
             rFactory.base<Level>();
             
             GlobalConsole->Debug("Registering LightMeUpLevel m_matrixWidth width");
@@ -247,8 +247,8 @@ rFactory.ctor<>();
         void Reflect_WavePlayerConfig() {
             std::cerr << "	Registering class WavePlayerConfig" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<WavePlayerConfig>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<WavePlayerConfig>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering WavePlayerConfig rows rows");
@@ -311,8 +311,8 @@ rFactory.ctor<>();
         void Reflect_Light() {
             std::cerr << "	Registering class Light" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<Light>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<Light>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering Light r r");
@@ -335,8 +335,8 @@ rFactory.ctor<>();
         void Reflect_GameObject() {
             std::cerr << "	Registering class GameObject" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<GameObject>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<GameObject>();
+            rFactory.ctor<>();
             
             
             GlobalConsole->Debug("Registering sf::Vector2 position position");
@@ -359,8 +359,8 @@ rFactory.ctor<>();
         void Reflect_Editor() {
             std::cerr << "	Registering class Editor" << std::endl;
             using namespace entt::literals;
-auto rFactory = entt::meta<Editor>();
-rFactory.ctor<>();
+            auto rFactory = entt::meta<Editor>();
+            rFactory.ctor<>();
             
             
         }

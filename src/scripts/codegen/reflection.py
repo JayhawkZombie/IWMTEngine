@@ -9,8 +9,8 @@ from string import Template
 meta_factory_name = "rFactory"
 
 meta_template_string = Template("""using namespace entt::literals;
-auto $metaFactoryName = entt::meta<$className>();
-$metaFactoryName.ctor<>();""")
+            auto $metaFactoryName = entt::meta<$className>();
+            $metaFactoryName.ctor<>();""")
 
 meta_data_template_string = Template('$metaFactoryName.data<&$className::$varName>("$description"_hs);')
 

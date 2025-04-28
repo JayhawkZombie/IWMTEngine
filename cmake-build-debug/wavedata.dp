@@ -1,13 +1,13 @@
 void initWaveData(WavePlayer &wp, Light *arr) {
-static float C_Rt[3] = {1,0,8.696};
+static float C_Rt[3] = {0.349,1.765,0.381};
 int rows = 16, cols = 16;
-Light onLight = Light(255,0,0);
-Light offLight = Light(255,255,0);
-wp.AmpRt = 1.347;
-wp.wvLenLt = 91.951;
-wp.wvLenRt = 51.722;
-wp.wvSpdLt = 92.473;
-wp.wvSpdRt = 67.396;
+Light onLight = Light(37,0,255);
+Light offLight = Light(52,255,0);
+wp.AmpRt = 0.387;
+wp.wvLenLt = 51.723;
+wp.wvLenRt = 47.021;
+wp.wvSpdLt = 94.041;
+wp.wvSpdRt = 0;
 wp.C_Rt = C_Rt;
 wp.init(arr[0], rows, cols, onLight, offLight);
 }

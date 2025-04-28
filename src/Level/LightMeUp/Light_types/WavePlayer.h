@@ -31,6 +31,7 @@ class WavePlayer
     void init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, Light HiLt, Light LoLt );
     void setWaveData( float AmpRt, float wvLen_lt, float wvSpd_lt, float wvLen_rt, float wvSpd_rt );
     void setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt );
+    void setSeriesCoeffs_Unsafe( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt );
 
     WavePlayer(){}
     ~WavePlayer(){}

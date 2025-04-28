@@ -5,6 +5,7 @@
 #include "DataPlayerWrapper.h"
 #include <Globals.h>
 #include <Console/EngineConsole.h>
+#include <fmt/ostream.h>
 
 DataPlayerWrapper::~DataPlayerWrapper() {
 }
@@ -179,21 +180,28 @@ void DataPlayerWrapper::Render(sf::RenderTarget &target) {
 
 void DataPlayerWrapper::GenerateCode() {
     std::ofstream file("dataPlayer.txt");
-    file << "CRGB arr" << m_dataPlayer.getRows() << " * " << m_dataPlayer.getCols() << ";\n";
+    fmt::println(file, "CRGB arr[{}]", m_dataPlayer.getCols() * m_dataPlayer.getRows());
+    // file << "CRGB arr" << m_dataPlayer.getRows() << " * " << m_dataPlayer.getCols() << ";\n";
     GlobalConsole->Debug("CRGB arr[%i * %i];", m_dataPlayer.getRows(), m_dataPlayer.getCols());
     GlobalConsole->Debug("dp.stepPause = %i; dp.drawOff = %i; dp.fadeAlong = %i;", m_dataPlayer.stepPause, m_dataPlayer.drawOff, m_dataPlayer.fadeAlong);
+    fmt::println(file, "dp.stepPause = {};", m_dataPlayer.stepPause);
     file << "dp.stepPause = " << m_dataPlayer.stepPause << ";\n";
+    fmt::println(file, "dp.drawOff = {};", m_dataPlayer.drawOff);
     file << "dp.drawOff = " << m_dataPlayer.drawOff << ";\n";
+    fmt::println(file, "dp.fadeAlong = {};", m_dataPlayer.fadeAlong);
     file << "dp.fadeAlong = " << m_dataPlayer.fadeAlong << ";\n";
+    fmt::println(file, "uint8_t dv[{}]", m_dataPlayerDataVector.size());
     file << "uint8_t dv[" << m_dataPlayerDataVector.size() << "];\n";
     BaseLightPlayerWrapper::GenerateCode();
     const auto lights = GetLights();
     for (int i = 0; i < 16; ++i) {
+        fmt::println(file, "dp.lt[{}] = {};", i, m_dataPlayer.Lt[i]);
         file << "dp.Lt[" << i << "] = Light(" << (int) m_dataPlayer.Lt[i].r << "," << (int) m_dataPlayer.Lt[i].g << "," << (int) m_dataPlayer.Lt[i].b << ");\n";
     }
     GlobalConsole->Debug("Data vector %lu", m_dataPlayerDataVector.size());
     for (unsigned int k = 0; k < m_dataPlayerDataVector.size(); ++k) {
         GlobalConsole->Debug("\tdv[%u] = %u", k, m_dataPlayerDataVector[k]);
+        fmt::println(file, "dv[{}] = ", k, m_dataPlayerDataVector[k]);
         file << "dv[" << k << "] = " << (int) m_dataPlayerDataVector[k] << ";\n";
     }
 }

@@ -98,6 +98,17 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
     ImGui::TextColored(color, "%u", value);
 }
 
+inline bool EditorInputTextWithButton(const char *inputLabel, char *inputBuff, size_t inputBuffSize, const char *buttonText) {
+    bool edited = false;
+    ImGui::SetNextItemWidth(150.f);
+    ImGui::InputText(inputLabel, inputBuff, inputBuffSize);
+    ImGui::SameLine();
+    ImGui::PushID(inputLabel);
+    edited = ImGui::Button(buttonText);
+    ImGui::PopID();
+    return edited;
+}
+
 inline void EditorViewPatternData(const char *label,
                                   const patternData *pdata,
                                   unsigned int numPatterns,

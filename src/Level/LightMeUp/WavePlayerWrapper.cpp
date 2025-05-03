@@ -22,7 +22,12 @@ WavePlayerWrapper::~WavePlayerWrapper() {
 void WavePlayerWrapper::Tick(double delta) {
     BaseLightPlayerWrapper::Tick(delta);
     m_visual.update();
-    m_wavePlayer.update(static_cast<float>(delta));
+    m_wavePlayer.update(updateScale * static_cast<float>(delta));
+    accumTime += delta;
+    if (accumTime >= 2.0) {
+        accumTime = 0.0;
+        TryToIndexWaveFiles();
+    }
 }
 
 void WavePlayerWrapper::Init() {
@@ -51,16 +56,29 @@ void WavePlayerWrapper::Init() {
                              m_config.wvSpdRt);
     m_wavePlayer.update(0.f);
     m_visual.update();
-    GlobalConsole->Debug("C_RT %.3f %.3f %.3f", m_config.C_Rt[0], m_config.C_Rt[1], m_config.C_Rt[2]);
+    GlobalConsole->Debug("C_RT %.3f %.3f %.3f",
+                         m_config.C_Rt[0],
+                         m_config.C_Rt[1],
+                         m_config.C_Rt[2]);
     m_wavePlayer.setSeriesCoeffs_Unsafe(m_config.C_Rt, 3, nullptr, 0);
     SetHasInit(true);
+    TryToIndexWaveFiles();
 }
 
 bool WavePlayerWrapper::RenderEditor() {
-    bool edited                    = false;
-    bool didSetSeries              = false;
-    static char fileNameBuff[256]  = {'\0'};
-    static char inputFileBuff[256] = {'\0'};
+    bool edited                        = false;
+    bool didSetSeries                  = false;
+    static char fileNameBuff[256]      = {'\0'};
+    static char inputFileBuff[256]     = {'\0'};
+    static unsigned int preConfigIndex = 0;
+    bool selectedConfigItem            = false;
+    if (m_preConfiguredWaves.size() < preConfigIndex) {
+        preConfigIndex = 0;
+    }
+
+    if (ImGui::SliderFloat("Update scale", &updateScale, 0.01f, 5.f)) {
+        edited = true;
+    }
 
     if (EditorInputTextWithButton("Output file",
                                   fileNameBuff,
@@ -68,14 +86,21 @@ bool WavePlayerWrapper::RenderEditor() {
                                   "Output file")) {
         SaveConfig(std::string(fileNameBuff));
     }
-
-    if (EditorInputTextWithButton("Input file",
-                                  inputFileBuff,
-                                  256,
-                                  "Input file")) {
-        LoadConfig(std::string(inputFileBuff));
-        Init();
+    if (m_preConfiguredWaves.size() > 0 && EditorComboDropdown("Input files",
+                 m_preConfiguredWaves,
+                 preConfigIndex)) {
+        // Nothing yet
+        selectedConfigItem = true;
     }
+
+    if (m_preConfiguredWaves.size() > 0) {
+        ImGui::SameLine();
+        if (ImGui::Button("Load Config")) {
+            LoadConfig(m_preConfiguredWaves[preConfigIndex]);
+            Init();
+        }
+    }
+
     if (ImGui::Button("Generate Code")) {
         GlobalConsole->Debug("Generating code for WavePlayer");
         GenerateCode();
@@ -173,6 +198,16 @@ bool WavePlayerWrapper::LoadConfig(const std::string &filename) {
     archive(cereal::make_nvp("waveData", m_config));
     GlobalConsole->Info("Loaded WaveData from file %s", filename.c_str());
     return true;
+}
+
+void WavePlayerWrapper::TryToIndexWaveFiles() {
+    // Index pre-configured wave patterns
+    m_preConfiguredWaves.clear();
+    for (const auto &asset: Assets) {
+        if (asset.has_extension() && asset.extension() == ".wave") {
+            m_preConfiguredWaves.push_back(asset.filename().string());
+        }
+    }
 }
 
 

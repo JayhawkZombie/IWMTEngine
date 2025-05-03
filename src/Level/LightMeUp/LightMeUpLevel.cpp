@@ -102,7 +102,12 @@ void LightMeUpLevel::UpdateVisuals(double delta) {
 void LightMeUpLevel::Render(sf::RenderTarget &target) {
     // Get the bounds of the light grid
     sf::FloatRect lightBounds = m_visual.getRect();
+    sf::RectangleShape box;
+    box.setSize(static_cast<sf::Vector2f>(target.getSize()));
+    box.setPosition({0.f, 0.f});
+    box.setFillColor({m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b});
     // Add some padding around the lights for the starry background
+    target.draw(box);
 
     lightBounds.left += lightBounds.width + 50.f;
     lightBounds.top    = 400.f;
@@ -159,7 +164,7 @@ void LightMeUpLevel::ResetAndResizeLights() {
     config.wvSpdLt  = 128.f;
     config.wvSpdRt  = 128.f;
     m_wavePlayerWrapper.SetConfig(config);
-    m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 100.f,
+    m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 150.f,
                                                  m_boxPosition.y));
     m_wavePlayerWrapper.Init();
     PulsePlayerWrapper::config config2;
@@ -175,15 +180,15 @@ void LightMeUpLevel::ResetAndResizeLights() {
     config2.boxSpacing   = m_boxSpacing;
     config2.T_repeat     = 1.f;
     m_pulsePlayerWrapper.SetPosition({
-                                         m_boxPosition.x + 300.f,
-                                         m_boxPosition.y
+                                         m_boxPosition.x,
+                                         m_boxPosition.y + 300.f
                                      });
     m_pulsePlayerWrapper.SetConfig(config2);
     m_pulsePlayerWrapper.Init();
 
     m_dataPlayerWrapper.SetSize(sf::Vector2f(200.f, 200.f));
-    m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 400.f,
-                                                 m_boxPosition.y));
+    m_dataPlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x,
+                                                 m_boxPosition.y + 500.f));
     m_dataPlayerWrapper.Init();
     m_dataPlayerWrapper.Tick(0.0);
 }

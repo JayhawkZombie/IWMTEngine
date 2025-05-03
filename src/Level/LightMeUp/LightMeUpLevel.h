@@ -26,6 +26,7 @@ class LightMeUpLevel : public Level
 
     int m_matrixHeight = 8;
     int m_matrixWidth = 8;
+    Light m_backgroundColor = Light(0, 0, 0);
     LightPlayer2 m_lightPlayer2;
     LightVisual m_visual;
     std::vector<patternData> m_patternData;

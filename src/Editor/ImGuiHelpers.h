@@ -98,7 +98,34 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
     ImGui::TextColored(color, "%u", value);
 }
 
-inline bool EditorInputTextWithButton(const char *inputLabel, char *inputBuff, size_t inputBuffSize, const char *buttonText) {
+inline bool EditorComboDropdown(const char *label,
+                                const std::vector<std::string> &items,
+                                unsigned int &selected) {
+    static int selectedIndex = 0;
+    selectedIndex            = selected;
+    bool edited              = false;
+    ImGui::PushID(label);
+    ImGui::SetNextItemWidth(150.f);
+    if (ImGui::BeginCombo(label, items[selected].c_str())) {
+        for (size_t i = 0; i < items.size(); i++) {
+            if (ImGui::Selectable(items[i].c_str(), selected == i)) {
+                edited        = true;
+                selectedIndex = i;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopID();
+    if (edited) {
+        selected = selectedIndex;
+    }
+    return edited;
+}
+
+inline bool EditorInputTextWithButton(const char *inputLabel,
+                                      char *inputBuff,
+                                      size_t inputBuffSize,
+                                      const char *buttonText) {
     bool edited = false;
     ImGui::SetNextItemWidth(150.f);
     ImGui::InputText(inputLabel, inputBuff, inputBuffSize);
@@ -134,9 +161,12 @@ inline void EditorViewPatternData(const char *label,
             ImGui::TableNextRow();
             const auto &p = pdata[i];
             if (p.funcIndex == currentIndex) {
-                ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImColor(255, 255, 0));
+                ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
+                                       ImColor(255, 255, 0));
             }
-            ImColor tColor = p.funcIndex == currentIndex ? ImColor(0, 0, 0) : ImColor(255, 255, 255);
+            ImColor tColor = p.funcIndex == currentIndex
+                                 ? ImColor(0, 0, 0)
+                                 : ImColor(255, 255, 255);
             ImGui::TableSetColumnIndex(0);
             ImGui::TextColored(tColor, "%u", p.funcIndex);
             ImGui::TableSetColumnIndex(1);
@@ -153,13 +183,17 @@ inline void EditorViewPatternData(const char *label,
     ImGui::PopStyleVar();
 }
 
-inline void EditorViewFloat(const char *label, float value, ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
+inline void EditorViewFloat(const char *label,
+                            float value,
+                            ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
     ImGui::Text("%s", label);
     ImGui::SameLine();
     ImGui::TextColored(color, "%.3f", value);
 }
 
-inline void EditorViewInt(const char *label, int value, ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
+inline void EditorViewInt(const char *label,
+                          int value,
+                          ImColor color = ImColor(1.f, 1.f, 1.f, 1.f)) {
     ImGui::Text("%s", label);
     ImGui::SameLine();
     ImGui::TextColored(color, "%i", value);
@@ -167,14 +201,14 @@ inline void EditorViewInt(const char *label, int value, ImColor color = ImColor(
 
 inline bool EditorBoolean(const char *label, bool &value) {
     static bool val;
-    val = value;
+    val         = value;
     bool edited = false;
 
     ImGui::Text("%s", label);
     ImGui::SameLine();
     if (ImGui::Checkbox(label, &val)) {
         edited = true;
-        value = val;
+        value  = val;
     }
 
     return edited;

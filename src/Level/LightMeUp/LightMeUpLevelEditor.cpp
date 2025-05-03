@@ -11,6 +11,9 @@ bool LightMeUpLevel::RenderEditor() {
     bool edited = false;
 
     if (ImGui::Begin(("LightMeUp"))) {
+        if (EditorLight(m_backgroundColor, "Background Color")) {
+            edited = true;
+        }
         ImGui::Text("Visual");
         ImGui::SetNextItemWidth(50.f);
         EditorViewInt("Matrix Height",

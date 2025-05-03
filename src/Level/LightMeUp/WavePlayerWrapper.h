@@ -32,8 +32,13 @@ public:
     bool SaveConfig(const std::string &filename) override;
     bool LoadConfig(const std::string &filename) override;
 
+    void TryToIndexWaveFiles();
+    double accumTime = 0.0;
+    float updateScale = 1.f;
+
     sf::Vector2f m_boxSize    = sf::Vector2f(8.f, 8.f);
     sf::Vector2f m_boxSpacing = sf::Vector2f(4.f, 4.f);
+    std::vector<std::string> m_preConfiguredWaves;
     WavePlayer m_wavePlayer;
 };
 

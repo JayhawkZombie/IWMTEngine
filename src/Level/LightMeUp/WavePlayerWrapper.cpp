@@ -75,9 +75,15 @@ bool WavePlayerWrapper::RenderEditor() {
     if (m_preConfiguredWaves.size() < preConfigIndex) {
         preConfigIndex = 0;
     }
-
+    ImGui::SetNextItemWidth(50.f);
     if (ImGui::SliderFloat("Update scale", &updateScale, 0.01f, 5.f)) {
         edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Gallery")) {
+        edited = true;
+        ImGui::OpenPopup("WavePlayerGallery");
+        m_showGallery = true;
     }
 
     if (EditorInputTextWithButton("Output file",
@@ -87,8 +93,8 @@ bool WavePlayerWrapper::RenderEditor() {
         SaveConfig(std::string(fileNameBuff));
     }
     if (m_preConfiguredWaves.size() > 0 && EditorComboDropdown("Input files",
-                 m_preConfiguredWaves,
-                 preConfigIndex)) {
+            m_preConfiguredWaves,
+            preConfigIndex)) {
         // Nothing yet
         selectedConfigItem = true;
     }
@@ -96,6 +102,12 @@ bool WavePlayerWrapper::RenderEditor() {
     if (m_preConfiguredWaves.size() > 0) {
         ImGui::SameLine();
         if (ImGui::Button("Load Config")) {
+            // Also update the output filename with the new filename
+            memcpy(fileNameBuff,
+                   m_preConfiguredWaves[preConfigIndex].c_str(),
+                   sizeof(char) * std::min(static_cast<size_t>(256),
+                                           m_preConfiguredWaves[preConfigIndex].
+                                           size()));
             LoadConfig(m_preConfiguredWaves[preConfigIndex]);
             Init();
         }
@@ -151,7 +163,26 @@ bool WavePlayerWrapper::RenderEditor() {
             m_wavePlayer.setSeriesCoeffs(&m_config.C_Rt[0], 2, nullptr, 0);
         }
     }
+    RenderGallery();
     return edited;
+}
+
+bool WavePlayerWrapper::RenderGallery() {
+    bool interacted = false;
+    ImVec2 center   = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    if (ImGui::BeginPopupModal("WavePlayerGallery",
+                               nullptr,
+                               ImGuiWindowFlags_AlwaysAutoResize)) {
+        interacted = true;
+        if (ImGui::Button("Gallery")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
+
+    return interacted;
 }
 
 #include <fmt/ostream.h>

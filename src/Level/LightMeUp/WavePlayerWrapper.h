@@ -28,6 +28,7 @@ public:
     virtual void Init() override;
     virtual void Render(sf::RenderTarget &target) override;
     virtual bool RenderEditor() override;
+    bool RenderGallery();
     void GenerateCode() override;
     bool SaveConfig(const std::string &filename) override;
     bool LoadConfig(const std::string &filename) override;
@@ -35,6 +36,7 @@ public:
     void TryToIndexWaveFiles();
     double accumTime = 0.0;
     float updateScale = 1.f;
+    bool m_showGallery = false;
 
     sf::Vector2f m_boxSize    = sf::Vector2f(8.f, 8.f);
     sf::Vector2f m_boxSpacing = sf::Vector2f(4.f, 4.f);

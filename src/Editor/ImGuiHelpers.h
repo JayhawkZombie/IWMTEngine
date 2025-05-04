@@ -11,7 +11,7 @@
 #include <Misc/UI.h>
 #include <Utility/MemUtils.h>
 
-inline bool EditorBeginRoundedChild(const char *label, const char *id) {
+inline bool EditorBeginRoundedChild(const char *label, const char *id, bool showLabel = false) {
     static char id_buff[64];
     id_buff[0] = '#';
     id_buff[1] = '#';
@@ -25,6 +25,9 @@ inline bool EditorBeginRoundedChild(const char *label, const char *id) {
                                     ImGuiChildFlags_AutoResizeY |
                                     ImGuiChildFlags_AutoResizeX,
                                     ImGuiWindowFlags_None);
+    if (showLabel) {
+        ImGui::Text("%s", label);
+    }
     return edited;
 }
 

@@ -20,6 +20,7 @@ bool WavePlayerWrapper::RenderEditor() {
     if (m_preConfiguredWaves.size() < preConfigIndex) {
         preConfigIndex = 0;
     }
+    ImGui::BeginGroup();
     ImGui::SetNextItemWidth(50.f);
     if (ImGui::SliderFloat("Update scale", &updateScale, 0.01f, 5.f)) {
         edited = true;
@@ -41,14 +42,23 @@ bool WavePlayerWrapper::RenderEditor() {
         edited = true;
     }
 
-    if (EditorInputTextWithButton("Output file",
+    if (EditorInputTextWithButton("##WaveOutput",
                                   fileNameBuff,
                                   256,
-                                  "Output file")) {
-        SaveConfig(std::string(fileNameBuff));
+                                  "Save")) {
+        std::string filename = std::string(fileNameBuff);
+        std::filesystem::path path(filename);
+        if (path.extension() == ".wave") {
+            SaveConfig(std::string(fileNameBuff));
+        } else {
+            GlobalConsole->Error("Cannot save file, invalid");
+        }
     }
+    ImGui::EndGroup();
     static bool listItemChanged = false;
     listItemChanged             = false;
+    ImGui::SameLine();
+    ImGui::BeginGroup();
     if (EditorComboListbox("Input files",
                            m_preConfiguredWaves,
                            preConfigIndex,
@@ -64,6 +74,7 @@ bool WavePlayerWrapper::RenderEditor() {
         LoadConfig(m_preConfiguredWaves[preConfigIndex]);
         Init();
     }
+    ImGui::EndGroup();
 
     ImGui::SeparatorText("Runtime Values");
     if (RenderEditorRuntimeValues()) {
@@ -76,7 +87,7 @@ bool WavePlayerWrapper::RenderEditor() {
 }
 
 bool WavePlayerWrapper::RenderEditorRuntimeValues() {
-    bool edited = false;
+    bool edited       = false;
     bool didSetSeries = false;
     if (EditorLight(m_config.offLight, "Lo light")) {
         edited = true;
@@ -85,61 +96,87 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
     if (EditorLight(m_config.onLight, "Hi light")) {
         edited = true;
     }
-    if (ImGui::Checkbox("C_Rt", &m_config.useRightCoefficients)) {
+    ImGui::SameLine();
+    if (ImGui::Button("Generate Code")) {
+        GlobalConsole->Debug("Generating code for WavePlayer");
+        GenerateCode();
+    }
+
+
+    EditorBeginRoundedChild("Series Coefficients", "series_coeff", true);
+    if (ImGui::Checkbox("Right", &m_config.useRightCoefficients)) {
         didSetSeries = true;
         edited       = true;
     }
     ImGui::SameLine();
-    if (ImGui::SliderFloat3("C_Rt", &m_config.C_Rt[0], 0.f, 20.f, "%.3f")) {
+    if (ImGui::SliderFloat3("##C_Rt", &m_config.C_Rt[0], 0.f, 20.f, "%.3f")) {
         edited = true;
     }
-    if (ImGui::Checkbox("C_Lt", &m_config.useLeftCoefficients)) {
+    if (ImGui::Checkbox("Left", &m_config.useLeftCoefficients)) {
         didSetSeries = true;
         edited       = true;
     }
     ImGui::SameLine();
-    if (ImGui::SliderFloat3("C_Lt", &m_config.C_Lt[0], 0.f, 20.f, "%.3f")) {
+    if (ImGui::SliderFloat3("##C_Lt", &m_config.C_Lt[0], 0.f, 20.f, "%.3f")) {
         didSetSeries = true;
         edited       = true;
     }
-    if (ImGui::SliderFloat("Amp Rt", &m_config.AmpRt, 0.f, 5.f, "%.3f")) {
+    EditorEndRoundedChild();
+
+    EditorBeginRoundedChild("Waveform Values", "waveform_values", true);
+    ImGui::Text("Amplitude");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(125.f);
+    if (ImGui::SliderFloat("##Amp Rt", &m_config.AmpRt, 0.f, 5.f, "%.3f")) {
         edited = true;
     }
 
-    if (ImGui::SliderFloat("WvLn Lt",
+    // Wavelength values, grouped
+    ImGui::BeginGroup();
+    ImGui::Text("Wavelength");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(125.f);
+    if (ImGui::SliderFloat("##WvLn Lt",
                            &m_config.wvLenLt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
     }
-    if (ImGui::SliderFloat("WvLn Rt",
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(125.f);
+    if (ImGui::SliderFloat("##WvLn Rt",
                            &m_config.wvLenRt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
     }
+    ImGui::EndGroup();
 
-    if (ImGui::SliderFloat("WvSpd Lt",
+    // Wave speed values, grouped
+    ImGui::BeginGroup();
+    ImGui::Text("Wave Speed");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(125.f);
+    if (ImGui::SliderFloat("##WvSpd Lt",
                            &m_config.wvSpdLt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
     }
-    if (ImGui::SliderFloat("WvSpd Rt",
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(125.f);
+    if (ImGui::SliderFloat("##WvSpd Rt",
                            &m_config.wvSpdRt,
                            0.f,
                            128.f,
                            "%.3f")) {
         edited = true;
     }
-
-    if (ImGui::Button("Generate Code")) {
-        GlobalConsole->Debug("Generating code for WavePlayer");
-        GenerateCode();
-    }
+    ImGui::EndGroup();
+    EditorEndRoundedChild();
 
     if (edited) {
         Init();

@@ -8,7 +8,12 @@ member_nvp_template_string = Template("ar(cereal::make_nvp(\"$varName\", val.$va
 serialize_function_template_string = Template("""
 template<class Archive>
 void serialize(Archive &ar, $type &val) {
-    $nvps
+    try {
+        $nvps
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in $type: " << e.what() << std::endl;
+    }
 }
 """)
 

@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 27/04/2025 08:58:41
+* Generated at: 04/05/2025 10:37:27
 */
 
 
@@ -25,13 +25,19 @@ namespace cereal {
 
 template<class Archive>
 void serialize(Archive &ar, PhysicsConfig &val) {
-    ar(cereal::make_nvp("gravity", val.gravity));
+    try {
+        ar(cereal::make_nvp("gravity", val.gravity));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in PhysicsConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, WindowConfig &val) {
-    ar(cereal::make_nvp("width", val.width));
+    try {
+        ar(cereal::make_nvp("width", val.width));
 ar(cereal::make_nvp("height", val.height));
 ar(cereal::make_nvp("enableVSync", val.enableVSync));
 ar(cereal::make_nvp("enableMsaa", val.enableMsaa));
@@ -39,103 +45,170 @@ ar(cereal::make_nvp("enableFullscreen", val.enableFullscreen));
 ar(cereal::make_nvp("enableResize", val.enableResize));
 ar(cereal::make_nvp("frameRate", val.frameRate));
 ar(cereal::make_nvp("windowTitle", val.windowTitle));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in WindowConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, CoreConfig &val) {
-    ar(cereal::make_nvp("defaultFont", val.defaultFont));
+    try {
+        ar(cereal::make_nvp("defaultFont", val.defaultFont));
 ar(cereal::make_nvp("startEditorPaused", val.startEditorPaused));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in CoreConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, GameInitConfig &val) {
-    ar(cereal::make_nvp("levelName", val.levelName));
+    try {
+        ar(cereal::make_nvp("levelName", val.levelName));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in GameInitConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, EngineConfig &val) {
-    ar(cereal::make_nvp("core", val.core));
+    try {
+        ar(cereal::make_nvp("core", val.core));
 ar(cereal::make_nvp("window", val.window));
 ar(cereal::make_nvp("physics", val.physics));
 ar(cereal::make_nvp("game", val.game));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in EngineConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, Level &val) {
-    ar(cereal::make_nvp("name", val.name));
+    try {
+        ar(cereal::make_nvp("name", val.name));
 ar(cereal::make_nvp("gameObjects", val.gameObjects));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in Level: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, TestBed &val) {
-    
+    try {
+        
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in TestBed: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, SpriteSheet &val) {
-    ar(cereal::make_nvp("originalFileName", val.originalFileName));
+    try {
+        ar(cereal::make_nvp("originalFileName", val.originalFileName));
 ar(cereal::make_nvp("dimensions", val.dimensions));
 ar(cereal::make_nvp("rawFrames", val.rawFrames));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in SpriteSheet: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, TarmieLevel &val) {
-    ar(cereal::make_nvp("m_spriteSheet", val.m_spriteSheet));
+    try {
+        ar(cereal::make_nvp("m_spriteSheet", val.m_spriteSheet));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in TarmieLevel: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, LightMeUpLevel &val) {
-    ar(cereal::make_nvp("m_matrixWidth", val.m_matrixWidth));
+    try {
+        ar(cereal::make_nvp("m_matrixWidth", val.m_matrixWidth));
 ar(cereal::make_nvp("m_matrixHeight", val.m_matrixHeight));
 ar(cereal::make_nvp("m_boxSize", val.m_boxSize));
 ar(cereal::make_nvp("m_boxSpacing", val.m_boxSpacing));
 ar(cereal::make_nvp("m_boxPosition", val.m_boxPosition));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in LightMeUpLevel: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, WavePlayerConfig &val) {
-    ar(cereal::make_nvp("rows", val.rows));
+    try {
+        ar(cereal::make_nvp("rows", val.rows));
 ar(cereal::make_nvp("cols", val.cols));
 ar(cereal::make_nvp("onLight", val.onLight));
 ar(cereal::make_nvp("offLight", val.offLight));
 ar(cereal::make_nvp("C_Rt", val.C_Rt));
+ar(cereal::make_nvp("C_Lt", val.C_Lt));
+ar(cereal::make_nvp("useRightCoefficients", val.useRightCoefficients));
+ar(cereal::make_nvp("useLeftCoefficients", val.useLeftCoefficients));
 ar(cereal::make_nvp("AmpLt", val.AmpLt));
 ar(cereal::make_nvp("AmpRt", val.AmpRt));
 ar(cereal::make_nvp("wvLenLt", val.wvLenLt));
 ar(cereal::make_nvp("wvLenRt", val.wvLenRt));
 ar(cereal::make_nvp("wvSpdLt", val.wvSpdLt));
 ar(cereal::make_nvp("wvSpdRt", val.wvSpdRt));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in WavePlayerConfig: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, Light &val) {
-    ar(cereal::make_nvp("r", val.r));
+    try {
+        ar(cereal::make_nvp("r", val.r));
 ar(cereal::make_nvp("g", val.g));
 ar(cereal::make_nvp("b", val.b));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in Light: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, GameObject &val) {
-    ar(cereal::make_nvp("position", val.position));
+    try {
+        ar(cereal::make_nvp("position", val.position));
 ar(cereal::make_nvp("size", val.size));
 ar(cereal::make_nvp("awake", val.awake));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in GameObject: " << e.what() << std::endl;
+    }
 }
 
 
 template<class Archive>
 void serialize(Archive &ar, Editor &val) {
-    
+    try {
+        
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in Editor: " << e.what() << std::endl;
+    }
 }
 
 }//namespace cereal

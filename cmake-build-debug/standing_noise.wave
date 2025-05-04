@@ -13,10 +13,17 @@
             "b": 255
         },
         "C_Rt": {
-            "value0": 6.98799991607666,
-            "value1": 7.85699987411499,
-            "value2": 1.4490000009536744
+            "value0": 14.20300006866455,
+            "value1": 20.0,
+            "value2": 14.857000350952149
         },
+        "C_Lt": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "useRightCoefficients": true,
+        "useLeftCoefficients": false,
         "AmpLt": 0.5,
         "AmpRt": 2.3369998931884767,
         "wvLenLt": 55.380001068115237,

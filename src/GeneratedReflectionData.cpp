@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 27/04/2025 08:58:41
+* Generated at: 04/05/2025 10:37:27
 */
 
 
@@ -274,6 +274,21 @@
             GlobalConsole->Debug("Registering WavePlayerConfig C_Rt C_Rt");
             GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::C_Rt>(\"C_Rt\"_hs);");
             rFactory.data<&WavePlayerConfig::C_Rt>("C_Rt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig C_Lt C_Lt");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::C_Lt>(\"C_Lt\"_hs);");
+            rFactory.data<&WavePlayerConfig::C_Lt>("C_Lt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig useRightCoefficients useRightCoefficients");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::useRightCoefficients>(\"useRightCoefficients\"_hs);");
+            rFactory.data<&WavePlayerConfig::useRightCoefficients>("useRightCoefficients"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig useLeftCoefficients useLeftCoefficients");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::useLeftCoefficients>(\"useLeftCoefficients\"_hs);");
+            rFactory.data<&WavePlayerConfig::useLeftCoefficients>("useLeftCoefficients"_hs);
         
 	
             GlobalConsole->Debug("Registering WavePlayerConfig AmpLt AmpLt");

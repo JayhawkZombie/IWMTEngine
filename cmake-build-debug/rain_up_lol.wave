@@ -17,6 +17,13 @@
             "value1": 1.1759999990463257,
             "value2": 1.4490000009536744
         },
+        "C_Lt": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "useRightCoefficients": true,
+        "useLeftCoefficients": false,
         "AmpLt": 0.5,
         "AmpRt": 1.0,
         "wvLenLt": 55.380001068115237,

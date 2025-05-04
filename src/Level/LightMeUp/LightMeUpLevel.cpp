@@ -164,6 +164,7 @@ void LightMeUpLevel::ResetAndResizeLights() {
     config.wvSpdLt  = 128.f;
     config.wvSpdRt  = 128.f;
     m_wavePlayerWrapper.SetConfig(config);
+    m_wavePlayerWrapper.SetBoxes({4.f, 4.f}, {2.f, 2.f});
     m_wavePlayerWrapper.SetPosition(sf::Vector2f(m_boxPosition.x + 150.f,
                                                  m_boxPosition.y));
     m_wavePlayerWrapper.Init();

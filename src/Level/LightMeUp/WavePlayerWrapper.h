@@ -10,7 +10,10 @@
 struct WavePlayerConfig {
     int rows, cols;
     Light onLight, offLight;
+    bool useRightCoefficients = true;
+    bool useLeftCoefficients = false;
     float C_Rt[3] = {3, 2, 1};
+    float C_Lt[3] = {0, 0, 0};
     float AmpLt, AmpRt;
     float wvLenLt, wvLenRt;
     float wvSpdLt, wvSpdRt;
@@ -32,6 +35,7 @@ public:
     void GenerateCode() override;
     bool SaveConfig(const std::string &filename) override;
     bool LoadConfig(const std::string &filename) override;
+    void SetBoxes(const sf::Vector2f &boxSize, const sf::Vector2f &boxSpacing);
 
     void TryToIndexWaveFiles();
     double accumTime = 0.0;
@@ -52,6 +56,9 @@ RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, cols, "cols")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, onLight, "onLight")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, offLight, "offLight")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, C_Rt, "C_Rt")
+RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, C_Lt, "C_Lt")
+RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, useRightCoefficients, "useRightCoefficients")
+RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, useLeftCoefficients, "useLeftCoefficients")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, AmpLt, "AmpLt")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, AmpRt, "AmpRt")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, wvLenLt, "wvLenLt")

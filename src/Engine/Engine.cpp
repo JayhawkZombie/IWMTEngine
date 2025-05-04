@@ -25,6 +25,7 @@ void Engine::CheckIndexedFiles(
             Assets.push_back(path);
         }
     }
+    std::ranges::sort(Assets);
 }
 
 bool HasBaseLevelClass(const entt::meta_type &tInfo) {

@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <Globals.h>
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <Level/LightMeUp/Light_types/Light.h>
@@ -98,26 +99,62 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
     ImGui::TextColored(color, "%u", value);
 }
 
-inline bool EditorComboDropdown(const char *label,
+inline bool EditorComboListbox(const char *label,
                                 const std::vector<std::string> &items,
-                                unsigned int &selected) {
+                                unsigned int &selected,
+                                bool &changed) {
     static int selectedIndex = 0;
     selectedIndex            = selected;
     bool edited              = false;
+    changed = false;
     ImGui::PushID(label);
-    ImGui::SetNextItemWidth(150.f);
-    if (ImGui::BeginCombo(label, items[selected].c_str())) {
+    ImGui::SetNextItemWidth(250.f);
+    // if (ImGui::BeginCombo(label, items[selected].c_str())) {
+    //     for (size_t i = 0; i < items.size(); i++) {
+    //         const bool isSelected = selected == i;
+    //         if (ImGui::Selectable(items[i].c_str(), isSelected)) {
+    //             edited        = true;
+    //             selectedIndex = i;
+    //         }
+    //         if (isSelected) {
+    //             ImGui::SetItemDefaultFocus();
+    //         }
+    //     }
+    //     ImGui::EndCombo();
+    // }
+    ImGui::Text("%s", label);
+    if (ImGui::BeginListBox("##ComboDropdown")) {
         for (size_t i = 0; i < items.size(); i++) {
-            if (ImGui::Selectable(items[i].c_str(), selected == i)) {
+            const bool isSelected = selected == i;
+            if (ImGui::Selectable(items[i].c_str(), isSelected)) {
                 edited        = true;
                 selectedIndex = i;
             }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
         }
-        ImGui::EndCombo();
+        ImGui::EndListBox();
     }
     ImGui::PopID();
     if (edited) {
         selected = selectedIndex;
+        changed       = true;
+    }
+    return edited;
+}
+
+inline bool EditorShowAlertModal(const char *title, const char *message) {
+    bool edited = false;
+    if (ImGui::BeginPopupModal(title,
+                               nullptr,
+                               ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::TextColored(ImGuiColors::ErrorOrange, "%s", message);
+        if (ImGui::Button("OK")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+        edited = true;
     }
     return edited;
 }

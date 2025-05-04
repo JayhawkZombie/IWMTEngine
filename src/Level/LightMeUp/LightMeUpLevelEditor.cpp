@@ -24,6 +24,7 @@ bool LightMeUpLevel::RenderEditor() {
             fmt::println("New vector value: {}", m_boxSize);
             ResetAndResizeLights();
         }
+        ImGui::SameLine();
         if (EditorVector2f(m_boxSpacing, "Box Spacing", 1.f, 1.f, 20.f, 20.f)) {
             fmt::println("New vector value: {}", m_boxSpacing);
             ResetAndResizeLights();

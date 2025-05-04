@@ -1,5 +1,6 @@
 #include <Console/EngineConsole.h>
 #include <Globals.h>
+#include <Misc/IconsFontAwesome6.h>
 
 static int InputTextCallbackStub(ImGuiInputTextCallbackData *data) {
     return GlobalConsole->InputTextCallback(data);
@@ -29,7 +30,10 @@ void EngineConsole::RenderLogsAndMessages() {
     const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
     const auto winSize = ImGui::GetWindowSize();
     ImGui::TextUnformatted("Messages and Logs");
-
+    ImGui::SameLine();
+    if (ImGui::Button(ICON_FA_TRASH_CAN)) {
+        ClearConsole();
+    }
     // How much space do we have left?
     if (ImGui::BeginChild("#logs", {winSize.x * 0.7f - 50.f, winSize.y * 0.9f - footer_height_to_reserve},
                           ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeX)) {
@@ -49,7 +53,7 @@ void EngineConsole::RenderTerminal() {
     const float lineHeightToReserve = ImGui::GetTextLineHeightWithSpacing() * 1.f;
     const auto winSize = ImGui::GetWindowSize();
     ImGui::TextUnformatted("Terminal");
-    if (ImGui::BeginChild("#terminal", {winSize.x * 0.3f, winSize.y - footer_height_to_reserve - lineHeightToReserve},
+    if (ImGui::BeginChild("#terminal", {winSize.x * 0.3f, winSize.y - footer_height_to_reserve - lineHeightToReserve - 50},
                           ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeX)) {
         ImGui::Indent(5.f);
         for (int i = 0; i < 20; ++i) {

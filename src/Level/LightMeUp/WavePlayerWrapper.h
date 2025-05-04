@@ -31,6 +31,7 @@ public:
     virtual void Init() override;
     virtual void Render(sf::RenderTarget &target) override;
     virtual bool RenderEditor() override;
+    bool RenderEditorRuntimeValues();
     bool RenderGallery();
     void GenerateCode() override;
     bool SaveConfig(const std::string &filename) override;

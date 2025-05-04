@@ -14,10 +14,8 @@
 
 bool WavePlayerWrapper::RenderEditor() {
     bool edited                        = false;
-    bool didSetSeries                  = false;
     static char fileNameBuff[256]      = {'\0'};
     static unsigned int preConfigIndex = 0;
-    // bool selectedConfigItem             = false;
 
     if (m_preConfiguredWaves.size() < preConfigIndex) {
         preConfigIndex = 0;
@@ -68,6 +66,18 @@ bool WavePlayerWrapper::RenderEditor() {
     }
 
     ImGui::SeparatorText("Runtime Values");
+    if (RenderEditorRuntimeValues()) {
+        edited = true;
+    }
+    if (RenderGallery()) {
+        edited = true;
+    }
+    return edited;
+}
+
+bool WavePlayerWrapper::RenderEditorRuntimeValues() {
+    bool edited = false;
+    bool didSetSeries = false;
     if (EditorLight(m_config.offLight, "Lo light")) {
         edited = true;
     }
@@ -149,11 +159,9 @@ bool WavePlayerWrapper::RenderEditor() {
                                                     : 0);
         }
     }
-    if (RenderGallery()) {
-        edited = true;
-    }
-    return edited;
+    return edited || didSetSeries;
 }
+
 
 bool WavePlayerWrapper::RenderGallery() {
     bool interacted = false;

@@ -9,6 +9,31 @@
 #include <Level/LightMeUp/Light_types/Light.h>
 #include <Level/LightMeUp/Light_types/LightPlayer2.h>
 #include <Misc/UI.h>
+#include <Utility/MemUtils.h>
+
+inline bool EditorBeginRoundedChild(const char *label, const char *id) {
+    static char id_buff[64];
+    id_buff[0] = '#';
+    id_buff[1] = '#';
+    safe_strcpy(id_buff + 2, 62, id, strlen(id));
+    GlobalConsole->Debug("id_buff %s", id_buff);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+    ImGui::PushID(label);
+    bool edited = ImGui::BeginChild(id_buff,
+                                    ImVec2(0, 0),
+                                    ImGuiChildFlags_Borders |
+                                    ImGuiChildFlags_AutoResizeY |
+                                    ImGuiChildFlags_AutoResizeX,
+                                    ImGuiWindowFlags_None);
+    return edited;
+}
+
+inline bool EditorEndRoundedChild() {
+    ImGui::EndChild();
+    ImGui::PopID();
+    ImGui::PopStyleVar();
+    return false;
+}
 
 inline bool EditImGuiVector2f(const char *label, sf::Vector2f &v) {
     if (ImGui::BeginChild(label)) {
@@ -28,13 +53,7 @@ inline bool EditorVector2f(sf::Vector2f &vec,
                            float maxx,
                            float maxy) {
     bool edited = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-    ImGui::PushID(label);
-    ImGui::BeginChild("##ChildR",
-                      ImVec2(0, 80),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY |
-                      ImGuiChildFlags_AutoResizeX,
-                      ImGuiWindowFlags_None);
+    EditorBeginRoundedChild(label, "Vector2f");
     ImGui::Indent(5.f);
     ImGui::Text("%s", label);
     ImGui::SetNextItemWidth(100.f);
@@ -49,9 +68,7 @@ inline bool EditorVector2f(sf::Vector2f &vec,
     }
 
     ImGui::Unindent();
-    ImGui::EndChild();
-    ImGui::PopStyleVar();
-    ImGui::PopID();
+    EditorEndRoundedChild();
     return edited;
 }
 
@@ -62,13 +79,7 @@ inline bool EditorLight(Light &light, const char *label) {
     color[2]              = static_cast<float>(light.b) / 255.0f;
     color[3]              = 1.f;
     bool edited           = false;
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-    ImGui::PushID(label);
-    ImGui::BeginChild("##Light",
-                      ImVec2(0, 0),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY |
-                      ImGuiChildFlags_AutoResizeX,
-                      ImGuiWindowFlags_None);
+    EditorBeginRoundedChild(label, "Light");
     ImGui::Indent(5.f);
     ImGui::Text("%s", label);
     ImGui::SetNextItemWidth(100.f);
@@ -85,9 +96,7 @@ inline bool EditorLight(Light &light, const char *label) {
         edited = true;
     }
     ImGui::Unindent();
-    ImGui::EndChild();
-    ImGui::PopID();
-    ImGui::PopStyleVar();
+    EditorEndRoundedChild();
     return edited;
 }
 
@@ -100,28 +109,15 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
 }
 
 inline bool EditorComboListbox(const char *label,
-                                const std::vector<std::string> &items,
-                                unsigned int &selected,
-                                bool &changed) {
+                               const std::vector<std::string> &items,
+                               unsigned int &selected,
+                               bool &changed) {
     static int selectedIndex = 0;
-    selectedIndex            = selected;
+    selectedIndex            = static_cast<int>(selected);
     bool edited              = false;
-    changed = false;
+    changed                  = false;
     ImGui::PushID(label);
     ImGui::SetNextItemWidth(250.f);
-    // if (ImGui::BeginCombo(label, items[selected].c_str())) {
-    //     for (size_t i = 0; i < items.size(); i++) {
-    //         const bool isSelected = selected == i;
-    //         if (ImGui::Selectable(items[i].c_str(), isSelected)) {
-    //             edited        = true;
-    //             selectedIndex = i;
-    //         }
-    //         if (isSelected) {
-    //             ImGui::SetItemDefaultFocus();
-    //         }
-    //     }
-    //     ImGui::EndCombo();
-    // }
     ImGui::Text("%s", label);
     if (ImGui::BeginListBox("##ComboDropdown")) {
         for (size_t i = 0; i < items.size(); i++) {
@@ -139,7 +135,7 @@ inline bool EditorComboListbox(const char *label,
     ImGui::PopID();
     if (edited) {
         selected = selectedIndex;
-        changed       = true;
+        changed  = true;
     }
     return edited;
 }
@@ -177,13 +173,7 @@ inline void EditorViewPatternData(const char *label,
                                   const patternData *pdata,
                                   unsigned int numPatterns,
                                   unsigned int currentIndex = 0) {
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-    ImGui::PushID(label);
-    ImGui::BeginChild("##Light",
-                      ImVec2(0, 0),
-                      ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY |
-                      ImGuiChildFlags_AutoResizeX,
-                      ImGuiWindowFlags_None);
+    EditorBeginRoundedChild(label, "Patterns");
     if (ImGui::BeginTable(label,
                           4,
                           ImGuiTableFlags_Resizable |
@@ -215,9 +205,7 @@ inline void EditorViewPatternData(const char *label,
         }
         ImGui::EndTable();
     }
-    ImGui::EndChild();
-    ImGui::PopID();
-    ImGui::PopStyleVar();
+    EditorEndRoundedChild();
 }
 
 inline void EditorViewFloat(const char *label,
@@ -250,14 +238,3 @@ inline bool EditorBoolean(const char *label, bool &value) {
 
     return edited;
 }
-
-// namespace ImGuiColors {
-//     static constexpr ImVec4 BrightBlue    = ImVec4(0.149, 0.988f, 0.953f, 1.f);
-//     static constexpr ImVec4 BrightPink    = ImVec4(1.f, 0.f, 0.929f, 1.f);
-//     static constexpr ImVec4 MutedMagenta  = ImVec4(0.808f, 0.22f, 0.812f, 1.f);
-//     static constexpr ImVec4 InfoGray      = ImVec4(0.729f, 0.729f, 0.729f, 1.f);
-//     static constexpr ImVec4 DebugBlue     = ImVec4(0.f, 0.627f, 0.839f, 1.f);
-//     static constexpr ImVec4 WarningYellow = ImVec4(1.f, 1.f, 0.f, 1.f);
-//     static constexpr ImVec4 ErrorOrange   = ImVec4(1.f, 0.569f, 0.f, 1.f);
-//     static constexpr ImVec4 FatalRed      = ImVec4(0.91f, 0.165f, 0.f, 1.f);
-// }

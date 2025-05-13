@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 04/05/2025 11:38:28
+* Generated at: 12/05/2025 21:41:12
 */
 
 
@@ -14,6 +14,7 @@
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
 #include "../src/Level/LightMeUp/WavePlayerWrapper.h"
 #include "../src/Level/LightMeUp/Light_types/Light.h"
+#include "../src/Level/LightMeUp/Light_types/LightPlayer2.h"
 #include "../src/Engine/GameObject.h"
 #include "../src/Editor/Editor.h"
 
@@ -244,6 +245,60 @@
         }
     
 
+        void Reflect_InitPatternConfig() {
+            std::cerr << "	Registering class InitPatternConfig" << std::endl;
+            using namespace entt::literals;
+            auto rFactory = entt::meta<InitPatternConfig>();
+            rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering InitPatternConfig rows rows");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::rows>(\"rows\"_hs);");
+            rFactory.data<&InitPatternConfig::rows>("rows"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig cols cols");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::cols>(\"cols\"_hs);");
+            rFactory.data<&InitPatternConfig::cols>("cols"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig posX posX");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::posX>(\"posX\"_hs);");
+            rFactory.data<&InitPatternConfig::posX>("posX"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig posY posY");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::posY>(\"posY\"_hs);");
+            rFactory.data<&InitPatternConfig::posY>("posY"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig dPosX dPosX");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::dPosX>(\"dPosX\"_hs);");
+            rFactory.data<&InitPatternConfig::dPosX>("dPosX"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig dPosY dPosY");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::dPosY>(\"dPosY\"_hs);");
+            rFactory.data<&InitPatternConfig::dPosY>("dPosY"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig lightSize lightSize");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::lightSize>(\"lightSize\"_hs);");
+            rFactory.data<&InitPatternConfig::lightSize>("lightSize"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig numPatterns numPatterns");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::numPatterns>(\"numPatterns\"_hs);");
+            rFactory.data<&InitPatternConfig::numPatterns>("numPatterns"_hs);
+        
+	
+            GlobalConsole->Debug("Registering InitPatternConfig pd pd");
+            GlobalConsole->Debug("	Code string: rFactory.data<&InitPatternConfig::pd>(\"pd\"_hs);");
+            rFactory.data<&InitPatternConfig::pd>("pd"_hs);
+        
+        }
+    
+
         void Reflect_WavePlayerConfig() {
             std::cerr << "	Registering class WavePlayerConfig" << std::endl;
             using namespace entt::literals;
@@ -347,6 +402,30 @@
         }
     
 
+        void Reflect_patternData() {
+            std::cerr << "	Registering class patternData" << std::endl;
+            using namespace entt::literals;
+            auto rFactory = entt::meta<patternData>();
+            rFactory.ctor<>();
+            
+            
+            GlobalConsole->Debug("Registering patternData funcIndex funcIndex");
+            GlobalConsole->Debug("	Code string: rFactory.data<&patternData::funcIndex>(\"funcIndex\"_hs);");
+            rFactory.data<&patternData::funcIndex>("funcIndex"_hs);
+        
+	
+            GlobalConsole->Debug("Registering patternData stepPause stepPause");
+            GlobalConsole->Debug("	Code string: rFactory.data<&patternData::stepPause>(\"stepPause\"_hs);");
+            rFactory.data<&patternData::stepPause>("stepPause"_hs);
+        
+	
+            GlobalConsole->Debug("Registering patternData param param");
+            GlobalConsole->Debug("	Code string: rFactory.data<&patternData::param>(\"param\"_hs);");
+            rFactory.data<&patternData::param>("param"_hs);
+        
+        }
+    
+
         void Reflect_GameObject() {
             std::cerr << "	Registering class GameObject" << std::endl;
             using namespace entt::literals;
@@ -393,8 +472,10 @@
 	Reflect_SpriteSheet();
 	Reflect_TarmieLevel();
 	Reflect_LightMeUpLevel();
+	Reflect_InitPatternConfig();
 	Reflect_WavePlayerConfig();
 	Reflect_Light();
+	Reflect_patternData();
 	Reflect_GameObject();
 	Reflect_Editor();
         }

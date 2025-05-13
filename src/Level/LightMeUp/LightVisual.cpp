@@ -10,6 +10,41 @@ LightVisual::~LightVisual()
     //dtor
 }
 
+void LightVisual::initRing( Light& r_Lt0, unsigned int numLts, float posX, float posY, float radius, float dPosX, float dPosY, sf::Vector2f LtSz )
+{
+    pLt0 = &r_Lt0;
+    this->numLts = numLts;
+    vtxVec.resize( 4*numLts );
+    
+    // Calculate angle between each LED
+    float angleStep = 2.0f * M_PI / numLts;
+    
+    for( unsigned int n = 0; n < numLts; ++n )
+    {
+        // Calculate position of this LED's center
+        float angle = n * angleStep;
+        float centerX = posX + radius * cos(angle);
+        float centerY = posY + radius * sin(angle);
+        
+        // Calculate the four corners of the LED square
+        // Offset by half the LED size to center it
+        float halfWidth = LtSz.x / 2.0f;
+        float halfHeight = LtSz.y / 2.0f;
+        
+        vtxVec[4*n].position.x = centerX - halfWidth;     // up lt
+        vtxVec[4*n].position.y = centerY - halfHeight;
+        
+        vtxVec[4*n+1].position.x = centerX + halfWidth;   // up rt
+        vtxVec[4*n+1].position.y = centerY - halfHeight;
+        
+        vtxVec[4*n+2].position.x = centerX + halfWidth;   // dn rt
+        vtxVec[4*n+2].position.y = centerY + halfHeight;
+        
+        vtxVec[4*n+3].position.x = centerX - halfWidth;   // dn lt
+        vtxVec[4*n+3].position.y = centerY + halfHeight;
+    }
+}
+
 void LightVisual::init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz )
 {
     pLt0 = &r_Lt0;

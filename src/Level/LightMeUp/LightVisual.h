@@ -15,6 +15,7 @@ public:
 
     // group is entire grid. Rectangular layout
     void init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz );
+    void initRing( Light& r_Lt0, unsigned int numLts, float posX, float posY, float radius, float dPosX, float dPosY, sf::Vector2f LtSz );
     LightVisual( Light& r_Lt0, unsigned int Rows, unsigned int Cols, float posX, float posY, float dPosX, float dPosY, sf::Vector2f LtSz )
     { init( r_Lt0, Rows, Cols, posX, posY, dPosX, dPosY, LtSz ); }
 

@@ -74,10 +74,30 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Level, LightMeUpLevel)
 
 #include <Reflection/GenReflection.h>
 RENGINE_REFLECT_CLASS_BEGIN(LightMeUpLevel)
-RENGINE_REFLECT_BASE_CLASS(Level)
-RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_matrixWidth, "width")
-RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_matrixHeight, "height")
-RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxSize, "boxSize")
-RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxSpacing, "boxSpacing")
-RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxPosition, "boxPosition")
+    RENGINE_REFLECT_BASE_CLASS(Level)
+    RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_matrixWidth, "width")
+    RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_matrixHeight, "height")
+    RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxSize, "boxSize")
+    RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxSpacing, "boxSpacing")
+    RENGINE_REFLECT_CLASS_MEMBER(LightMeUpLevel, m_boxPosition, "boxPosition")
 RENGINE_REFLECT_CLASS_END(LightMeUpLevel)
+
+struct InitPatternConfig {
+    unsigned int rows = 0, cols = 0;
+    float posX = 0.f, posY = 0.f, dPosX = 0.f, dPosY = 0.f;
+    sf::Vector2f lightSize {};
+    unsigned int numPatterns = 0;
+    patternData pd{};
+};
+
+RENGINE_REFLECT_CLASS_BEGIN(InitPatternConfig)
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, rows, "rows")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, cols, "cols")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, posX, "posX")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, posY, "posY")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, dPosX, "dPosX")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, dPosY, "dPosY")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, lightSize, "lightSize")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, numPatterns, "numPatterns")
+    RENGINE_REFLECT_CLASS_MEMBER(InitPatternConfig, pd, "pd")
+RENGINE_REFLECT_CLASS_END(InitPatternConfig)

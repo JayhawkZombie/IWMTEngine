@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 04/05/2025 11:38:28
+* Generated at: 12/05/2025 21:41:12
 */
 
 
@@ -15,6 +15,7 @@
 #include "../src/Level/LightMeUp/LightMeUpLevel.h"
 #include "../src/Level/LightMeUp/WavePlayerWrapper.h"
 #include "../src/Level/LightMeUp/Light_types/Light.h"
+#include "../src/Level/LightMeUp/Light_types/LightPlayer2.h"
 #include "../src/Engine/GameObject.h"
 #include "../src/Editor/Editor.h"
 #include <cereal/cereal.hpp>
@@ -152,6 +153,25 @@ ar(cereal::make_nvp("m_boxPosition", val.m_boxPosition));
 
 
 template<class Archive>
+void serialize(Archive &ar, InitPatternConfig &val) {
+    try {
+        ar(cereal::make_nvp("rows", val.rows));
+ar(cereal::make_nvp("cols", val.cols));
+ar(cereal::make_nvp("posX", val.posX));
+ar(cereal::make_nvp("posY", val.posY));
+ar(cereal::make_nvp("dPosX", val.dPosX));
+ar(cereal::make_nvp("dPosY", val.dPosY));
+ar(cereal::make_nvp("lightSize", val.lightSize));
+ar(cereal::make_nvp("numPatterns", val.numPatterns));
+ar(cereal::make_nvp("pd", val.pd));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in InitPatternConfig: " << e.what() << std::endl;
+    }
+}
+
+
+template<class Archive>
 void serialize(Archive &ar, WavePlayerConfig &val) {
     try {
         ar(cereal::make_nvp("rows", val.rows));
@@ -184,6 +204,19 @@ ar(cereal::make_nvp("b", val.b));
     } catch (std::exception &e) {
         // Not sure what to do here
         std::cerr << "Archive error in Light: " << e.what() << std::endl;
+    }
+}
+
+
+template<class Archive>
+void serialize(Archive &ar, patternData &val) {
+    try {
+        ar(cereal::make_nvp("funcIndex", val.funcIndex));
+ar(cereal::make_nvp("stepPause", val.stepPause));
+ar(cereal::make_nvp("param", val.param));
+    } catch (std::exception &e) {
+        // Not sure what to do here
+        std::cerr << "Archive error in patternData: " << e.what() << std::endl;
     }
 }
 

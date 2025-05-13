@@ -68,6 +68,13 @@ public:
     { funcIndex = fIdx; stepPause = StepPause; param = Param; }
 };
 
+#include <Reflection/GenReflection.h>
+RENGINE_REFLECT_CLASS_BEGIN(patternData)
+    RENGINE_REFLECT_CLASS_MEMBER(patternData, funcIndex, "funcIndex")
+    RENGINE_REFLECT_CLASS_MEMBER(patternData, stepPause, "stepPause")
+    RENGINE_REFLECT_CLASS_MEMBER(patternData, param, "param")
+RENGINE_REFLECT_CLASS_END(patternData)
+
 class LightPlayer2
 {
     public:

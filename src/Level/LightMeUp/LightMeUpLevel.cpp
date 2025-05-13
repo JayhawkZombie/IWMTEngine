@@ -139,14 +139,15 @@ void LightMeUpLevel::SetLEDsPosition(const sf::Vector2f &pos) {
 
 void LightMeUpLevel::ResetAndResizeLights() {
     m_lights.resize(m_matrixWidth * m_matrixHeight, Light(125, 125, 125));
-    m_visual.init(m_lights[0],
-                  m_matrixHeight,
-                  m_matrixWidth,
-                  m_boxPosition.x,
-                  m_boxPosition.y,
-                  m_boxSpacing.x,
-                  m_boxSpacing.y,
-                  m_boxSize);
+    // m_visual.init(m_lights[0],
+    //               m_matrixHeight,
+    //               m_matrixWidth,
+    //               m_boxPosition.x,
+    //               m_boxPosition.y,
+    //               m_boxSpacing.x,
+    //               m_boxSpacing.y,
+    //               m_boxSize);
+    m_visual.initRing(m_lights[0], 64, 100.f, 100.f, 100.f, 5.f, 5.f, m_boxSize);
     AssignRandomColors();
     m_visual.update();
     WavePlayerConfig config;

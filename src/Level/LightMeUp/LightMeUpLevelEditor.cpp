@@ -6,6 +6,9 @@
 #include <Logging/LogFormatting.h>
 #include <Editor/ImGuiHelpers.h>
 #include "LightMeUpLevel.h"
+#include <cereal/types/vector.hpp>
+#include <cereal/archives/json.hpp>
+#include <GeneratedSerializationData.h>
 
 bool LightMeUpLevel::RenderEditor() {
     bool edited = false;
@@ -36,8 +39,38 @@ bool LightMeUpLevel::RenderEditor() {
 }
 
 bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
-    // bool edited = false;
+    bool edited = false;
     ImGui::TextColored(ImColor(255, 0, 0), "State (readonly)");
+    static char outputFileBuff[256] = {0};
+    if (ImGui::InputText("Output file", outputFileBuff, 256)) {
+        edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Save")) {
+        edited = true;
+        InitPatternConfig ipc;
+        ipc.rows        = m_matrixWidth;
+        ipc.cols        = m_matrixHeight;
+        ipc.numPatterns = m_lightPlayer2.numPatterns;
+        ipc.pd          = m_patternData;
+        ipc.lightSize   = m_boxSize;
+        ipc.posX        = m_boxPosition.x;
+        ipc.posY        = m_boxPosition.y;
+        ipc.dPosX       = m_boxSpacing.x;
+        ipc.dPosY       = m_boxSpacing.y;
+        std::ofstream outfile(outputFileBuff);
+        if (!outfile) {
+            GlobalConsole->Error("Could not save file writing %s",
+                                 outputFileBuff);
+        } else {
+            try {
+                cereal::JSONOutputArchive archive(outfile);
+                archive(cereal::make_nvp("InitPatternConfig", ipc));
+            } catch (...) {
+                GlobalConsole->Error("Could not save file writing %s", outputFileBuff);
+            }
+        }
+    }
     ImGui::Separator();
     EditorColoredLabeledUnsignedInt("Num patterns",
                                     ImColor(255, 255, 0),
@@ -56,8 +89,9 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
     EditorViewPatternData("Pattern data",
                           m_lightPlayer2.pattData,
                           m_lightPlayer2.numPatterns,
-                          m_lightPlayer2.pattData[ m_lightPlayer2.patternIter ].funcIndex);
-    return false;
+                          m_lightPlayer2.pattData[m_lightPlayer2.patternIter].
+                          funcIndex);
+    return edited;
 }
 
 bool LightMeUpLevel::RenderWavePlayerEditorTab() {

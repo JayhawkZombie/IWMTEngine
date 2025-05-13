@@ -53,7 +53,7 @@ bool PulsePlayerWrapper::RenderEditor() {
     ImGui::SameLine();
     edited = edited || EditorLight(m_config.hiLight, "Hi light");
     edited = edited || EditorBoolean("Repeat", m_config.repeat);
-    if (ImGui::SliderFloat("W", &m_config.W_pulse, 0, 100)) {
+    if (ImGui::SliderInt("W", &m_config.W_pulse, 0, 100)) {
         edited = true;
     }
     if (ImGui::SliderFloat("Speed", &m_config.speed, 0.f, 100.f, "%.3f")) {
@@ -70,6 +70,22 @@ bool PulsePlayerWrapper::RenderEditor() {
     return edited;
 }
 
+#include <fmt/ostream.h>
+
 void PulsePlayerWrapper::GenerateCode() {
-    BaseLightPlayerWrapper::GenerateCode();
+    // BaseLightPlayerWrapper::GenerateCode();
+    std::ofstream file("pulsedata.pulse");
+    if (!file) {
+        GlobalConsole->Error("Could not open file for writing %s", "pulsedata.pulse");
+        return;
+    }
+
+    fmt::println(file, "void initPulseData(PulsePlayer *pl, Light *arr) {{");
+    fmt::println(file, "int rows = {}, cols = {};", m_config.rows, m_config.cols);
+    fmt::println(file, "Light hiLight = {}, lowLight = {}", m_config.hiLight, m_config.lowLight);
+    fmt::println(file, "int W_pulse = {};", m_config.W_pulse);
+    fmt::println(file, "float speed = {}, T_repeat = {};", m_config.speed, m_config.T_repeat);
+    fmt::println(file, "bool repeat = {}", m_config.repeat);
+    fmt::println(file, "pl->init(arr[0], rows, cols, hiLight, lowLight, W_pulse, speed, T_repeat, repeat);");
+    fmt::println(file, "}}");
 }

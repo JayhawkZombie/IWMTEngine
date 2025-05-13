@@ -13,7 +13,8 @@ public:
         int rows, cols;
         Light defaultColor;
         Light hiLight, lowLight;
-        float W_pulse, speed, T_repeat;
+        int W_pulse;
+        float speed, T_repeat;
         bool repeat = false;
         sf::Vector2f boxSpacing;
         sf::Vector2f boxSize;

@@ -87,7 +87,7 @@ struct InitPatternConfig {
     float posX = 0.f, posY = 0.f, dPosX = 0.f, dPosY = 0.f;
     sf::Vector2f lightSize {};
     unsigned int numPatterns = 0;
-    patternData pd{};
+    std::vector<patternData> pd;
 };
 
 RENGINE_REFLECT_CLASS_BEGIN(InitPatternConfig)

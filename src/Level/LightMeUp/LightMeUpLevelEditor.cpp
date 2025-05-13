@@ -11,9 +11,6 @@ bool LightMeUpLevel::RenderEditor() {
     bool edited = false;
 
     if (ImGui::Begin(("LightMeUp"))) {
-        if (EditorLight(m_backgroundColor, "Background Color")) {
-            edited = true;
-        }
         ImGui::Text("Visual");
         ImGui::SetNextItemWidth(50.f);
         EditorViewInt("Matrix Height",
@@ -29,7 +26,9 @@ bool LightMeUpLevel::RenderEditor() {
             fmt::println("New vector value: {}", m_boxSpacing);
             ResetAndResizeLights();
         }
-
+        if (EditorLight(m_backgroundColor, "Background Color")) {
+            edited = true;
+        }
         RenderLightsEditor();
     }
     ImGui::End();
@@ -79,9 +78,13 @@ bool LightMeUpLevel::RenderDataPlayerEditorTab() {
 bool LightMeUpLevel::RenderLightsEditor() {
     bool edited = false;
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f);
-    edited = EditorLight(m_lightPlayer2.onLt, "On light");
+    if (EditorLight(m_lightPlayer2.onLt, "On light")) {
+        edited = true;
+    }
     ImGui::SameLine();
-    edited = edited || EditorLight(m_lightPlayer2.offLt, "Off light");
+    if (EditorLight(m_lightPlayer2.offLt, "Off light")) {
+        edited = true;
+    }
     if (ImGui::BeginTabBar("Light Players")) {
         if (ImGui::BeginTabItem("Pattern Player")) {
             edited = RenderPatternPlayerEditorTab();

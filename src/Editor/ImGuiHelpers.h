@@ -12,21 +12,16 @@
 #include <Utility/MemUtils.h>
 
 inline bool EditorBeginRoundedChild(const char *label, const char *id, bool showLabel = false) {
-    static char id_buff[64];
-    id_buff[0] = '#';
-    id_buff[1] = '#';
-    safe_strcpy(id_buff + 2, 62, id, strlen(id));
-    GlobalConsole->Debug("id_buff %s", id_buff);
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
     ImGui::PushID(label);
-    bool edited = ImGui::BeginChild(id_buff,
+    bool edited = ImGui::BeginChild(id,
                                     ImVec2(0, 0),
                                     ImGuiChildFlags_Borders |
                                     ImGuiChildFlags_AutoResizeY |
                                     ImGuiChildFlags_AutoResizeX,
                                     ImGuiWindowFlags_None);
     if (showLabel) {
-        ImGui::Text("%s", label);
+        ImGui::TextColored(ImGuiColors::MutedMagenta, "%s", label);
     }
     return edited;
 }
@@ -120,8 +115,9 @@ inline bool EditorComboListbox(const char *label,
     bool edited              = false;
     changed                  = false;
     ImGui::PushID(label);
-    ImGui::SetNextItemWidth(250.f);
+    ImGui::SetNextItemWidth(50.f);
     ImGui::Text("%s", label);
+    ImGui::SetNextItemWidth(350.f);
     if (ImGui::BeginListBox("##ComboDropdown")) {
         for (size_t i = 0; i < items.size(); i++) {
             const bool isSelected = selected == i;

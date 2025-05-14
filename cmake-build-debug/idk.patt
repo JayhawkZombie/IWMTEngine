@@ -1,0 +1,92 @@
+{
+    "InitPatternConfig": {
+        "rows": 8,
+        "cols": 8,
+        "posX": 20.0,
+        "posY": 20.0,
+        "dPosX": 2.0,
+        "dPosY": 2.0,
+        "lightSize": {
+            "x": 4.0,
+            "y": 4.0
+        },
+        "numPatterns": 15,
+        "pd": [
+            {
+                "funcIndex": 16,
+                "stepPause": 8,
+                "param": 3
+            },
+            {
+                "funcIndex": 15,
+                "stepPause": 8,
+                "param": 1
+            },
+            {
+                "funcIndex": 14,
+                "stepPause": 8,
+                "param": 1
+            },
+            {
+                "funcIndex": 1,
+                "stepPause": 2,
+                "param": 5
+            },
+            {
+                "funcIndex": 2,
+                "stepPause": 2,
+                "param": 3
+            },
+            {
+                "funcIndex": 7,
+                "stepPause": 16,
+                "param": 10
+            },
+            {
+                "funcIndex": 3,
+                "stepPause": 2,
+                "param": 1
+            },
+            {
+                "funcIndex": 4,
+                "stepPause": 2,
+                "param": 1
+            },
+            {
+                "funcIndex": 5,
+                "stepPause": 2,
+                "param": 3
+            },
+            {
+                "funcIndex": 6,
+                "stepPause": 16,
+                "param": 12
+            },
+            {
+                "funcIndex": 10,
+                "stepPause": 4,
+                "param": 1
+            },
+            {
+                "funcIndex": 11,
+                "stepPause": 4,
+                "param": 1
+            },
+            {
+                "funcIndex": 12,
+                "stepPause": 4,
+                "param": 1
+            },
+            {
+                "funcIndex": 13,
+                "stepPause": 4,
+                "param": 1
+            },
+            {
+                "funcIndex": 0,
+                "stepPause": 60,
+                "param": 1
+            }
+        ]
+    }
+}

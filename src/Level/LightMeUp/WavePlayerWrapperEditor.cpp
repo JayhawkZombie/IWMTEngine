@@ -33,12 +33,12 @@ bool WavePlayerWrapper::RenderEditor() {
             m_showGallery = true;
         }
 
-        ImGui::SetNextItemWidth(50.f);
+        ImGui::SetNextItemWidth(150.f);
         if (ImGui::SliderInt("Width", &m_config.cols, 0, 256)) {
             edited = true;
         }
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(50.f);
+        ImGui::SetNextItemWidth(150.f);
         if (ImGui::SliderInt("Height", &m_config.rows, 0, 256)) {
             edited = true;
         }
@@ -119,12 +119,13 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
         GlobalConsole->Debug("Generating code for WavePlayer");
         GenerateCode();
     } {
-        ImGuiHelpers::Group _group("Serial Coefficients", "series_coeff", true);
+        ImGuiHelpers::Group _group("Series Coefficients", "series_coeff", true);
         if (ImGui::Checkbox("Right", &m_config.useRightCoefficients)) {
             didSetSeries = true;
             edited       = true;
         }
         ImGui::SameLine();
+        ImGui::SetNextItemWidth(400.f);
         if (ImGui::SliderFloat3("##C_Rt",
                                 &m_config.C_Rt[0],
                                 0.f,
@@ -138,6 +139,7 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
             edited       = true;
         }
         ImGui::SameLine();
+        ImGui::SetNextItemWidth(400.f);
         if (ImGui::SliderFloat3("##C_Lt",
                                 &m_config.C_Lt[0],
                                 0.f,
@@ -150,7 +152,7 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
         ImGuiHelpers::Group _group("Waveform Values", "waveform_values", true);
         ImGui::Text("Amplitude");
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(125.f);
+        ImGui::SetNextItemWidth(200.f);
         if (ImGui::SliderFloat("##Amp Rt", &m_config.AmpRt, 0.f, 5.f, "%.3f")) {
             edited = true;
         }
@@ -158,7 +160,7 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
         ImGui::BeginGroup();
         ImGui::Text("Wavelength");
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(125.f);
+        ImGui::SetNextItemWidth(200.f);
         if (ImGui::SliderFloat("##WvLn Lt",
                                &m_config.wvLenLt,
                                0.f,
@@ -167,30 +169,29 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
             edited = true;
         }
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(125.f);
+        ImGui::SetNextItemWidth(200.f);
         if (ImGui::SliderFloat("##WvLn Rt",
                                &m_config.wvLenRt,
                                0.f,
                                128.f,
-                               "%.3f")) {
+                               "%.6f")) {
             edited = true;
         }
         ImGui::EndGroup();
-
         // Wave speed values, grouped
         ImGui::BeginGroup();
         ImGui::Text("Wave Speed");
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(125.f);
+        ImGui::SetNextItemWidth(200.f);
         if (ImGui::SliderFloat("##WvSpd Lt",
                                &m_config.wvSpdLt,
                                0.f,
                                128.f,
-                               "%.3f")) {
+                               "%.6f")) {
             edited = true;
         }
         ImGui::SameLine();
-        ImGui::SetNextItemWidth(125.f);
+        ImGui::SetNextItemWidth(200.f);
         if (ImGui::SliderFloat("##WvSpd Rt",
                                &m_config.wvSpdRt,
                                0.f,
@@ -294,7 +295,8 @@ void WavePlayerWrapper::TryToIndexWaveFiles() {
     m_preConfiguredWaves.clear();
     for (const auto &asset: Assets) {
         if (asset.has_extension() && asset.extension() == ".wave") {
-            m_preConfiguredWaves.push_back(asset.filename().string());
+            const auto relPath = std::filesystem::relative(asset, "./");
+            m_preConfiguredWaves.push_back(relPath.string());
         }
     }
 }

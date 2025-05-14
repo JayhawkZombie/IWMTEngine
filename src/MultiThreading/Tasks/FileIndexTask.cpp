@@ -4,12 +4,14 @@
 
 #include "FileIndexTask.h"
 
+#include <fmt/base.h>
+
 FileIndexTask::FileIndexTask(const std::filesystem::path &rootPath): root(rootPath) {
 }
 
 std::shared_ptr<entt::meta_any> FileIndexTask::operator()() const {
     auto files = std::vector<std::filesystem::path>();
-    for (const auto &entry : std::filesystem::directory_iterator(root)) {
+    for (const auto &entry : std::filesystem::recursive_directory_iterator(root)) {
         if (entry.is_regular_file()) {
             files.push_back(entry.path());
         }

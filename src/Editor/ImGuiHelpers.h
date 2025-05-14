@@ -159,7 +159,7 @@ inline bool EditorInputTextWithButton(const char *inputLabel,
                                       size_t inputBuffSize,
                                       const char *buttonText) {
     bool edited = false;
-    ImGui::SetNextItemWidth(150.f);
+    ImGui::SetNextItemWidth(300.f);
     ImGui::InputText(inputLabel, inputBuff, inputBuffSize);
     ImGui::SameLine();
     ImGui::PushID(inputLabel);

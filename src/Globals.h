@@ -19,4 +19,5 @@ extern std::unique_ptr<EngineConsole> GlobalConsole;
 extern std::unique_ptr<IniConfig> GlobalIniConfig;
 extern std::unique_ptr<Editor> GlobalEditor;
 extern std::vector<std::filesystem::path> Assets;
+
 // extern std::unique_ptr<sf::RenderWindow> GlobalRenderWindow;

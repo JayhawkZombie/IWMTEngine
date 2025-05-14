@@ -11,6 +11,7 @@
 #include <MultiThreading/WorkerThread.h>
 #include <MultiThreading/Tasks/FileIndexTask.h>
 #include <SFML/Window.hpp>
+#include <Assets/AssetProcessor.h>
 
 std::vector<std::string> Engine::PossibleLevelFiles = {};
 
@@ -18,11 +19,13 @@ void Engine::CheckIndexedFiles(
     const std::vector<std::filesystem::path> &paths) {
     fmt::println("Checking indexed files ({})...", paths.size());
     for (const auto &path: paths) {
-        fmt::print("\t{}\n", path.string());
         if (path.has_extension() && path.extension() == ".level") {
             PossibleLevelFiles.push_back(path.string());
         } else {
-            Assets.push_back(path);
+            if (AssetProcessor::IsPossiblyAsset(path)) {
+                fmt::print("\tAsset file: {}\n", path.string());
+                Assets.push_back(path);
+            }
         }
     }
     std::ranges::sort(Assets);

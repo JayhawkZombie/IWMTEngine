@@ -5,7 +5,7 @@
             "startEditorPaused": true
         },
         "window": {
-            "width": 1600,
+            "width": 2000,
             "height": 900,
             "enableVSync": true,
             "enableMsaa": true,

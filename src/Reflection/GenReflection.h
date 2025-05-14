@@ -10,4 +10,11 @@
 #define RENGINE_REFLECT_BASE_CLASS(...)
 #define RENGINE_REFLECT_CLASS_END(...)
 
+
+
+
+#define RENGINE_REFLECTABLE_BEGIN(...)
+#define RENGINE_REFLECTABLE_END(...)
+#define RENGINE_REFLECT_PROPERTY(...)
+
 extern void Reflect_RegisterAll();

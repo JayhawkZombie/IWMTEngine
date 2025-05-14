@@ -29,8 +29,7 @@ class ReflectedClass:
         return f"Class: {class_string}\n  {members_repr}"
 
 
-# Parser function
-def parse_reflection_macros(file_path: str) -> List[ReflectedClass]:
+def parse_old_style_macros(file_path: str) -> List[ReflectedClass]:
     class_begin_pattern = re.compile(r'RENGINE_REFLECT_CLASS_BEGIN\(([\w:]+)\)')
     class_end_pattern = re.compile(r'RENGINE_REFLECT_CLASS_END\(([\w:]+)\)')
     member_pattern = re.compile(r'RENGINE_REFLECT_CLASS_MEMBER\(([\w:<>]+),\s*(\w+),\s*"([^"]+)"\)')
@@ -72,6 +71,67 @@ def parse_reflection_macros(file_path: str) -> List[ReflectedClass]:
                     current_class.base = match.group(1)
 
     return classes
+
+def parse_new_style_macros(file_path: str) -> List[ReflectedClass]:
+    reflectable_begin_pattern = re.compile(r'RENGINE_REFLECTABLE_BEGIN\(([\w:]+)\)')
+    reflectable_end_pattern = re.compile(r'RENGINE_REFLECTABLE_END\(([\w:]+)\)')
+    property_pattern = re.compile(r'RENGINE_REFLECT_PROPERTY\((\w+)\)')
+
+    classes = []
+    current_class = None
+    in_class_definition = False
+
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()
+
+            # Match class start
+            match = reflectable_begin_pattern.match(line)
+            if match:
+                common.debug_log(f"Matched new class pattern {match.group(1)}")
+                current_class = ReflectedClass(match.group(1))
+                in_class_definition = True
+                continue
+
+            # Match class end
+            match = reflectable_end_pattern.match(line)
+            if match and current_class and in_class_definition:
+                if current_class.class_name == match.group(1):
+                    common.debug_log(f"End of new class pattern {match.group(1)}")
+                    classes.append(current_class)
+                    current_class = None
+                    in_class_definition = False
+                continue
+
+            # Match property
+            if current_class and in_class_definition:
+                match = property_pattern.match(line)
+                if match:
+                    var_name = match.group(1)
+                    common.debug_log(f"Matched new var pattern {var_name}")
+                    # For new style, we use the variable name as both type and description
+                    current_class.add_member(ReflectedMember(var_name, var_name, var_name))
+                    continue
+    common.debug_log(f"Classes {classes}")
+    return classes
+
+def parse_reflection_macros(file_path: str) -> List[ReflectedClass]:
+    """
+    Parse both old and new style reflection macros from a file.
+    Returns a list of ReflectedClass objects containing all reflected classes.
+    """
+    # Parse both styles and combine results
+    old_style_classes = parse_old_style_macros(file_path)
+    new_style_classes = parse_new_style_macros(file_path)
+    
+    # Combine results, ensuring no duplicate class names
+    all_classes = old_style_classes.copy()
+    for new_class in new_style_classes:
+        # Check if we already have this class from old style
+        if not any(c.class_name == new_class.class_name for c in all_classes):
+            all_classes.append(new_class)
+    
+    return all_classes
 
 def gather_reflection_data(input_files: List[str]):
     """

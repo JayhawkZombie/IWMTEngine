@@ -121,19 +121,19 @@ bool LightMeUpLevel::RenderLightsEditor() {
     }
     if (ImGui::BeginTabBar("Light Players")) {
         if (ImGui::BeginTabItem("Pattern Player")) {
-            edited = RenderPatternPlayerEditorTab();
+            edited = RenderPatternPlayerEditorTab() || edited;
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Wave Player")) {
-            edited = RenderWavePlayerEditorTab();
+            edited = RenderWavePlayerEditorTab() || edited;
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Pulse Player")) {
-            edited = RenderPulsePlayerEditorTab();
+            edited = RenderPulsePlayerEditorTab() || edited;
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem(("Data Player"))) {
-            edited = m_dataPlayerWrapper.RenderEditor();
+            edited = m_dataPlayerWrapper.RenderEditor() || edited;
             ImGui::EndTabItem();
         }
         ImGui::EndTabBar();

@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 12/05/2025 21:41:12
+* Generated at: 13/05/2025 21:20:58
 */
 
 
@@ -409,17 +409,17 @@
             rFactory.ctor<>();
             
             
-            GlobalConsole->Debug("Registering patternData funcIndex funcIndex");
+            GlobalConsole->Debug("Registering funcIndex funcIndex funcIndex");
             GlobalConsole->Debug("	Code string: rFactory.data<&patternData::funcIndex>(\"funcIndex\"_hs);");
             rFactory.data<&patternData::funcIndex>("funcIndex"_hs);
         
 	
-            GlobalConsole->Debug("Registering patternData stepPause stepPause");
+            GlobalConsole->Debug("Registering stepPause stepPause stepPause");
             GlobalConsole->Debug("	Code string: rFactory.data<&patternData::stepPause>(\"stepPause\"_hs);");
             rFactory.data<&patternData::stepPause>("stepPause"_hs);
         
 	
-            GlobalConsole->Debug("Registering patternData param param");
+            GlobalConsole->Debug("Registering param param param");
             GlobalConsole->Debug("	Code string: rFactory.data<&patternData::param>(\"param\"_hs);");
             rFactory.data<&patternData::param>("param"_hs);
         

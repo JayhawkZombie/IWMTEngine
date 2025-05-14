@@ -56,24 +56,27 @@ constexpr const char * PatternNames[] = {
     "<oops>",
 };
 
+#include <Reflection/GenReflection.h>
+
 // a player for presenting procedural patterns in a specified order
+RENGINE_REFLECTABLE_BEGIN(patternData)
 struct patternData// for each pattern in the sequence to be played
 {
 public:
+    RENGINE_REFLECT_PROPERTY(funcIndex);
     unsigned int funcIndex = 0;// which pattern
+
+    RENGINE_REFLECT_PROPERTY(stepPause);
     unsigned int stepPause = 1;// between each step in the present pattern. To slow animation
+
+    RENGINE_REFLECT_PROPERTY(param);
     unsigned int param = 0;// varying purpose. see notes for each case in getPattLength() and getState()
+    
     // convenient init
     void init( unsigned int fIdx, unsigned int StepPause = 1, unsigned int Param = 0 )
     { funcIndex = fIdx; stepPause = StepPause; param = Param; }
 };
-
-#include <Reflection/GenReflection.h>
-RENGINE_REFLECT_CLASS_BEGIN(patternData)
-    RENGINE_REFLECT_CLASS_MEMBER(patternData, funcIndex, "funcIndex")
-    RENGINE_REFLECT_CLASS_MEMBER(patternData, stepPause, "stepPause")
-    RENGINE_REFLECT_CLASS_MEMBER(patternData, param, "param")
-RENGINE_REFLECT_CLASS_END(patternData)
+RENGINE_REFLECTABLE_END(patternData)
 
 class LightPlayer2
 {

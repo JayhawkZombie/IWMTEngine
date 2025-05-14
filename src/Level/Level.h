@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <cereal/types/polymorphic.hpp>
 
 class GameObject;
 

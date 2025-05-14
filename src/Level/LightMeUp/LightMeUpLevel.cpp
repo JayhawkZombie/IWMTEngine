@@ -19,6 +19,7 @@ LightMeUpLevel::LightMeUpLevel()
 
 void LightMeUpLevel::Init() {
     Level::Init();
+    name = "LightMeUpLevel";
     fmt::println("LightMeUpLevel::Init");
 
     InitPatterns();

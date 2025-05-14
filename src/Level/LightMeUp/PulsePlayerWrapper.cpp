@@ -51,8 +51,8 @@ bool PulsePlayerWrapper::RenderEditor() {
     bool edited = false;
     edited      = EditorLight(m_config.lowLight, "Lo light");
     ImGui::SameLine();
-    edited = edited || EditorLight(m_config.hiLight, "Hi light");
-    edited = edited || EditorBoolean("Repeat", m_config.repeat);
+    edited = EditorLight(m_config.hiLight, "Hi light") || edited;
+    edited = EditorBoolean("Repeat", m_config.repeat) || edited;
     if (ImGui::SliderInt("W", &m_config.W_pulse, 0, 100)) {
         edited = true;
     }

@@ -9,7 +9,7 @@
 #include "StarrySky.h"
 #include "Light_types/LightPlayer2.h"
 // #include "Light_types/PulsePlayer.h"
-
+#include "Choreography.h"
 #include "WavePlayerWrapper.h"
 #include "DataPlayerWrapper.h"
 #include "PulsePlayerWrapper.h"
@@ -42,6 +42,8 @@ class LightMeUpLevel : public Level
     light_vector m_lights;
     StarrySky m_starrySky;
     std::mt19937 m_rng;  // Random number generator for colors
+
+    Choreography m_choreography;
 
     float C_Rt[3] = {3, 2, 1};
 

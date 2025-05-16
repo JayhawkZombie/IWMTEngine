@@ -82,6 +82,8 @@ void WavePlayerWrapper::Init() {
                              m_config.C_Lt[1],
                              m_config.C_Lt[2]);
     }
+    m_wavePlayer.setRightTrigFunc(m_config.rightTrigFuncIndex);
+    m_wavePlayer.setLeftTrigFunc(m_config.leftTrigFuncIndex);
     SetHasInit(true);
     TryToIndexWaveFiles();
 }

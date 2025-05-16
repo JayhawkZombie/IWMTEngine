@@ -11,6 +11,7 @@
 #include <Serialization/SerializeTypes.h>
 #include <cereal/archives/json.hpp>
 #include <GeneratedSerializationData.h>
+#include <Assets/AssetLoader.h>
 #include <Editor/ImGuiClasses.h>
 
 bool WavePlayerWrapper::RenderEditor() {
@@ -107,6 +108,17 @@ bool WavePlayerWrapper::RenderEditor() {
 bool WavePlayerWrapper::RenderEditorRuntimeValues() {
     bool edited       = false;
     bool didSetSeries = false;
+    static std::vector<std::string> trigFuncIndices{
+        "sinf",
+        "cosf",
+        "tanf",
+        "hypotf",
+        "sinh",
+        "cosh",
+        "tanh"
+    };
+    static bool selectedTrigFunctionChanged    = false;
+    selectedTrigFunctionChanged                = false;
     if (EditorLight(m_config.offLight, "Lo light")) {
         edited = true;
     }
@@ -148,8 +160,36 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
             didSetSeries = true;
             edited       = true;
         }
-    } {
-        ImGuiHelpers::Group _group("Waveform Values", "waveform_values", true);
+    } { // Group all waveform stuff together
+        ImGuiHelpers::Group _group("Waveforms", "waveform_values", true);
+
+            {
+                ImGuiHelpers::Group _leftFuncGroup("LeftTrigFunc",
+                                                   "left_func_group",
+                                                   false);
+                if (EditorComboListbox("Left Trig function",
+                                       trigFuncIndices,
+                                       m_config.leftTrigFuncIndex,
+                                       selectedTrigFunctionChanged,
+                                       ImVec2(150.f, 75.f))) {
+                    edited = true;
+                    // m_wavePlayer.setLeftTrigFunc(selectedLeftFuncIndex);
+                }
+            }
+        ImGui::SameLine();
+            {
+                ImGuiHelpers::Group _rightFuncGroup("RightTrigFunc", "right_func_group", false);
+                if (EditorComboListbox("Right Trig function",
+                                       trigFuncIndices,
+                                       m_config.rightTrigFuncIndex,
+                                       selectedTrigFunctionChanged,
+                                       ImVec2(150.f, 75.f))) {
+                    edited = true;
+                    // m_wavePlayer.setRightTrigFunc(selectedRightFuncIndex);
+                }
+            }
+            // ImGui::SameLine();
+
         ImGui::Text("Amplitude");
         ImGui::SameLine();
         ImGui::SetNextItemWidth(200.f);
@@ -259,6 +299,12 @@ void WavePlayerWrapper::GenerateCode() {
     fmt::println(file, "wp.wvLenRt = {};", m_config.wvLenRt);
     fmt::println(file, "wp.wvSpdLt = {};", m_config.wvSpdLt);
     fmt::println(file, "wp.wvSpdRt = {};", m_config.wvSpdRt);
+    fmt::println(file,
+                 "// TODO: wp.setRightTrigFunc({});",
+                 m_config.rightTrigFuncIndex);
+    fmt::println(file,
+                 "// TODO: wp.setLeftTrigFunc({});",
+                 m_config.leftTrigFuncIndex);
     if (m_config.useRightCoefficients) {
         fmt::println(file, "wp.C_Rt = C_Rt;");
     }
@@ -277,8 +323,10 @@ bool WavePlayerWrapper::LoadConfig(const std::string &filename) {
         return false;
     }
 
-    cereal::JSONInputArchive archive(file);
-    archive(cereal::make_nvp("waveData", m_config));
+    LoadJSONAsset(filename, "waveData", m_config);
+
+    // cereal::JSONInputArchive archive(file);
+    // archive(cereal::make_nvp("waveData", m_config));
     GlobalConsole->Info("Loaded WaveData from file %s", filename.c_str());
     return true;
 }

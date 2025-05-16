@@ -109,7 +109,8 @@ inline void EditorColoredLabeledUnsignedInt(const char *label,
 inline bool EditorComboListbox(const char *label,
                                const std::vector<std::string> &items,
                                unsigned int &selected,
-                               bool &changed) {
+                               bool &changed,
+                               ImVec2 size = ImVec2(0, 0)) {
     static int selectedIndex = 0;
     selectedIndex            = static_cast<int>(selected);
     bool edited              = false;
@@ -118,7 +119,7 @@ inline bool EditorComboListbox(const char *label,
     ImGui::SetNextItemWidth(50.f);
     ImGui::Text("%s", label);
     ImGui::SetNextItemWidth(350.f);
-    if (ImGui::BeginListBox("##ComboDropdown")) {
+    if (ImGui::BeginListBox("##ComboDropdown", size)) {
         for (size_t i = 0; i < items.size(); i++) {
             const bool isSelected = selected == i;
             if (ImGui::Selectable(items[i].c_str(), isSelected)) {

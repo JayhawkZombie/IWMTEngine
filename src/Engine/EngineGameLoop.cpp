@@ -26,7 +26,9 @@ void Engine::GameLoop() {
                               "Jitter Task");
     };
 
+    Benchmark::benchmark_duration_t last_main_loop_duration{0};
     while (!quit) {
+        mainLoopBenchmark.Start();
         CheckWorkerResults();
         const auto delta       = deltaClock.restart();
         Level *currentLevelPtr = maybeLevelPtr
@@ -58,6 +60,7 @@ void Engine::GameLoop() {
         if (engineWorker.TryGetLastHeartbeat(thisHeartbeat)) {
             lastHeartbeat = thisHeartbeat;
         }
+        ImGui::Text("Last update %llu", last_main_loop_duration.count());
         ImGui::End();
 
 
@@ -88,6 +91,8 @@ void Engine::GameLoop() {
 
         ImGui::SFML::Render(*window);
         window->display();
+        mainLoopBenchmark.Stop();
+        last_main_loop_duration = mainLoopBenchmark.GetDuration();
     }
     ImGui::SFML::Shutdown();
 }

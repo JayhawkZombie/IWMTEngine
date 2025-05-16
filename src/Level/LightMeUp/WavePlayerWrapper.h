@@ -9,6 +9,8 @@
 
 struct WavePlayerConfig {
     int rows, cols;
+    unsigned int rightTrigFuncIndex = 0;
+    unsigned int leftTrigFuncIndex = 0;
     Light onLight, offLight;
     bool useRightCoefficients = true;
     bool useLeftCoefficients = false;
@@ -66,4 +68,6 @@ RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, wvLenLt, "wvLenLt")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, wvLenRt, "wvLenRt")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, wvSpdLt, "wvSpdLt")
 RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, wvSpdRt, "wvSpdRt")
+RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, rightTrigFuncIndex, "rightTrigFuncIndex")
+RENGINE_REFLECT_CLASS_MEMBER(WavePlayerConfig, leftTrigFuncIndex, "leftTrigFuncIndex")
 RENGINE_REFLECT_CLASS_END(WavePlayerConfig)

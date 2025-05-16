@@ -1,7 +1,7 @@
 #pragma once
 /**********************************
 * GeneratedSerializationData.h
-* Generated at: 14/05/2025 11:24:10
+* Generated at: 15/05/2025 10:44:12
 */
 
 
@@ -188,6 +188,8 @@ ar(cereal::make_nvp("wvLenLt", val.wvLenLt));
 ar(cereal::make_nvp("wvLenRt", val.wvLenRt));
 ar(cereal::make_nvp("wvSpdLt", val.wvSpdLt));
 ar(cereal::make_nvp("wvSpdRt", val.wvSpdRt));
+ar(cereal::make_nvp("rightTrigFuncIndex", val.rightTrigFuncIndex));
+ar(cereal::make_nvp("leftTrigFuncIndex", val.leftTrigFuncIndex));
     } catch (std::exception &e) {
         // Not sure what to do here
         std::cerr << "Archive error in WavePlayerConfig: " << e.what() << std::endl;

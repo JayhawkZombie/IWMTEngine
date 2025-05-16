@@ -1,6 +1,6 @@
 /**********************************
 * GeneratedReflectionData.cpp
-* Generated at: 14/05/2025 11:24:10
+* Generated at: 15/05/2025 10:44:12
 */
 
 
@@ -374,6 +374,16 @@
             GlobalConsole->Debug("Registering WavePlayerConfig wvSpdRt wvSpdRt");
             GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::wvSpdRt>(\"wvSpdRt\"_hs);");
             rFactory.data<&WavePlayerConfig::wvSpdRt>("wvSpdRt"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig rightTrigFuncIndex rightTrigFuncIndex");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::rightTrigFuncIndex>(\"rightTrigFuncIndex\"_hs);");
+            rFactory.data<&WavePlayerConfig::rightTrigFuncIndex>("rightTrigFuncIndex"_hs);
+        
+	
+            GlobalConsole->Debug("Registering WavePlayerConfig leftTrigFuncIndex leftTrigFuncIndex");
+            GlobalConsole->Debug("	Code string: rFactory.data<&WavePlayerConfig::leftTrigFuncIndex>(\"leftTrigFuncIndex\"_hs);");
+            rFactory.data<&WavePlayerConfig::leftTrigFuncIndex>("leftTrigFuncIndex"_hs);
         
         }
     

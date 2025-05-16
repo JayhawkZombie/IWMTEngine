@@ -40,6 +40,7 @@ namespace ImGuiHelpers {
         bool m_showing = false;
 
         Group(const char *label, const char *id, bool showLabel = false): m_label(label), m_id(id) {
+            ImGui::BeginGroup();
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
             ImGui::PushID(label);
             m_showing = ImGui::BeginChild(id,
@@ -47,7 +48,7 @@ namespace ImGuiHelpers {
                                             ImGuiChildFlags_Borders |
                                             ImGuiChildFlags_AutoResizeY |
                                             ImGuiChildFlags_AutoResizeX,
-                                            ImGuiWindowFlags_None);
+                                            ImGuiWindowFlags_None | ImGuiWindowFlags_AlwaysVerticalScrollbar);
             if (showLabel) {
                 ImGui::TextColored(ImGuiColors::MutedMagenta, "%s", label);
             }
@@ -59,6 +60,7 @@ namespace ImGuiHelpers {
             ImGui::EndChild();
             ImGui::PopID();
             ImGui::PopStyleVar();
+            ImGui::EndGroup();
         }
     };
 

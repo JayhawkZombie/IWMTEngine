@@ -24,6 +24,8 @@ void LightMeUpLevel::Init() {
 
     InitPatterns();
     ResetAndResizeLights();
+    m_choreography.Init(m_wavePlayerWrapper.GetLights().data());
+    m_choreography.Start();
 }
 
 void LightMeUpLevel::InitPatterns() {
@@ -77,6 +79,7 @@ void LightMeUpLevel::Tick(double deltaTime) {
 
     // Update star cell visibility and color based on LED states
     auto &dpLights = m_dataPlayerWrapper.GetLights();
+    m_choreography.Update(deltaTime);
     for (size_t y = 0; y < 8; ++y) {
         for (size_t x = 0; x < 8; ++x) {
             const auto &light = dpLights[y * 8 + x];

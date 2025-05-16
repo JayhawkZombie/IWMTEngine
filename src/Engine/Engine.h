@@ -11,6 +11,7 @@
 #include <Physics/Physics.h>
 #include <Config/EngineConfig.h>
 #include <Level/Level.h>
+#include <Benchmarking/Benchmark.h>
 
 class Editor;
 
@@ -27,6 +28,8 @@ private:
     std::vector<std::shared_ptr<lineSeg> > lineSegs;
     double lastFrameTime = 0.0;
     WorkerThread engineWorker{"EngineWorker"};
+
+    Benchmark mainLoopBenchmark{"MainLoop"};
 
 public:
     Engine() = default;

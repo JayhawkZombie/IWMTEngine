@@ -5,6 +5,8 @@
 #include<iostream>
 #include "Light.h"
 
+using trig_func_t = float (*)(float);
+
 class WavePlayer
 {
     public:
@@ -26,9 +28,14 @@ class WavePlayer
     float frHi = 0.0f, fgHi = 0.0f, fbHi = 0.0f;// store once
     float frLo = 0.0f, fgLo = 0.0f, fbLo = 0.0f;// used in update
 
+    trig_func_t rightTrigFunc = sinf;
+    trig_func_t leftTrigFunc = sinf;
+
     void update( float dt );
 
     void init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, Light HiLt, Light LoLt );
+    void setRightTrigFunc(unsigned int func);
+    void setLeftTrigFunc(unsigned int func);
     void setWaveData( float AmpRt, float wvLen_lt, float wvSpd_lt, float wvLen_rt, float wvSpd_rt );
     void setSeriesCoeffs( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt );
     void setSeriesCoeffs_Unsafe( float* C_rt, unsigned int n_TermsRt, float* C_lt, unsigned int n_TermsLt );

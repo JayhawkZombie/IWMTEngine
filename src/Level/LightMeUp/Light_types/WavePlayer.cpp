@@ -20,6 +20,46 @@ void WavePlayer::init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, Light
     // std::cout << "\n LoLt.r = " << rd << " LoLt.g = " << gn << " LoLt.b = " << bu;
 }
 
+void WavePlayer::setRightTrigFunc(unsigned int func) {
+    if (func == 0) {
+        rightTrigFunc = sinf;
+    } else if (func == 1) {
+        rightTrigFunc = cosf;
+    } else if (func == 2) {
+        rightTrigFunc = tanf;
+    } else if (func == 3) {
+        rightTrigFunc = [](float x) -> float {
+            return hypotf(x, 0.0f);
+        };
+    } else if (func == 4) {
+        rightTrigFunc = sinh;
+    } else if (func == 5) {
+        rightTrigFunc = cosh;
+    } else if (func == 6) {
+        rightTrigFunc = tanh;
+    }
+}
+
+void WavePlayer::setLeftTrigFunc(unsigned int func) {
+    if (func == 0) {
+        leftTrigFunc = sinf;
+    } else if (func == 1) {
+        leftTrigFunc = cosf;
+    } else if (func == 2) {
+        leftTrigFunc = tanf;
+    } else if (func == 3) {
+        leftTrigFunc = [](float x) -> float {
+            return hypotf(x, 0.0f);
+        };
+    } else if (func == 4) {
+        leftTrigFunc = sinh;
+    } else if (func == 5) {
+        leftTrigFunc = cosh;
+    } else if (func == 6) {
+        leftTrigFunc = tanh;
+    }
+}
+
 void WavePlayer::setWaveData( float ampRt, float wvLen_lt, float wvSpd_lt, float wvLen_rt, float wvSpd_rt )
 {
     wvLenLt = wvLen_lt;
@@ -116,6 +156,9 @@ void WavePlayer::setSeriesCoeffs_Unsafe( float* C_rt, unsigned int n_TermsRt, fl
 
 void WavePlayer::update( float dt )
 {
+    if (!rightTrigFunc || !leftTrigFunc) {
+        return;
+    }
     tElapRt += dt;
     if( tElapRt > periodRt ) tElapRt -= periodRt;
     tElapLt += dt;
@@ -132,20 +175,20 @@ void WavePlayer::update( float dt )
         if( C_Rt )
         {
             for( unsigned k = 0; k < nTermsRt; ++k )
-                yRt += C_Rt[k]*sinf( (k+1)*arg );
+                yRt += C_Rt[k]*rightTrigFunc( (k+1)*arg );
         }
         else
-            yRt = sinf( arg );
+            yRt = rightTrigFunc( arg );
 
         float yLt = 0.0f;
         arg = ( (float)n/wvLenLt + tElapLt/periodLt )*6.283f;
         if( C_Lt )
         {
             for( unsigned k = 0; k < nTermsLt; ++k )
-                yLt += C_Lt[k]*sinf( (k+1)*arg );
+                yLt += C_Lt[k]*leftTrigFunc( (k+1)*arg );
         }
         else
-            yLt = sinf( arg );
+            yLt = leftTrigFunc( arg );
 
         float y = AmpRt*yRt + AmpLt*yLt;
   //      std::cout << "\nwvPlay.update() yLt = " << yLt << " yRt = " << yRt << " y = " << y;

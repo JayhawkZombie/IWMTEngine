@@ -1,1 +1,36 @@
-{"waveData": {"rows": 48, "cols": 48, "onLight": {"r": 0, "g": 64, "b": 0}, "offLight": {"r": 0, "g": 29, "b": 255}, "C_Rt": {"value0": 3.5290000438690186, "value1": 7.353000164031982, "value2": 2.319000005722046}, "C_Lt": {"value0": 0.0, "value1": 0.0, "value2": 0.0}, "useRightCoefficients": true, "useLeftCoefficients": false, "AmpLt": 0.5, "AmpRt": 0.9179999828338623, "wvLenLt": 66.35099792480469, "wvLenRt": 82.02400207519531, "wvSpdLt": 41.79600143432617, "wvSpdRt": 43.362998962402344, "rightTrigFuncIndex": 0, "leftTrigFuncIndex": 0}}
+{
+    "waveData": {
+        "rows": 48,
+        "cols": 48,
+        "onLight": {
+            "r": 0,
+            "g": 64,
+            "b": 0
+        },
+        "offLight": {
+            "r": 0,
+            "g": 29,
+            "b": 255
+        },
+        "C_Rt": {
+            "value0": 3.5290000438690187,
+            "value1": 7.353000164031982,
+            "value2": 2.319000005722046
+        },
+        "C_Lt": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "useRightCoefficients": true,
+        "useLeftCoefficients": false,
+        "AmpLt": 0.5,
+        "AmpRt": 0.9179999828338623,
+        "wvLenLt": 66.35099792480469,
+        "wvLenRt": 82.02400207519531,
+        "wvSpdLt": 41.79600143432617,
+        "wvSpdRt": 43.362998962402347,
+        "rightTrigFuncIndex": 0,
+        "leftTrigFuncIndex": 1
+    }
+}

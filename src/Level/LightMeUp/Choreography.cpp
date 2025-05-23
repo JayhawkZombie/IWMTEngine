@@ -10,10 +10,11 @@
 TrackNode::TrackNode(double stamp, const std::string &newFilename): seconds_stamp{stamp}, newWaveConfigFilename{newFilename} {
 }
 
-void Track::Init(Light *lightArr, WavePlayerConfig bg) {
+void Track::Init(Light *lightArr, WavePlayerConfig bg, size_t idx) {
+    GlobalConsole->Debug("Init track");
     m_backgroundConfig = bg;
     m_lights           = lightArr;
-    m_current_node_index = 0;
+    m_current_node_index = idx;
     m_current_seconds_stamp = 0.0;
     m_background.init(*m_lights,
                       m_backgroundConfig.rows,
@@ -57,6 +58,7 @@ void Track::Play() {
 }
 
 void Track::SetBackground(const WavePlayerConfig &config) {
+    GlobalConsole->Debug("Setting background config");
     Init(m_lights, config);
 }
 
@@ -87,13 +89,13 @@ void Track::StartNextNode(double overStep) {
     }
 
     m_current_node_index += 1;
-    GlobalConsole->Error("Starting next node %lu", m_current_node_index);
+    GlobalConsole->Error("Starting next node %lu out of %llu", m_current_node_index, m_nodes.size());
     m_current_seconds_stamp = overStep;
     const auto node = m_nodes[m_current_node_index];
     // Init & update next player with overStep
     GlobalConsole->Error("Next config name %s", node.newWaveConfigFilename.c_str());
     const auto config = LoadNextNode(node.newWaveConfigFilename);
-    Init(m_lights, config);
+    Init(m_lights, config, m_current_node_index);
 }
 
 void Choreography::Init(Light *arr) {
@@ -101,8 +103,8 @@ void Choreography::Init(Light *arr) {
     GlobalConsole->Info("Choreography::Init");
     LoadJSONAsset("wave-files/rain_better.wave", "waveData", config);
     m_track.Init(arr, config);
-    m_track.m_nodes.push_back({10.0, "wave-files/rain_better.wave"});
-    m_track.m_nodes.push_back({20.0, "wave-files/rain.wave"});
+    m_track.m_nodes.push_back({1.0, "wave-files/rain_better.wave"});
+    m_track.m_nodes.push_back({2.0, "wave-files/rain.wave"});
 }
 
 void Choreography::Update(double delta) {

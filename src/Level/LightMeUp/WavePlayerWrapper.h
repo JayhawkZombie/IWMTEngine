@@ -6,6 +6,7 @@
 
 #include "BaseLightPlayerWrapper.h"
 #include "Light_types/WavePlayer.h"
+#include <map>
 
 struct WavePlayerConfig {
     int rows, cols;
@@ -36,9 +37,10 @@ public:
     bool RenderEditorRuntimeValues();
     bool RenderGallery();
     void GenerateCode() override;
+    void SetBoxes(const sf::Vector2f &boxSize, const sf::Vector2f &boxSpacing);
     bool SaveConfig(const std::string &filename) override;
     bool LoadConfig(const std::string &filename) override;
-    void SetBoxes(const sf::Vector2f &boxSize, const sf::Vector2f &boxSpacing);
+    static bool LoadConfigFile(const std::string &filename, WavePlayerConfig &config);
 
     void TryToIndexWaveFiles();
     double accumTime = 0.0;
@@ -48,6 +50,7 @@ public:
     sf::Vector2f m_boxSize    = sf::Vector2f(8.f, 8.f);
     sf::Vector2f m_boxSpacing = sf::Vector2f(4.f, 4.f);
     std::vector<std::string> m_preConfiguredWaves;
+    std::map<std::string, WavePlayerConfig> m_preloadedConfigs;
     WavePlayer m_wavePlayer;
 };
 

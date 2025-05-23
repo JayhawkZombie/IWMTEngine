@@ -111,6 +111,9 @@ inline bool EditorComboListbox(const char *label,
                                unsigned int &selected,
                                bool &changed,
                                ImVec2 size = ImVec2(0, 0)) {
+    if (items.empty()) {
+        return false;
+    }
     static int selectedIndex = 0;
     selectedIndex            = static_cast<int>(selected);
     bool edited              = false;

@@ -26,7 +26,7 @@ public:
     std::vector<TrackNode> m_nodes;
     Light *m_lights;
 
-    void Init(Light *lightArr, WavePlayerConfig bg);
+    void Init(Light *lightArr, WavePlayerConfig bg, size_t idx = 0);
     WavePlayerConfig LoadNextNode(const std::string &newWaveConfigFilename);
 
     void Play();

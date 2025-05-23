@@ -14,8 +14,8 @@
         },
         "C_Rt": {
             "value0": 0.0,
-            "value1": 0.057999998331069949,
-            "value2": 0.17399999499320985
+            "value1": 0.23199999332427979,
+            "value2": 0.0
         },
         "C_Lt": {
             "value0": 0.0,
@@ -25,12 +25,12 @@
         "useRightCoefficients": true,
         "useLeftCoefficients": false,
         "AmpLt": 0.5,
-        "AmpRt": 0.625,
-        "wvLenLt": 48.14699935913086,
-        "wvLenRt": 62.717350006103519,
-        "wvSpdLt": 68.86956787109375,
-        "wvSpdRt": 75.82599639892578,
-        "rightTrigFuncIndex": 3,
+        "AmpRt": 4.960000038146973,
+        "wvLenLt": 88.25800323486328,
+        "wvLenRt": 82.06500244140625,
+        "wvSpdLt": 16.516000747680665,
+        "wvSpdRt": 0.0,
+        "rightTrigFuncIndex": 0,
         "leftTrigFuncIndex": 0
     }
 }

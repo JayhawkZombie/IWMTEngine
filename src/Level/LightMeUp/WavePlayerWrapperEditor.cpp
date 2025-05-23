@@ -323,11 +323,26 @@ bool WavePlayerWrapper::LoadConfig(const std::string &filename) {
         return false;
     }
 
-    LoadJSONAsset(filename, "waveData", m_config);
-
+    // LoadJSONAsset(filename, "waveData", m_config);
+    if (!LoadConfigFile(filename, m_config)) {
+        GlobalConsole->Error("Could not load wave data %s", filename.c_str());
+        return false;
+    }
     // cereal::JSONInputArchive archive(file);
     // archive(cereal::make_nvp("waveData", m_config));
     GlobalConsole->Info("Loaded WaveData from file %s", filename.c_str());
+    return true;
+}
+
+bool WavePlayerWrapper::LoadConfigFile(const std::string &filename,
+    WavePlayerConfig &config) {
+    try {
+        LoadJSONAsset(filename, "waveData", config);
+    } catch (const std::exception &e) {
+        GlobalConsole->Error("Exception while loading wave data from %s: %s", filename.c_str(), e.what());
+        return false;
+    }
+
     return true;
 }
 
@@ -344,7 +359,13 @@ void WavePlayerWrapper::TryToIndexWaveFiles() {
     for (const auto &asset: Assets) {
         if (asset.has_extension() && asset.extension() == ".wave") {
             const auto relPath = std::filesystem::relative(asset, "./");
-            m_preConfiguredWaves.push_back(relPath.string());
+            WavePlayerConfig config;
+            if (LoadConfigFile(relPath.string(), config)) {
+                m_preloadedConfigs[relPath.string()] = config;
+                m_preConfiguredWaves.push_back(relPath.string());
+            } else {
+                // Hmmm....
+            }
         }
     }
 }

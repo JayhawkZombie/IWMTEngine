@@ -9,7 +9,7 @@
 #include <Level/LightMeUp/Light_types/Light.h>
 #include <Level/LightMeUp/Light_types/LightPlayer2.h>
 #include <Misc/UI.h>
-#include <Utility/MemUtils.h>
+#include <Utility/Utils.h>
 
 inline bool EditorBeginRoundedChild(const char *label, const char *id, bool showLabel = false) {
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -178,23 +178,24 @@ inline void EditorViewPatternData(const char *label,
                                   unsigned int currentIndex = 0) {
     EditorBeginRoundedChild(label, "Patterns");
     if (ImGui::BeginTable(label,
-                          4,
+                          5,
                           ImGuiTableFlags_Resizable |
                           ImGuiTableFlags_BordersOuter |
                           ImGuiTableFlags_ScrollY)) {
         ImGui::TableSetupColumn("Func index");
         ImGui::TableSetupColumn("Step pause");
         ImGui::TableSetupColumn("Param");
+        ImGui::TableSetupColumn("Param (Hex)");
         ImGui::TableSetupColumn("Name");
         ImGui::TableHeadersRow();
         for (unsigned int i = 0; i < numPatterns; i++) {
             ImGui::TableNextRow();
             const auto &p = pdata[i];
-            if (p.funcIndex == currentIndex) {
+            if (i == currentIndex) {
                 ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
                                        ImColor(255, 255, 0));
             }
-            ImColor tColor = p.funcIndex == currentIndex
+            ImColor tColor = i == currentIndex
                                  ? ImColor(0, 0, 0)
                                  : ImColor(255, 255, 255);
             ImGui::TableSetColumnIndex(0);
@@ -204,6 +205,8 @@ inline void EditorViewPatternData(const char *label,
             ImGui::TableSetColumnIndex(2);
             ImGui::TextColored(tColor, "%u", p.param);
             ImGui::TableSetColumnIndex(3);
+            ImGui::TextColored(tColor, "%u|%u", getUpperBitsValue(p.param, 8), getLowerBitsValue(p.param, 8));
+            ImGui::TableSetColumnIndex(4);
             ImGui::TextColored(tColor, "%s", PatternNames[p.funcIndex]);
         }
         ImGui::EndTable();

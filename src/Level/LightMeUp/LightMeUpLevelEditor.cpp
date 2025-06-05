@@ -89,8 +89,7 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
     EditorViewPatternData("Pattern data",
                           m_lightPlayer2.pattData,
                           m_lightPlayer2.numPatterns,
-                          m_lightPlayer2.pattData[m_lightPlayer2.patternIter].
-                          funcIndex);
+                          m_lightPlayer2.patternIter);
     return edited;
 }
 

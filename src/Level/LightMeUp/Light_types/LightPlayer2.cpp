@@ -1,4 +1,6 @@
 #include "LightPlayer2.h"
+
+#include <Globals.h>
 #include <Utility/Utils.h>
 
 void LightPlayer2::init(Light &r_Lt0,
@@ -122,8 +124,9 @@ unsigned int LightPlayer2::getPattLength() const {
     if (funcIdx == 16) return rows + cols;                // scrollDiagonal
 
     // Fill from top uses upper 8 bits to store the fill-to value
-    if (funcIdx == 31 || funcIdx == 32 || funcIdx == 33 || funcIdx == 34) return
-            getUpperBitsValue(pattData[patternIter].param, 8);
+    if (funcIdx == 31 || funcIdx == 32 || funcIdx == 33 || funcIdx == 34)
+        return
+                getUpperBitsValue(pattData[patternIter].param, 8);
 
     return 1;
 }
@@ -287,20 +290,100 @@ bool LightPlayer2::unfillColumnFromTop(unsigned int n,
                                        unsigned int toRow) const {
     int r = n / cols, c = n % cols;
     // const auto pattLen = getPattLength();
-    return c == colToFill && (toRow - stepIter - 1) >= r;
+    unsigned int bitShifted = (1 << c) & colToFill;
+    return bitShifted && (toRow - stepIter - 1) >= r;
 }
 
 bool LightPlayer2::fillColumnFromBottom(unsigned int n,
                                         unsigned int colToFill,
                                         unsigned int toRow) const {
-    int r = n / cols, c = n % cols;
-    return c == colToFill && r >= (rows - stepIter - 1);
+    int r                   = n / cols, c = n % cols;
+    unsigned int bitShifted = (1 << c) & colToFill;
+    return bitShifted && r >= (rows - stepIter - 1);
 }
 
 bool LightPlayer2::unfillColumnFromBottom(unsigned int n,
-    unsigned int colToFill,
-    unsigned int toRow) const {
+                                          unsigned int colToFill,
+                                          unsigned int toRow) const {
     int r = n / cols, c = n % cols;
     // const auto pattLen = getPattLength();
+    unsigned int bitShifted = (1 << c) & colToFill;
     return c == colToFill && r >= (toRow + stepIter);
+}
+
+bool LightPlayer2::ShowParamUI(unsigned int funcIndex,
+int &paramValue) {
+    static int val;
+    val = paramValue;
+    bool edited    = false;
+    switch (funcIndex) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        {
+            if (ImGui::InputInt("Param", &val, 1, 100)) {
+                edited = true;
+            }
+            break;
+        }
+        case 31:
+        case 32:
+        case 33:
+        case 34:
+        {
+            int lowerBits = getLowerBitsValue(paramValue, 8);
+            int upperBits = getUpperBitsValue(paramValue, 8);
+
+            bool editedBits = false;
+            for (int i = 0; i <= 7; i++) {
+                bool thisBit = (1 << i) & lowerBits;
+                ImGui::PushID(i);
+                if (ImGui::Checkbox("##bit", &thisBit)) {
+                    editedBits = true;
+                    if (thisBit) {
+                        lowerBits |= (1 << i);
+                    } else {
+                        lowerBits &= ~(1 << i);
+                    }
+                }
+                ImGui::PopID();
+                    ImGui::SameLine();
+            }
+            // Last SameLine applies to this label as well
+            ImGui::Text("Columns to show");
+
+            if (ImGui::InputInt("Target row", &upperBits, 1, 10)) {
+                editedBits = true;
+            }
+
+            if (editedBits) {
+                edited = true;
+                val = lowerBits;
+                val |= (upperBits << 8);
+            }
+            break;
+        }
+        default:
+        {
+            ImGui::Text("Un-implemented param UI");
+            break;
+        }
+    }
+
+    if (edited) {
+        paramValue = val;
+    }
+    return edited;
 }

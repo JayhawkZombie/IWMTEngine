@@ -1,6 +1,9 @@
 #ifndef LIGHTPLAYER2_H
 #define LIGHTPLAYER2_H
 
+#include <array>
+#include <unordered_map>
+
 #include "Light.h"
 
 /*
@@ -64,6 +67,28 @@ constexpr const char *PatternNames[] = {
     "<oops>",
     "<oops>",
     "<oops>",
+};
+
+const std::array<unsigned int, 19> AvailableFunctionIndices = {
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    31,
+    32,
+    33,
+    34,
 };
 
 #include <Reflection/GenReflection.h>
@@ -156,10 +181,18 @@ public:
     bool scrollDiagonal(unsigned int n, unsigned int Mode) const;
 
     // New ones
-    bool fillColumnFromTop(unsigned int n, unsigned int colToFill, unsigned int toRow) const;
-    bool unfillColumnFromTop(unsigned int n, unsigned int colToFill, unsigned int toRow) const;
-    bool fillColumnFromBottom(unsigned int n, unsigned int colToFill, unsigned int toRow) const;
-    bool unfillColumnFromBottom(unsigned int n, unsigned int colToFill, unsigned int toRow) const;
+    bool fillColumnFromTop(unsigned int n,
+                           unsigned int colToFill,
+                           unsigned int toRow) const;
+    bool unfillColumnFromTop(unsigned int n,
+                             unsigned int colToFill,
+                             unsigned int toRow) const;
+    bool fillColumnFromBottom(unsigned int n,
+                              unsigned int colToFill,
+                              unsigned int toRow) const;
+    bool unfillColumnFromBottom(unsigned int n,
+                                unsigned int colToFill,
+                                unsigned int toRow) const;
 
     LightPlayer2() {
     }
@@ -181,6 +214,8 @@ public:
     int getCols() const { return cols; }
 
     unsigned int getNumLts() const { return numLts; }
+
+    static bool ShowParamUI(unsigned int funcIndex, int &paramValue);
 
 protected:                 // new for me. Not everything is public
     Light *pLt0 = nullptr; // to LightArr on Arduino

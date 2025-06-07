@@ -9,6 +9,7 @@
 #include <cereal/types/vector.hpp>
 #include <cereal/archives/json.hpp>
 #include <GeneratedSerializationData.h>
+#include <Editor/ImGuiClasses.h>
 
 bool LightMeUpLevel::RenderEditor() {
     bool edited = false;
@@ -86,10 +87,19 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
                                     m_lightPlayer2.stepIter);
 
     ImGui::SeparatorText("Pattern Data");
-    EditorViewPatternData("Pattern data",
-                          m_lightPlayer2.pattData,
-                          m_lightPlayer2.numPatterns,
-                          m_lightPlayer2.patternIter);
+    {
+        ImGuiHelpers::Group _group("Pattern Data", "##pattdata", false);
+        EditorViewPatternData("Pattern data",
+                              m_lightPlayer2.pattData,
+                              m_lightPlayer2.numPatterns,
+                              m_lightPlayer2.patternIter);
+    }
+    ImGui::SameLine();
+    {
+        static patternData newPatternToAdd;
+        ImGuiHelpers::Group _group2("Pattern Maker", "##pattmakergroup", true);
+        edited = EditorPatternMaker("Pattern Maker", newPatternToAdd);
+    }
     return edited;
 }
 

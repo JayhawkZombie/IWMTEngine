@@ -11,6 +11,8 @@
 #include <Misc/UI.h>
 #include <Utility/Utils.h>
 
+#include "ImGuiClasses.h"
+
 inline bool EditorBeginRoundedChild(const char *label, const char *id, bool showLabel = false) {
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
     ImGui::PushID(label);
@@ -212,6 +214,86 @@ inline void EditorViewPatternData(const char *label,
         ImGui::EndTable();
     }
     EditorEndRoundedChild();
+}
+
+using pattern_func_index_name_map = std::unordered_map<std::string, int>;
+
+inline std::vector<std::string> initPatternVector() {
+    std::vector<std::string> patterns;
+    patterns.reserve(AvailableFunctionIndices.size());
+    for (size_t i = 0; i < AvailableFunctionIndices.size(); ++i) {
+        const auto funcIndex = AvailableFunctionIndices[i];
+        const auto funcName = PatternNames[funcIndex];
+        patterns.emplace_back(funcName);
+    }
+    return patterns;
+}
+
+inline unsigned int GetIndexForPatternName(const std::string &name) {
+    auto it = std::find_if(AvailableFunctionIndices.begin(), AvailableFunctionIndices.end(), [&](int funcIndex) {
+        const auto funcName = PatternNames[funcIndex];
+        return name == std::string(funcName);
+    });
+    if (it == AvailableFunctionIndices.end()) {
+        return 0;
+    }
+    return *it;
+}
+
+inline bool EditorPatternMaker(const char *label, patternData &pData) {
+    bool edited = false;
+
+    static unsigned int funcIdx = 0;
+    static int stepPause = 0;
+    static int param = 0;
+    static std::vector<std::string> patternNameVector = initPatternVector();
+    static unsigned int selectedPattern = 0;
+    bool changed = false;
+
+    funcIdx = pData.funcIndex;
+    stepPause = pData.stepPause;
+    param = pData.param;
+
+    EditorBeginRoundedChild(label, "#pattmaker", false);
+    {
+        if (EditorComboListbox("Available Patterns",
+                               patternNameVector,
+                               selectedPattern,
+                               changed)) {
+            edited  = true;
+            funcIdx =
+                    GetIndexForPatternName(patternNameVector[selectedPattern]);
+        }
+        {
+            ImGuiHelpers::Group _valsGroup("Pattern vals", "patternvals");
+            EditorColoredLabeledUnsignedInt("Selected func index",
+                                            ImGuiColors::BrightBlue,
+                                            funcIdx);
+
+            if (ImGui::InputInt("Step pause", &stepPause)) {
+                edited = true;
+            }
+
+            EditorColoredLabeledUnsignedInt("Param",
+                                            ImColor(1.f, 1.f, 1.f),
+                                            static_cast<unsigned int>(param));
+            {
+                ImGuiHelpers::Group _paramGroup("Param", "params");
+                if (LightPlayer2::ShowParamUI(funcIdx, param)) {
+                    edited = true;
+                    GlobalConsole->Debug("New param value %i", param);
+                }
+            }
+        }
+    }
+
+    EditorEndRoundedChild();
+    if (edited) {
+        pData.funcIndex = funcIdx;
+        pData.stepPause = static_cast<unsigned int>(stepPause);
+        pData.param = static_cast<unsigned int>(param);
+    }
+    return edited;
 }
 
 inline void EditorViewFloat(const char *label,

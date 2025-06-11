@@ -123,10 +123,10 @@ unsigned int LightPlayer2::getPattLength() const {
     if (funcIdx == 14 || funcIdx == 15) return cols / 2;  // BoxIn, BoxOut
     if (funcIdx == 16) return rows + cols;                // scrollDiagonal
 
+    if (funcIdx == 31) return cols;
     // Fill from top uses upper 8 bits to store the fill-to value
-    if (funcIdx == 31 || funcIdx == 32 || funcIdx == 33 || funcIdx == 34)
-        return
-                getUpperBitsValue(pattData[patternIter].param, 8);
+    if (funcIdx == 32 || funcIdx == 33 || funcIdx == 34)
+        return getUpperBitsValue(pattData[patternIter].param, 8);
 
     return 1;
 }
@@ -281,8 +281,11 @@ bool LightPlayer2::fillColumnFromTop(unsigned int n,
                                      unsigned int colToFill,
                                      unsigned int toRow) const {
     int r = n / cols, c = n % cols;
+    float perc = static_cast<float>(stepIter) / getPattLength();
+    // GlobalConsole->Debug("Perc %.4f", perc);
+    unsigned int targetRow = std::round(perc * toRow);
     unsigned int bitShifted = (1 << c) & colToFill;
-    return bitShifted && r <= stepIter;
+    return bitShifted && r <= targetRow;
 }
 
 bool LightPlayer2::unfillColumnFromTop(unsigned int n,
@@ -308,7 +311,7 @@ bool LightPlayer2::unfillColumnFromBottom(unsigned int n,
     int r = n / cols, c = n % cols;
     // const auto pattLen = getPattLength();
     unsigned int bitShifted = (1 << c) & colToFill;
-    return c == colToFill && r >= (toRow + stepIter);
+    return bitShifted && r >= (toRow + stepIter);
 }
 
 bool LightPlayer2::ShowParamUI(unsigned int funcIndex,

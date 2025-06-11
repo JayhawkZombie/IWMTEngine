@@ -216,6 +216,7 @@ public:
     unsigned int getNumLts() const { return numLts; }
 
     static bool ShowParamUI(unsigned int funcIndex, int &paramValue);
+    bool ShowEditor();
 
 protected:                 // new for me. Not everything is public
     Light *pLt0 = nullptr; // to LightArr on Arduino

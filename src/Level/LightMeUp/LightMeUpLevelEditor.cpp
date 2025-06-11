@@ -89,10 +89,7 @@ bool LightMeUpLevel::RenderPatternPlayerEditorTab() {
     ImGui::SeparatorText("Pattern Data");
     {
         ImGuiHelpers::Group _group("Pattern Data", "##pattdata", false);
-        EditorViewPatternData("Pattern data",
-                              m_lightPlayer2.pattData,
-                              m_lightPlayer2.numPatterns,
-                              m_lightPlayer2.patternIter);
+        m_lightPlayer2.ShowEditor();
     }
     ImGui::SameLine();
     {

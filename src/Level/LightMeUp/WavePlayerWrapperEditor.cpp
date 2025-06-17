@@ -73,7 +73,7 @@ bool WavePlayerWrapper::RenderEditor() {
                                            m_preConfiguredWaves[preConfigIndex].
                                            size()));
             LoadConfig(m_preConfiguredWaves[preConfigIndex]);
-            Init();
+            edited = true;
         }
     }
 
@@ -87,6 +87,7 @@ bool WavePlayerWrapper::RenderEditor() {
 
     if (edited) {
         Init();
+        GlobalConsole->Debug("Edited, might set series coeff {} {}", m_config.useLeftCoefficients, m_config.useRightCoefficients);
         m_wavePlayer.setSeriesCoeffs_Unsafe(
                                             m_config.useRightCoefficients
                                                 ? m_config.C_Rt
@@ -115,7 +116,8 @@ bool WavePlayerWrapper::RenderEditorRuntimeValues() {
         "hypotf",
         "sinh",
         "cosh",
-        "tanh"
+        "tanh",
+        std::string("sawtooth")
     };
     static bool selectedTrigFunctionChanged    = false;
     selectedTrigFunctionChanged                = false;
@@ -300,10 +302,10 @@ void WavePlayerWrapper::GenerateCode() {
     fmt::println(file, "wp.wvSpdLt = {};", m_config.wvSpdLt);
     fmt::println(file, "wp.wvSpdRt = {};", m_config.wvSpdRt);
     fmt::println(file,
-                 "// TODO: wp.setRightTrigFunc({});",
+                 "wp.setRightTrigFunc({});",
                  m_config.rightTrigFuncIndex);
     fmt::println(file,
-                 "// TODO: wp.setLeftTrigFunc({});",
+                 "wp.setLeftTrigFunc({});",
                  m_config.leftTrigFuncIndex);
     if (m_config.useRightCoefficients) {
         fmt::println(file, "wp.C_Rt = C_Rt;");

@@ -20,6 +20,18 @@ void WavePlayer::init( Light& r_Lt0, unsigned int Rows, unsigned int Cols, Light
     // std::cout << "\n LoLt.r = " << rd << " LoLt.g = " << gn << " LoLt.b = " << bu;
 }
 
+float SawTooth(float x) {
+    if (x >= 0 && x <= 0.25f) {
+        return 4.f * x;
+    } else if (x >= 0.25f && x <= 0.5f) {
+        return 4.f * (0.5f - x);
+    } else if (x >= 0.5f && x <= 1.0f) {
+        return -1.f * SawTooth(x - 0.5f);
+    } else {
+        return -1;
+    }
+};
+
 void WavePlayer::setRightTrigFunc(unsigned int func) {
     if (func == 0) {
         rightTrigFunc = sinf;
@@ -37,8 +49,12 @@ void WavePlayer::setRightTrigFunc(unsigned int func) {
         rightTrigFunc = cosh;
     } else if (func == 6) {
         rightTrigFunc = tanh;
+    } else if (func == 7) {
+        rightTrigFunc = SawTooth;
     }
 }
+
+
 
 void WavePlayer::setLeftTrigFunc(unsigned int func) {
     if (func == 0) {
@@ -57,6 +73,9 @@ void WavePlayer::setLeftTrigFunc(unsigned int func) {
         leftTrigFunc = cosh;
     } else if (func == 6) {
         leftTrigFunc = tanh;
+    } else if (func == 7) {
+        // Sawtooth, domain constrained to 0-1
+        leftTrigFunc = SawTooth;
     }
 }
 

@@ -1,0 +1,36 @@
+{
+    "waveData": {
+        "rows": 8,
+        "cols": 8,
+        "onLight": {
+            "r": 17,
+            "g": 187,
+            "b": 37
+        },
+        "offLight": {
+            "r": 194,
+            "g": 0,
+            "b": 255
+        },
+        "C_Rt": {
+            "value0": 0.7020000219345093,
+            "value1": 0.6959999799728394,
+            "value2": 2.319000005722046
+        },
+        "C_Lt": {
+            "value0": 13.333000183105469,
+            "value1": 2.0869998931884767,
+            "value2": 1.7389999628067017
+        },
+        "useRightCoefficients": false,
+        "useLeftCoefficients": false,
+        "AmpLt": 0.5,
+        "AmpRt": 0.16300000250339509,
+        "wvLenLt": 74.43499755859375,
+        "wvLenRt": 43.130435943603519,
+        "wvSpdLt": 57.739131927490237,
+        "wvSpdRt": 82.08699798583985,
+        "rightTrigFuncIndex": 6,
+        "leftTrigFuncIndex": 3
+    }
+}

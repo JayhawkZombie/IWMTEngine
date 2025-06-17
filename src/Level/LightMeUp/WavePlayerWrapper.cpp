@@ -61,6 +61,7 @@ void WavePlayerWrapper::Init() {
     m_wavePlayer.update(0.f);
     m_visual.update();
     if (m_config.useRightCoefficients || m_config.useLeftCoefficients) {
+        GlobalConsole->Debug("Setting series coeff");
         m_wavePlayer.setSeriesCoeffs_Unsafe(
                                             m_config.useRightCoefficients
                                                 ? m_config.C_Rt
